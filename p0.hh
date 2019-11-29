@@ -14,8 +14,8 @@ private:
   const Mat&  diff(const int& size, const bool& integrate);
   const Vec&  nextTaylor(const int& size);
   const Vec&  nextDeepTaylor(const int& size);
-  const T Pi() const;
-  const U J()  const;
+  const T& Pi() const;
+  const U& J()  const;
   Vec buf;
 };
 
@@ -37,12 +37,12 @@ template <typename T, typename U> inline T P0<T,U>::next(const T& in) {
   return nextDeepTaylor(buf.size()).dot(buf);
 }
 
-template <typename T, typename U> const T P0<T,U>::Pi() const {
+template <typename T, typename U> const T& P0<T,U>::Pi() const {
   const static auto pi(atan2(T(1), T(1)) * T(4));
   return pi;
 }
 
-template <typename T, typename U> const U P0<T,U>::J() const {
+template <typename T, typename U> const U& P0<T,U>::J() const {
   const static auto i(sqrt(U(T(- 1))));
   return i;
 }
