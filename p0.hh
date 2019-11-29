@@ -96,7 +96,7 @@ template <typename T, typename U> const typename P0<T,U>::Mat& P0<T,U>::diff(con
   T nd(0);
   T ni(0);
   for(int i = 1; i < DD.rows(); i ++) {
-    const auto phase(- Pi() * J() * T(i) * T(2) / T(DD.rows()));
+    const auto phase(- J() * T(2) * Pi() * T(i) / T(DD.rows()));
     const auto phase2(U(T(1)) / phase);
     DD.row(i) *= phase;
     II.row(i) /= phase;
