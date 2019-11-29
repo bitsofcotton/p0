@@ -25,7 +25,7 @@ int main() {
     if(bd != d) {
       d0 += (d - bd) * M;
       try {
-        M = p0.next(bd = d);
+        M = p0.next(bd = d) - d;
       } catch(const char* e) {
         std::cerr << e << std::endl;
       }
