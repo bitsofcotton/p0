@@ -7,3 +7,6 @@ This suppose original data stream is in L2(R).
     p0_t p(range);
     pred = p.next(d);
     ...
+
+# How to use (commandline):
+    ./p0 < data.txt
