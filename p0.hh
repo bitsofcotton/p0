@@ -137,7 +137,7 @@ template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextDeep
   assert(0 < size);
   static vector<Vec> dtayl;
   if(dtayl.size() <= size)
-    dtayl.resize(size);
+    dtayl.resize(size + 1);
   if(dtayl[size].size() == size)
     return dtayl[size];
   auto& p(dtayl[size]);

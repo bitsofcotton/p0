@@ -8,12 +8,15 @@
 #include "simplelin.hh"
 #include "p0.hh"
 
-const int range(20);
 typedef SimpleFloat<uint64_t, DUInt<uint64_t, 64>, 64, int16_t> num_t;
 typedef P0<num_t, Complex<num_t> > p0_t;
 
-int main() {
+int main(int argc, const char* argv[]) {
   std::string s;
+  int range(20);
+  if(1 < argc)
+    range = std::atoi(argv[1]);
+  assert(2 < range);
   p0_t  p0(range);
   num_t M(0);
   num_t bd(0);
