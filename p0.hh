@@ -125,9 +125,10 @@ template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextTayl
     v[i] = T(0);
   v[v.size() - 1] = T(1);
   for(int i = 2; 0 <= i; i ++) {
-    if(dd.dot(dd) <= T(0))
-      break;
+    const auto bv(v);
     v += dd;
+    if(bv == v)
+      break;
     dd = (D * dd) / T(i);
   }
   return v;
