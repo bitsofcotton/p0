@@ -6,24 +6,32 @@ public:
   typedef SimpleVector<U> VecU;
   typedef SimpleMatrix<T> Mat;
   typedef SimpleMatrix<U> MatU;
-  inline P0(const int& range);
+  inline P0(const int& range, const int& shrink = 4);
   inline ~P0();
   inline T next(const T& in);
 private:
+  Vec pred;
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size, const bool& integrate);
   const Vec&  nextTaylor(const int& size);
-  const Vec&  nextDeepTaylor(const int& size);
+  const Vec&  nextDeepTaylor(const int& size, const int& shrink);
   const T& Pi() const;
   const U& J()  const;
   Vec buf;
 };
 
-template <typename T, typename U> P0<T,U>::P0(const int& range) {
-  assert(1 < range);
+template <typename T, typename U> P0<T,U>::P0(const int& range, const int& shrink) {
+  assert(1 < range && 0 < shrink);
   buf.resize(range);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
+  const auto& pred0(nextDeepTaylor(range * shrink, shrink));
+  pred.resize(range);
+  for(int i = 0; i < pred.size(); i ++)
+    pred[i] = T(0);
+  for(int i = 0; i < pred0.size(); i ++)
+    pred[i / shrink] += pred0[i];
+  pred /= T(shrink);
 }
 
 template <typename T, typename U> P0<T,U>::~P0() {
@@ -34,7 +42,7 @@ template <typename T, typename U> inline T P0<T,U>::next(const T& in) {
   for(int i = 1; i < buf.size(); i ++)
     buf[i - 1] = buf[i];
   buf[buf.size() - 1] = in;
-  return nextDeepTaylor(buf.size()).dot(buf);
+  return pred.dot(buf);
 }
 
 template <typename T, typename U> const T& P0<T,U>::Pi() const {
@@ -134,7 +142,7 @@ template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextTayl
   return v;
 }
 
-template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextDeepTaylor(const int& size) {
+template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextDeepTaylor(const int& size, const int& shrink) {
   assert(0 < size);
   static vector<Vec> dtayl;
   if(dtayl.size() <= size)
@@ -143,7 +151,7 @@ template <typename T, typename U> const typename P0<T,U>::Vec& P0<T,U>::nextDeep
     return dtayl[size];
   auto& p(dtayl[size]);
   p = nextTaylor(size);
-  for(int i = 2; i < p.size(); i ++) {
+  for(int i = shrink + 1; i < p.size(); i ++) {
     const auto& q(nextTaylor(i));
     for(int j = 0; j < q.size(); j ++)
       p[p.size() + j - q.size()] += q[j];
