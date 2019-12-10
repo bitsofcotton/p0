@@ -9,7 +9,13 @@
 
 #include <complex>
 #include <cmath>
-using namespace std;
+using std::sqrt;
+using std::atan2;
+using std::log;
+using std::exp;
+using std::abs;
+using std::sin;
+using std::cos;
 #include "p0.hh"
 //typedef SimpleFloat<uint64_t, DUInt<uint64_t, 64>, 64, int16_t> num_t;
 //typedef P0<num_t, Complex<num_t> > p0_t;
@@ -21,24 +27,32 @@ int main(int argc, const char* argv[]) {
   int range(20);
   if(1 < argc)
     range = std::atoi(argv[1]);
+  assert(2 < range);
+  int reset(80);
+  if(2 < argc)
+    reset = std::atoi(argv[2]);
+  assert(2 < reset);
   p0_t  p(range, 2, 1);
   num_t M(0);
   num_t bd(0);
   num_t bbd(0);
   num_t d0(0);
+  int   hit(0), nit(0);
   while(std::getline(std::cin, s, '\n')) {
     num_t d;
     std::stringstream ins(s);
     ins >> d;
-    if(isfinite(M))
-      d0 += (d - bd) * M;
     if(bd != d) {
-      d0 += M * (d - bd);
-      M   = p.next(d) - d;
+      if((d - bbd) * M < num_t(0))
+        hit ++;
+      else if(num_t(0) < (d - bbd) * M)
+        nit ++;
+      d0 += M * (d - bbd);
+      M   = p.next(d + bd) - d * num_t(2);
+      bbd = bd;
+      bd  = d;
     }
-    bbd = bd;
-    bd  = d;
-    std::cout << M << ", " << d0 << ", " << std::endl << std::flush;
+    std::cout << d0 << ", " << M << ", " << d << ", " << hit << ", " << nit << std::endl;
   }
   return 0;
 }
