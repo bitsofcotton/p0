@@ -21,7 +21,7 @@ int main(int argc, const char* argv[]) {
   int range(20);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  p0_t  p(range, 2, 1);
+  p0_t  p(range, 1);
   num_t M(0);
   num_t bd(0);
   num_t bbd(0);
