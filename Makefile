@@ -1,4 +1,4 @@
-CXX=	xcrun clang++
+CXX=	clang++
 LD=	${CXX}
 
 # compiler flags.
