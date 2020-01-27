@@ -30,12 +30,12 @@ template <typename T> const T& sgn(const T& x) {
 int main(int argc, const char* argv[]) {
   std::string s;
   int range(8);
-  int look(1);
+  int lpfr(2);
   if(1 < argc)
     range = std::atoi(argv[1]);
   if(2 < argc)
-    look  = std::atoi(argv[2]);
-  P0<num_t> p(range, look);
+    lpfr  = std::atoi(argv[2]);
+  P0<num_t> p(range, lpfr, 1);
   SimpleVector<num_t> buf(range);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = num_t(0);
