@@ -1,3 +1,34 @@
+/*
+ BSD 3-Clause License
+
+Copyright (c) 2019-2020, bitsofcotton
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 #if !defined(_P0_)
 
 template <typename T> class P0 {
@@ -7,26 +38,27 @@ public:
   typedef SimpleMatrix<T> Mat;
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
-  inline P0(const int& range, const int& lpfr = 2, const int& look = 1);
+  inline P0(const int& range, const int& look = 1);
   inline ~P0();
   inline T next(const Vec& in);
+  T   lherr;
 private:
   Vec pred;
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size, const bool& integrate);
-  const Mat&  lpf(const int& size, const int& lpfr);
+  const Mat&  lhpf(const int& size, const bool& hpf);
   const Vec&  nextTaylor(const int& size, const int& step);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
 
 template <typename T> inline P0<T>::P0() {
-  ;
+  lherr = T(0);
 }
 
-template <typename T> inline P0<T>::P0(const int& range, const int& lpfr, const int& look) {
+template <typename T> inline P0<T>::P0(const int& range, const int& look) {
   assert(1 < range && 0 < look);
-  pred = lpf(range, lpfr).transpose() * nextTaylor(range, look) - lpf(range, lpfr).row(range - 1);
+  pred = lhpf(range, false).transpose() * nextTaylor(range, look) - lhpf(range, false).row(range - 1);
 }
 
 template <typename T> inline P0<T>::~P0() {
@@ -35,6 +67,8 @@ template <typename T> inline P0<T>::~P0() {
 
 template <typename T> inline T P0<T>::next(const Vec& in) {
   assert(pred.size() == in.size());
+  const auto herr(lhpf(in.size(), true) * in);
+  lherr = sqrt(herr.dot(herr));
   return pred.dot(in);
 }
 
@@ -111,20 +145,31 @@ template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size, co
   return d;
 }
 
-template <typename T> const typename P0<T>::Mat& P0<T>::lpf(const int& size, const int& lpfr) {
+template <typename T> const typename P0<T>::Mat& P0<T>::lhpf(const int& size, const bool& hpf) {
   assert(0 < size);
-  static vector<vector<Mat> > L;
+  static vector<Mat> L;
+  static vector<Mat> H;
   if(L.size() <= size)
-    L.resize(size + 1, vector<Mat>());
-  if(L[size].size() <= lpfr)
-    L[size].resize(lpfr + 1, Mat());
-  if(L[size][lpfr].rows() == size && L[size][lpfr].cols() == size)
-    return L[size][lpfr];
-  auto& l(L[size][lpfr]);
+    L.resize(size + 1, Mat());
+  if(H.size() <= size)
+    H.resize(size + 1, Mat());
+  if((! hpf) && L[size].rows() == size && L[size].cols() == size)
+    return L[size];
+  if(   hpf  && H[size].rows() == size && H[size].cols() == size)
+    return H[size];
+  auto& l(L[size]);
+  auto& h(H[size]);
   auto  ll(seed(size, false));
-  for(int i = size / lpfr; i < size; i ++)
+  auto  hh(seed(size, false));
+  for(int i = 0; i < size / 2; i ++)
+    hh.row(i) *= complex<T>(T(0));
+  for(int i = size / 2; i < size; i ++)
     ll.row(i) *= complex<T>(T(0));
-  return l = (seed(size, true) * ll).template real<T>();
+  l = (seed(size, true) * ll).template real<T>();
+  h = (seed(size, true) * hh).template real<T>();
+  if(hpf)
+    return h;
+  return l;
 }
 
 template <typename T> const typename P0<T>::Vec& P0<T>::nextTaylor(const int& size, const int& step) {

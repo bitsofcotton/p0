@@ -1,3 +1,34 @@
+/*
+BSD 3-Clause License
+
+Copyright (c) 2019-2020, bitsofcotton
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 #if !defined(_INTEGER_FLOAT_)
 
 using std::move;
@@ -66,8 +97,6 @@ public:
 */
 
   T e[2];
-private:
-  inline int getMSB() const;
 };
 
 template <typename T, int bits> inline DUInt<T,bits>::DUInt() {
@@ -156,31 +185,26 @@ template <typename T, int bits> inline DUInt<T,bits>& DUInt<T,bits>::operator -=
 }
 
 template <typename T, int bits> inline DUInt<T,bits>  DUInt<T,bits>::operator *  (const DUInt<T,bits>& src) const {
-  const static auto hbits(bits >> 1);
-  const static auto lmask((T(1) << hbits) - T(1));
-  const auto d0(e[0] & lmask);
-  const auto d1(e[0] >> hbits);
-  const auto d2(e[1] & lmask);
-  const auto d3(e[1] >> hbits);
-  const auto s0(src.e[0] & lmask);
-  const auto s1(src.e[0] >> hbits);
-  const auto s2(src.e[1] & lmask);
-  const auto s3(src.e[1] >> hbits);
-  // (d0 + d1 * p1 + d2 * p2 + d3 * p3) * (s0 + s1 * p1 + s2 * p2 + s3 * p3) ==
-  // ... ==
-  // d0 * s0 + (d0 * s1 + s0 * d1) * p1 +
-  //   (d0 * s2 + d2 * s0 + d1 * s1) * p2 +
-  //   (d0 * s3 + d2 * s1 + d1 * s2 + d3 * s0) * p3
-  // N.B. not used:
-  //   dk * sl + dl * sk == dk * sk + sl * dl - (dk - dl) * (sk - sl)
-  return DUInt<T,bits>(d0 * s0) +
-       ((DUInt<T,bits>(s0 * d1) + DUInt<T,bits>(s1 * d0)) << hbits) +
-       (DUInt<T,bits>(s0 * d2 + s2 * d0 + s1 * d1) << bits) +
-       (DUInt<T,bits>(s0 * d3 + s3 * d0 + s1 * d2 + s2 * d1) << (bits + hbits));
+  auto result(*this);
+  return result *= src;
 }
 
 template <typename T, int bits> inline DUInt<T,bits>& DUInt<T,bits>::operator *= (const DUInt<T,bits>& src) {
-  return *this = *this * src;
+  const auto cache(*this);
+  *this ^= *this;
+  for(int i = 0; i < 2 * bits; i ++)
+    if(int(src >> i) & 1)
+      *this += cache << i;
+  // N.B.
+  //   If we work with multiply with table and summing up with simple window,
+  //   and the parallel condition, we can reduce better:
+  //     with bit pair [x1, x2, ..., xn], [y1, y2, ..., yn],
+  //     make table [[x1*y1, ..., x1*yn],...,[xn*y1, ... xn*yn]],
+  //     then counter orthogonal sum-up with parallel.
+  //     we get [z1, ... zn] == [x1*y1, ..., sum_i+j=k(x_i*y_j), ..., xn*yn],
+  //     then sum-up with certain bit adder and fixing one by one:
+  //     r1 := x1*y1, s1 := ((x1*y1) >> 1) + z2, r2 := s2 & 1, ... and so on.
+  return *this;
 }
 
 template <typename T, int bits> inline DUInt<T,bits>  DUInt<T,bits>::operator /  (const DUInt<T,bits>& src) const {
@@ -188,87 +212,22 @@ template <typename T, int bits> inline DUInt<T,bits>  DUInt<T,bits>::operator / 
   return work /= src;
 }
 
-template <typename T, int bits> inline int DUInt<T,bits>::getMSB() const {
-  int shift(- 1);
-  if(! e[1]) {
-    if(! e[0])
-      return shift;
-    for(int i = bits - 1; 0 <= i; i --)
-      if(int(e[0] >> i) & 1) {
-        shift = i;
-        break;
-      }
-    return shift;
-  }
-  for(int i = bits - 1; 0 <= i; i --)
-    if(int(e[1] >> i) & 1) {
-      shift = i + bits;
-      break;
-    }
-  return shift;
-}
-
 template <typename T, int bits> inline DUInt<T,bits>& DUInt<T,bits>::operator /= (const DUInt<T,bits>& src) {
-  const static auto hbits(bits >> 1);
-  const static auto lmask((T(1) << hbits) - T(1));
-  const auto shift(src.getMSB());
-  if(shift < 0)
+  const static DUInt<T,bits> one(1);
+  if(! src)
     throw "Zero division";
   if(! *this)
     return *this;
-  const auto dblocks(shift / hbits + 1);
-  const auto lshift(dblocks * hbits - shift - 1);
-  assert(0 <= lshift && lshift < hbits && !((shift + lshift + 1) % hbits));
-  const auto dd(src << lshift);
-  const auto dlast((dblocks - 1) & 1 ? dd.e[(dblocks - 1) >> 1] >> hbits
-                                     : dd.e[(dblocks - 1) >> 1] &  lmask);
-  assert(dlast);
-        auto ltshift(getMSB());
-  assert(0 <= ltshift);
-  ltshift = bits * 2 - 1 - ltshift;
-  *this <<= ltshift;
-  assert(*this);
-  // N.B.
-  //   block division with better condition.
-  //   de[0] ... de[n], de[n] = 0...1..., each de uses half of space.
-  //                                ^ hbits - 1
-  //   dlast := de[n].
-  //   res = *this / (src == dd >> lshift ~= (dlast << ...))
-  auto res(src ^ src);
-  auto div(res);
-  auto d(e[0] ^ e[0]);
-  for(int i = 2; - 1 <= i; i --) {
-    switch(i) {
-    case - 1:
-      d =  (e[0] << hbits) / dlast;
-      break;
-    case 0:
-      d =  (e[0]) / dlast;
-      break;
-    case 1:
-      d = ((e[0] >> hbits) | (e[1] << hbits)) / dlast;
-      break;
-    case 2:
-      d =  (e[1]) / dlast;
-      break;
-    default:
-      assert(0 && "Should not be reached.");
+  auto cache(*this);
+  *this ^= *this;
+  for(int i = 2 * bits - 1; 0 <= i; i --)
+    if((cache >> i) >= src) {
+      *this |= one << i;
+      cache -= src << i;
     }
-    // N.B.
-    //   d(0)  := original.
-    //   d(k+1) = (d << tshift) * src + r + d(k) == orig.
-    //   ( |r| < |src|, ((d << tshift) * src) <= orig - d(k) )
-    const auto tshift(hbits * i + lshift - (dblocks - 1) * hbits);
-    div = (DUInt<T,bits>(d) * src) << tshift;
-    for(int j = 0; j < 4 && ! (div <= *this); j ++) {
-      -- d;
-      div -= src << tshift;
-    }
-    assert(div <= *this);
-    *this -= div;
-    res   += DUInt<T,bits>(d) << tshift;
-  }
-  return *this = (res >>= ltshift);
+  assert(cache < src);
+  return *this;
+  // N.B. if we works with newton's method, better speed will be gained.
 }
 
 template <typename T, int bits> inline DUInt<T,bits>  DUInt<T,bits>::operator %  (const DUInt<T,bits>& src) const {
@@ -662,12 +621,12 @@ template <typename T, typename W, int bits, typename U>        SimpleFloat<T,W,b
   if((s |= src.s & (1 << NaN)) & (1 << NaN))
     return *this;
   s ^= src.s & (1 << SIGN);
-  if((s |= src.s & (1 << INF)) & (1 << INF))
-    return *this;
   if((! m) || (! src.m)) {
     s |= 1 << DWRK;
     return ensureFlag();
   }
+  if((s |= src.s & (1 << INF)) & (1 << INF))
+    return *this;
   auto mm(W(m) * W(src.m));
   s |= safeAdd(e, src.e);
   s |= safeAdd(e, normalize(mm));
@@ -703,7 +662,7 @@ template <typename T, typename W, int bits, typename U>        SimpleFloat<T,W,b
     return *this;
   }
   if(! src.m) {
-  //  throw "Zero division";
+    throw "Zero division";
     s |= 1 << NaN;
     return *this;
   }
@@ -773,15 +732,13 @@ template <typename T, typename W, int bits, typename U> inline bool             
 
 template <typename T, typename W, int bits, typename U> inline bool             SimpleFloat<T,W,bits,U>::operator <  (const SimpleFloat<T,W,bits,U>& src) const {
   if((s | src.s) & (1 << NaN))
-    return true;
-    // throw "compair NaN";
+    throw "compair NaN";
   const auto s_is_minus(s & (1 << SIGN));
   if(s_is_minus ^ (src.s & (1 << SIGN)))
     return s_is_minus;
   if(s & (1 << INF)) {
     if(src.s & (1 << INF))
-      //throw "compair INF";
-      ;
+      throw "compair INF";
     return s_is_minus;
   }
   if(src.s & (1 << INF))
@@ -862,23 +819,18 @@ template <typename T, typename W, int bits, typename U> inline SimpleFloat<T,W,b
   if(! m || (s & (1 << DWRK))) {
     e ^= e;
     m ^= m;
-    s &= ~ (1 << DWRK);
+    s &= ~ ((1 << DWRK) | (1 << INF));
   }
   return * this;
 }
 
 template <typename T, typename W, int bits, typename U> inline unsigned char SimpleFloat<T,W,bits,U>::safeAdd(U& dst, const U& src) {
   const auto dst0(dst);
-  unsigned char ss(0);
   dst += src;
   if((dst0 > 0 && src > 0 && dst < 0) ||
-     (dst0 < 0 && src < 0 && dst > 0)) {
-    if(dst < 0)
-      ss |= 1 << INF;
-    else
-      ss |= 1 << DWRK;
-  }
-  return ss;
+     (dst0 < 0 && src < 0 && dst > 0))
+    return 1 << (dst < 0 ? INF : DWRK);
+  return 0;
 }
 
 template <typename T, typename W, int bits, typename U> inline SimpleFloat<T,W,bits,U> SimpleFloat<T,W,bits,U>::floor() const {
@@ -895,12 +847,13 @@ template <typename T, typename W, int bits, typename U> inline SimpleFloat<T,W,b
 }
 
 template <typename T, typename W, int bits, typename U> inline SimpleFloat<T,W,bits,U> SimpleFloat<T,W,bits,U>::ceil() const {
-  if(*this - this->floor()) {
+  const auto fl(this->floor);
+  if(*this - fl) {
     auto pmone(one());
     pmone.s |= s & (1 << SIGN);
-    return this->floor() + pmone;
+    return fl + pmone;
   }
-  return this->floor();
+  return fl;
 }
 
 template <typename T, typename W, int bits, typename U> inline SimpleFloat<T,W,bits,U> SimpleFloat<T,W,bits,U>::abs() const {
