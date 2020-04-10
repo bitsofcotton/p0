@@ -41,7 +41,6 @@ public:
   inline P0(const int& range, const int& look = 1);
   inline ~P0();
   inline T next(const Vec& in);
-  T   lherr;
 private:
   Vec pred;
   const MatU& seed(const int& size, const bool& idft);
@@ -53,7 +52,7 @@ private:
 };
 
 template <typename T> inline P0<T>::P0() {
-  lherr = T(0);
+  ;
 }
 
 template <typename T> inline P0<T>::P0(const int& range, const int& look) {
@@ -67,9 +66,17 @@ template <typename T> inline P0<T>::~P0() {
 
 template <typename T> inline T P0<T>::next(const Vec& in) {
   assert(pred.size() == in.size());
-  const auto herr(lhpf(in.size(), true) * in);
-  lherr = sqrt(herr.dot(herr));
-  return pred.dot(in);
+  auto result(pred.dot(in));
+  auto herr(lhpf(in.size(), true) * in);
+  while(T(1) / T(200) / T(200) < herr.dot(herr)) {
+    for(int i = 0; i < herr.size(); i ++)
+      if(i % 2) herr[i] *= - T(1);
+    if(herr.size() % 2)
+      herr  = - herr;
+    result += pred.dot(herr);
+    herr    = lhpf(in.size(), true) * herr;
+  }
+  return result;
 }
 
 template <typename T> const T& P0<T>::Pi() const {
