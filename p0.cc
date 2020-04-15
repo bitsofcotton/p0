@@ -41,6 +41,7 @@ int main(int argc, const char* argv[]) {
   SimpleVector<num_t> buf(range);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = num_t(0);
+  auto  ibuf(buf);
   num_t d0(0);
   auto  MM(d0);
   while(std::getline(std::cin, s, '\n')) {
@@ -50,10 +51,13 @@ int main(int argc, const char* argv[]) {
     const auto& bd(buf[buf.size() - 1]);
     if(d != bd) {
       d0 += (d - bd) * MM;
-      for(int i = 1; i < buf.size(); i ++)
-        buf[i - 1] = buf[i];
-      buf[buf.size() - 1] = d;
-      MM  = p.next(buf);
+      for(int i = 0; i < buf.size() - 1; i ++) {
+        buf[ i] = buf[ i + 1];
+        ibuf[i] = ibuf[i + 1];
+      }
+      buf[ buf.size()  - 1] = d;
+      ibuf[ibuf.size() - 1] = num_t(1) / d;
+      MM  = (p.next(buf) + num_t(1) / p.next(ibuf)) / num_t(2) - p.lpf(buf.size()).row(buf.size() - 1).dot(buf);
     }
     std::cout << d0 << "," << MM << std::endl;
   }
