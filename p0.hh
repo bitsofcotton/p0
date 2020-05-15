@@ -72,7 +72,16 @@ template <typename T> inline P0<T>::~P0() {
 
 template <typename T> inline T P0<T>::next(const Vec& in) {
   assert(pred.size() == in.size());
-  return pred.dot(in);
+  auto res(pred.dot(in));
+  auto residue(in - lpf(in.size()) * in);
+  while(T(1) / T(1000) / T(1000) < residue.dot(residue)) {
+    for(int i = 0; i < residue.size(); i ++)
+      if(i % 2 == (residue.size() + 1) % 2)
+        residue[i] = - residue[i];
+    res     += pred.dot(residue);
+    residue -= lpf(residue.size()) * residue;
+  }
+  return res;
 }
 
 template <typename T> const T& P0<T>::Pi() const {
