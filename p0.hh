@@ -161,7 +161,7 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
       revextends(i, j) = extends(extends.rows() - 1 - i,
                                  extends.cols() - 1 - j);
   const auto reverse(revextends.transpose() * taylor(p.size() * 2 - 1, - T(1)));
-  p = extends.transpose() * taylor(p.size() * 2 - 1, T(p.size()));
+  p = extends.transpose() * taylor(p.size() * 2 - 1, T(p.size() * 2 - 1));
   for(int i = 0; i < reverse.size(); i ++)
     p[i] += reverse[reverse.size() - i - 1];
   return p /= T(2);
