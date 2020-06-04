@@ -12,8 +12,7 @@ typedef long double num_t;
 /*
 #include "ifloat.hh"
 template <typename T> using complex = Complex<T>;
-// typedef SimpleFloat<uint64_t, DUInt<uint64_t, 64>, 64, int32_t> num_t;
-typedef SimpleFloat<DUInt<uint64_t, 64>, DUInt<DUInt<uint64_t, 64>, 128>, 128, int16_t> num_t;
+typedef SimpleFloat<uint64_t, DUInt<uint64_t, 64>, 64, int32_t> num_t;
 */
 #include "simplelin.hh"
 #include "p0.hh"
@@ -31,10 +30,11 @@ int main(int argc, const char* argv[]) {
     num_t d;
     std::stringstream ins(s);
     ins >> d;
+    //d /= 100.;
+    d = 1. / d;
     if(d != bd) {
       d0 += (d - bd) * MM;
-      MM  = p.next(d) - d;
-      bd  = d;
+      MM  = p.next(bd = d) - d;
     }
     std::cout << d0 << ", " << MM << std::endl;
   }
