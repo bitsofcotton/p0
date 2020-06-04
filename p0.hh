@@ -74,7 +74,7 @@ template <typename T> inline T P0<T>::next(const Vec& in, const T& err) {
     Vec buf(in.size());
     for(int i = 0; i < buf.size(); i ++)
       buf[i] = in[i] - tilt * T(i);
-    res   = nextP(buf.size()).dot(buf) + tilt;
+    res   = nextP(buf.size()).dot(buf) + tilt * T(buf.size());
     tilt -= minSq(work.size()).dot(work);
   }
   return res;
