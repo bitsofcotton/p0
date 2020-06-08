@@ -24,7 +24,7 @@ p_t p;
 int main(int argc, const char* argv[]) {
   std::string s;
   int range(20);
-  int loop(22);
+  int loop(14);
   if(1 < argc)
     range = std::atoi(argv[1]);
   if(2 < argc)

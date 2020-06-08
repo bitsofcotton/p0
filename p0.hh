@@ -210,15 +210,17 @@ public:
   T next(const T& in, const int& idx = 0);
 private:
   std::vector<U> p;
+  int p0size;
 };
 
 template <typename T, typename U> inline P0C<T,U>::P0C() {
-  ;
+  p0size = 0;
 }
 
 template <typename T, typename U> inline P0C<T,U>::P0C(const int& size, const int& loop) {
   assert(1 < size && 1 < loop);
-  p.resize(pow(2, loop) - 1, U(size));
+  p0size = pow(2, loop) - 1;
+  p.resize(pow(2, loop - 1) - 1, U(size));
 }
 
 template <typename T, typename U> inline P0C<T,U>::~P0C() {
@@ -229,12 +231,12 @@ template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) 
   const static T halfPi(atan2(T(1), T(1)) * T(4) / T(2));
   const auto inpi(in * halfPi);
   // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^(n + 1) - 2
-  const auto stt(((p.size() + 2) / 2 - 2 + 2) / 2 - 1);
-  if(idx < stt) {
-    const auto M(atan2(next(cos(inpi), 2 * idx + 1), next(sin(inpi), 2 * idx + 2)) - inpi);
-    return atan2(cos(M), sin(M)) / halfPi + in;
-  }
-  const auto M(atan2(p[2 * idx - stt].next(cos(inpi)), p[2 * idx + 1 - stt].next(sin(inpi))) - inpi);
+  const auto stt(((p0size + 2) / 2 - 2 + 2) / 2 - 1);
+  const auto M(idx < stt ?
+    atan2(next(cos(inpi), 2 * idx + 1),
+          next(sin(inpi), 2 * idx + 2)) - inpi :
+    atan2(p[2 * idx     - stt].next(cos(inpi)),
+          p[2 * idx + 1 - stt].next(sin(inpi))) - inpi);
   return atan2(cos(M), sin(M)) / halfPi + in;
 }
 
