@@ -39,13 +39,11 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  inline T next(const Vec& in, const T& err = T(1) / T(100000));
+  const Vec&  nextP(const int& size);
 private:
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size);
   inline Vec  taylor(const int& size, const T& step);
-  const Vec&  nextP(const int& size);
-  const Vec&  minSq(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -56,28 +54,6 @@ template <typename T> inline P0<T>::P0() {
 
 template <typename T> inline P0<T>::~P0() {
   ;
-}
-
-template <typename T> inline T P0<T>::next(const Vec& in, const T& err) {
-  assert(in.size());
-  if(in[0] == T(0))
-    return in[in.size() - 1];
-  Vec   work(in.size() + 1);
-  for(int i = 0; i < in.size(); i ++)
-    work[i] = in[i];
-  auto& res(work[work.size() - 1]);
-  res = nextP(in.size()).dot(in);
-  const auto normin(sqrt(in.dot(in)));
-  auto  tilt(normin);
-  while(err * normin < abs(tilt)) {
-    tilt  = minSq(work.size()).dot(work);
-    Vec buf(in.size());
-    for(int i = 0; i < buf.size(); i ++)
-      buf[i] = in[i] - tilt * T(i);
-    res   = nextP(buf.size()).dot(buf) + tilt * T(buf.size());
-    tilt -= minSq(work.size()).dot(work);
-  }
-  return res;
 }
 
 template <typename T> const T& P0<T>::Pi() const {
@@ -186,96 +162,72 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
   return p /= T(2);
 }
 
-template <typename T> const typename P0<T>::Vec& P0<T>::minSq(const int& size) {
-  assert(1 < size);
-  static vector<Vec> ms;
-  if(ms.size() <= size)
-    ms.resize(size + 1, Vec());
-  if(ms[size].size() == size)
-    return ms[size];
-  auto& t(ms[size]);
-  t.resize(size);
-  const auto xsum(T(t.size()) * T(t.size() - 1) / T(2));
-  const auto xdot(T(t.size()) * T(t.size() - 1) * T(2 * t.size() - 1) / T(6));
-  for(int i = 0; i < t.size(); i ++)
-    t[i] = T(i) * T(t.size()) - xsum;
-  return t /= xdot * T(t.size()) - xsum * xsum;
-}
 
-
-template <typename T> class P0EL {
+template <typename T> class P0B {
 public:
   typedef SimpleVector<T> Vec;
-  inline P0EL();
-  inline P0EL(const int& size);
-  inline ~P0EL();
-  inline const T& next(const T& in);
-  T   d;
-  T   M;
+  inline P0B();
+  inline P0B(const int& size);
+  inline ~P0B();
+  inline T next(const T& in);
 private:
-  inline Vec& shift(Vec& a, const T& in);
-  inline const T& sgn(const T& x);
-  inline T expscale(const T& x);
-  inline T logscale(const T& x);
-  P0<T> p0;
-  Vec p;
-  Vec pe;
-  Vec pl;
+  P0<T> p;
+  Vec   buf;
 };
 
-template <typename T> P0EL<T>::P0EL() {
-  d = M = T(0);
-}
-
-template <typename T> P0EL<T>::P0EL(const int& size) {
-  assert(1 < size);
-  p.resize(size);
-  for(int i = 0; i < size; i ++)
-    p[i] = T(0);
-  pe = pl = p;
-  d  = M = T(0);
-}
-
-template <typename T> P0EL<T>::~P0EL() {
+template <typename T> inline P0B<T>::P0B() {
   ;
 }
 
-template <typename T> inline const T& P0EL<T>::next(const T& in) {
-  if(in == d)
-    return M;
-  M = (         p0.next(shift(p,  d = in)) +
-       logscale(p0.next(shift(pe, expscale(d)))) +
-       expscale(p0.next(shift(pl, logscale(d)))) ) / T(3);
-  if(! isfinite(M) || isnan(M) || p[0] == T(0))
-    M = in;
-  return M;
+template <typename T> inline P0B<T>::P0B(const int& size) {
+  buf.resize(size);
+  for(int i = 0; i < buf.size(); i ++)
+    buf[i] = T(0);
 }
 
-template <typename T> inline typename P0EL<T>::Vec& P0EL<T>::shift(Vec& a, const T& in) {
-  assert(a.size());
-  for(int i = 0; i < a.size() - 1; i ++)
-    a[i] = a[i + 1];
-  a[a.size() - 1] = in;
-  return a;
+template <typename T> inline P0B<T>::~P0B() {
+  ;
 }
 
-template <typename T> inline const T& P0EL<T>::sgn(const T& x) {
-  static const T one(1);
-  static const T mone(- 1);
-  static const T zero(0);
-  if(zero < x)
-    return one;
-  if(x < zero)
-    return mone;
-  return zero;
+template <typename T> inline T P0B<T>::next(const T& in) {
+  for(int i = 0; i < buf.size() - 1; i ++)
+    buf[i] = buf[i + 1];
+  buf[buf.size() - 1] = in;
+  return p.nextP(buf.size()).dot(buf);
 }
 
-template <typename T> inline T P0EL<T>::expscale(const T& x) {
-  return sgn(x) * (exp(abs(x)) - T(1));
+
+template <typename T, typename U> class P0C {
+public:
+  typedef SimpleVector<T> Vec;
+  inline P0C();
+  inline P0C(const int& size);
+  inline ~P0C();
+  inline T next(const T& in);
+private:
+  U p;
+  U q;
+};
+
+template <typename T, typename U> inline P0C<T,U>::P0C() {
+  ;
 }
 
-template <typename T> inline T P0EL<T>::logscale(const T& x) {
-  return sgn(x) * log(abs(x) + T(1));
+template <typename T, typename U> inline P0C<T,U>::P0C(const int& size) {
+  assert(1 < size);
+  p = U(size);
+  q = U(size);
+}
+
+template <typename T, typename U> inline P0C<T,U>::~P0C() {
+  ;
+}
+
+template <typename T, typename U> inline T P0C<T,U>::next(const T& in) {
+  const static T Pi(atan2(T(1), T(1)) * T(4));
+  const auto inpi(in * Pi);
+  const auto M(atan2(p.next(cos(inpi)), q.next(sin(inpi))) - inpi);
+  return atan2(cos(M), sin(M)) / Pi + in;
 }
 
 #define _P0_
