@@ -162,7 +162,7 @@ template <typename T> const typename P0<T>::Mat& P0<T>::nextP(const int& size) {
   p.row(0) /= T(2);
   for(int i = 1; i < p.rows(); i ++)
     for(int j = 0; j < p.cols(); j ++)
-      p(i, j) = p(0, (i + j) % p.cols());
+      p(i, j) = p(0, (p.cols() - i + j) % p.cols());
   return p;
 }
 
@@ -228,12 +228,13 @@ template <typename T, typename U> inline P0C<T,U>::~P0C() {
 template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) {
   const static T halfPi(atan2(T(1), T(1)) * T(4) / T(2));
   const auto inpi(in * halfPi);
-  // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^n - 2
-  if(idx < ((p.size() + 2) / 2 - 2 + 2) / 2 - 1) {
+  // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^(n + 1) - 2
+  const auto stt(((p.size() + 2) / 2 - 2 + 2) / 2 - 1);
+  if(idx < stt) {
     const auto M(atan2(next(cos(inpi), 2 * idx + 1), next(sin(inpi), 2 * idx + 2)) - inpi);
     return atan2(cos(M), sin(M)) / halfPi + in;
   }
-  const auto M(atan2(p[2 * idx].next(cos(inpi)), p[2 * idx + 1].next(sin(inpi))) - inpi);
+  const auto M(atan2(p[2 * idx - stt].next(cos(inpi)), p[2 * idx + 1 - stt].next(sin(inpi))) - inpi);
   return atan2(cos(M), sin(M)) / halfPi + in;
 }
 
