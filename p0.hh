@@ -220,7 +220,7 @@ template <typename T, typename U> inline P0C<T,U>::P0C() {
 template <typename T, typename U> inline P0C<T,U>::P0C(const int& size, const int& loop) {
   assert(1 < size && 1 < loop);
   p0size = pow(2, loop) - 1;
-  p.resize(pow(2, loop - 1) - 1, U(size));
+  p.resize(pow(2, loop - 1), U(size));
 }
 
 template <typename T, typename U> inline P0C<T,U>::~P0C() {
@@ -235,8 +235,8 @@ template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) 
   const auto M(idx < stt ?
     atan2(next(cos(inpi), 2 * idx + 1),
           next(sin(inpi), 2 * idx + 2)) - inpi :
-    atan2(p[2 * idx     - stt].next(cos(inpi)),
-          p[2 * idx + 1 - stt].next(sin(inpi))) - inpi);
+    atan2(p[2 * idx     - 2 * stt].next(cos(inpi)),
+          p[2 * idx + 1 - 2 * stt].next(sin(inpi))) - inpi);
   return atan2(cos(M), sin(M)) / halfPi + in;
 }
 
