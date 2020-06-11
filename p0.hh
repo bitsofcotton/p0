@@ -39,11 +39,11 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  const Mat&  nextP(const int& size);
+  const Vec&  nextP(const int& size);
+  inline Vec  taylor(const int& size, const T& step);
 private:
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size);
-  inline Vec  taylor(const int& size, const T& step);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -117,7 +117,7 @@ template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size) {
 }
 
 template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
-  const auto  spt(min(size - 1, std::max(0, int(std::ceil(step)))));
+  const auto  spt(min(size - 1, max(0, int(ceil(step)))));
   const auto  residue(step - T(spt));
         Vec   tayl(size);
   const auto& D(diff(size));
@@ -135,35 +135,31 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
   return tayl;
 }
 
-template <typename T> const typename P0<T>::Mat& P0<T>::nextP(const int& size) {
+template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
   assert(1 < size);
-  static vector<Mat> P;
+  static vector<Vec> P;
   if(P.size() <= size)
-    P.resize(size + 1, Mat());
-  if(P[size].rows() == size && P[size].cols() == size)
+    P.resize(size + 1, Vec());
+  if(P[size].size() == size)
     return P[size];
   auto& p(P[size]);
-  p.resize(size, size);
-  Mat   extends(p.cols() * 2 - 1, p.cols());
+  p.resize(size);
+  Mat   extends(p.size() * 2 - 1, p.size());
   Mat   revextends(extends.rows(), extends.cols());
   for(int i = 0; i < extends.rows(); i ++)
     for(int j = 0; j < extends.cols(); j ++)
       extends(i, j) = i / 2 == j && i % 2 == 0 ? T(1) : T(0);
-  for(int i = 0; i < p.cols() - 1; i ++)
-    extends.row(i * 2 + 1) = taylor(p.cols(), T(i) + T(1) / T(2));
+  for(int i = 0; i < p.size() - 1; i ++)
+    extends.row(i * 2 + 1) = taylor(p.size(), T(i) + T(1) / T(2));
   for(int i = 0; i < extends.rows(); i ++)
     for(int j = 0; j < extends.cols(); j ++)
       revextends(i, j) = extends(extends.rows() - 1 - i,
                                  extends.cols() - 1 - j);
-  const auto reverse(revextends.transpose() * taylor(p.cols() * 2 - 1, - T(2)));
-  p.row(0) = extends.transpose() * taylor(p.cols() * 2 - 1, T(p.cols() * 2));
+  const auto reverse(revextends.transpose() * taylor(p.size() * 2 - 1, - T(1)));
+  p = extends.transpose() * taylor(p.size() * 2 - 1, T(p.size() * 2 - 1));
   for(int i = 0; i < reverse.size(); i ++)
-    p(0, i) += reverse[reverse.size() - i - 1];
-  p.row(0) /= T(2);
-  for(int i = 1; i < p.rows(); i ++)
-    for(int j = 0; j < p.cols(); j ++)
-      p(i, j) = p(0, (p.cols() - i + j) % p.cols());
-  return p;
+    p[i] += reverse[reverse.size() - i - 1];
+  return p /= T(2);
 }
 
 
@@ -174,21 +170,20 @@ public:
   inline P0B(const int& size);
   inline ~P0B();
   inline T next(const T& in);
+  T bd;
 private:
   P0<T> p;
   Vec   buf;
-  int   t;
 };
 
 template <typename T> inline P0B<T>::P0B() {
-  t = 0;
+  ;
 }
 
 template <typename T> inline P0B<T>::P0B(const int& size) {
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
-  t = 0;
 }
 
 template <typename T> inline P0B<T>::~P0B() {
@@ -196,48 +191,12 @@ template <typename T> inline P0B<T>::~P0B() {
 }
 
 template <typename T> inline T P0B<T>::next(const T& in) {
-  buf[(t ++) % buf.size()] = in;
-  return p.nextP(buf.size()).row(t % buf.size()).dot(buf);
-}
-
-
-template <typename T, typename U> class P0C {
-public:
-  typedef SimpleVector<T> Vec;
-  inline P0C();
-  inline P0C(const int& size, const int& loop);
-  inline ~P0C();
-  T next(const T& in, const int& idx = 0);
-private:
-  std::vector<U> p;
-  int p0size;
-};
-
-template <typename T, typename U> inline P0C<T,U>::P0C() {
-  p0size = 0;
-}
-
-template <typename T, typename U> inline P0C<T,U>::P0C(const int& size, const int& loop) {
-  assert(1 < size && 1 < loop);
-  p0size = pow(2, loop - 1) - 1;
-  p.resize(pow(2, loop), U(size));
-}
-
-template <typename T, typename U> inline P0C<T,U>::~P0C() {
-  ;
-}
-
-template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) {
-  const static T quadPi(atan2(T(1), T(1)));
-  const auto inpi(in * quadPi);
-  // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^(n + 1) - 2
-  const auto M(idx < p0size ?
-    atan2(next(sin(inpi), 2 * idx + 1),
-          next(cos(inpi), 2 * idx + 2)) - atan2(sin(inpi), cos(inpi)) :
-    atan2(p[2 * idx     - 2 * p0size].next(sin(inpi)),
-          p[2 * idx + 1 - 2 * p0size].next(cos(inpi))) -
-      atan2(sin(inpi), cos(inpi)));
-  return atan2(sin(M), cos(M)) / quadPi + in;
+  for(int i = 0; i < buf.size() - 1; i ++)
+    buf[i] = buf[i + 1];
+  buf[buf.size() - 1] = in;
+  if(buf[0] == num_t(0))
+    return in;
+  return p.nextP(buf.size()).dot(buf);
 }
 
 #define _P0_
