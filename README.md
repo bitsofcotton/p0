@@ -11,9 +11,3 @@ And there exists the sampling theorem.
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-
-# Tips
-This better predicts with 2 step pairs on the complement meaning. This stands:
-xnext = (t ++) & 1 ? p.next(x) : q.next(x)
-case, delta from the next step's p's or q's complement on x is better predicted.
-So the sampling theorem is the matter.
