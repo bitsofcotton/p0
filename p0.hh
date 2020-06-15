@@ -39,11 +39,13 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
+  const Mat&  nextDeepP(const int& size);
   const Vec&  nextP(const int& size);
-  inline Vec  taylor(const int& size, const T& step);
+  const Vec&  minSq(const int& size);
 private:
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size);
+  inline Vec  taylor(const int& size, const T& step);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -173,8 +175,52 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
   return p;
 }
 
+template <typename T, int ratio> const typename P0<T,ratio>::Mat& P0<T,ratio>::nextDeepP(const int& size) {
+  assert(1 < size);
+  static vector<Mat> P;
+  if(P.size() <= size)
+    P.resize(size + 1, Mat());
+  if(P[size].rows() == size && P[size].cols() == size)
+    return P[size];
+  auto& p(P[size]);
+  p.resize(size, size);
+  if(size <= 2)
+    return p;
+  Vec p0;
+  if(size == 3)
+    p.row(0) = nextP(size);
+  else {
+    const auto pp(nextDeepP(size - 1).row(0) * T(size - 2));
+    p.row(0) = nextP(size);
+    for(int i = 1; i < p.cols(); i ++)
+      p(0, i) += pp[i - 1];
+  }
+  p.row(0) /= T(size - 1);
+  for(int i = 1; i < p.rows(); i ++)
+    for(int j = 0; j < p.cols(); j ++)
+      p(i, j) = p(0, (j + p.cols() - i) % p.cols());
+  return p;
+}
 
-template <typename T, int ratio = 2> class P0B {
+template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::minSq(const int& size) {
+  assert(1 < size);
+  static vector<Vec> S;
+  if(S.size() <= size)
+    S.resize(size + 1, Vec());
+  if(S[size].size() == size)
+    return S[size];
+  auto& s(S[size]);
+  s.resize(size);
+  const T    xsum(size * (size - 1) / 2);
+  const T    xdot(size * (size - 1) * (2 * size - 1) / 6);
+  const auto denom(xdot * T(size) - xsum * xsum);
+  for(int i = 0; i < s.size(); i ++)
+    s[i] = (T(i) * T(size) - xsum) / denom;
+  return s;
+}
+
+
+template <typename T> class P0B {
 public:
   typedef SimpleVector<T> Vec;
   inline P0B();
@@ -182,31 +228,69 @@ public:
   inline ~P0B();
   inline T next(const T& in);
 private:
-  P0<T,ratio> p;
-  Vec buf;
+  P0<T, 4> p;
+  Vec   buf;
+  int   t;
 };
 
-template <typename T, int ratio> inline P0B<T,ratio>::P0B() {
-  ;
+template <typename T> inline P0B<T>::P0B() {
+  t = 0;
 }
 
-template <typename T, int ratio> inline P0B<T,ratio>::P0B(const int& size) {
+template <typename T> inline P0B<T>::P0B(const int& size) {
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
+  t = 0;
 }
 
-template <typename T, int ratio> inline P0B<T,ratio>::~P0B() {
+template <typename T> inline P0B<T>::~P0B() {
   ;
 }
 
-template <typename T, int ratio> inline T P0B<T,ratio>::next(const T& in) {
-  for(int i = 0; i < buf.size() - 1; i ++)
-    buf[i] = buf[i + 1];
-  buf[buf.size() - 1] = in;
-  if(buf[0] == num_t(0))
-    return in;
-  return p.nextP(buf.size()).dot(buf);
+template <typename T> inline T P0B<T>::next(const T& in) {
+  buf[(t ++) % buf.size()] = in;
+  return p.nextDeepP(buf.size()).row(t % buf.size()).dot(buf);
+}
+
+
+template <typename T, typename U> class P0C {
+public:
+  typedef SimpleVector<T> Vec;
+  inline P0C();
+  inline P0C(const int& size, const int& loop);
+  inline ~P0C();
+  T next(const T& in, const int& idx = 0);
+private:
+  std::vector<U> p;
+  int p0size;
+};
+
+template <typename T, typename U> inline P0C<T,U>::P0C() {
+  p0size = 0;
+}
+
+template <typename T, typename U> inline P0C<T,U>::P0C(const int& size, const int& loop) {
+  assert(1 < size && 1 < loop);
+  p0size = pow(2, loop - 1) - 1;
+  p.resize(pow(2, loop), U(size));
+}
+
+template <typename T, typename U> inline P0C<T,U>::~P0C() {
+  ;
+}
+
+template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) {
+  const static T quadPi(atan2(T(1), T(1)));
+  const auto inpi(in * quadPi);
+  // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^(n + 1) - 2
+  const auto M(idx < p0size ?
+    atan2(next(sin(inpi), 2 * idx + 1),
+          next(cos(inpi), 2 * idx + 2)) - atan2(sin(inpi), cos(inpi)) :
+    atan2(p[2 * idx     - 2 * p0size].next(sin(inpi)),
+          p[2 * idx + 1 - 2 * p0size].next(cos(inpi))) -
+      atan2(sin(inpi), cos(inpi)));
+  return atan2(sin(M), cos(M)) / quadPi + in;
 }
 
 #define _P0_
