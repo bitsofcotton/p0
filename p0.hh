@@ -39,7 +39,8 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  const Mat&  nextDeepP(const int& size);
+  inline T    next(const Vec& in, const T& err = T(1) / T(80));
+  const Vec&  nextDeepP(const int& size);
   const Vec&  nextP(const int& size);
   const Vec&  minSq(const int& size);
 private:
@@ -56,6 +57,26 @@ template <typename T, int ratio> inline P0<T,ratio>::P0() {
 
 template <typename T, int ratio> inline P0<T,ratio>::~P0() {
   ;
+}
+
+template <typename T, int ratio> inline T P0<T,ratio>::next(const Vec& in, const T& err) {
+  assert(in.size());
+  Vec   work(in.size() + 1);
+  for(int i = 0; i < in.size(); i ++)
+    work[i] = in[i];
+  auto& res(work[work.size() - 1]);
+  res = nextDeepP(in.size()).dot(in);
+  const auto normin(sqrt(in.dot(in)));
+  auto  tilt(normin);
+  while(err * normin < abs(tilt)) {
+    tilt  = minSq(work.size()).dot(work);
+    Vec buf(in.size());
+    for(int i = 0; i < buf.size(); i ++)
+      buf[i] = in[i] - tilt * T(i);
+    res   = nextDeepP(buf.size()).dot(buf) + tilt * T(buf.size());
+    tilt -= minSq(work.size()).dot(work);
+  }
+  return res;
 }
 
 template <typename T, int ratio> const T& P0<T,ratio>::Pi() const {
@@ -175,31 +196,26 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
   return p;
 }
 
-template <typename T, int ratio> const typename P0<T,ratio>::Mat& P0<T,ratio>::nextDeepP(const int& size) {
+template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::nextDeepP(const int& size) {
   assert(1 < size);
-  static vector<Mat> P;
+  static vector<Vec> P;
   if(P.size() <= size)
-    P.resize(size + 1, Mat());
-  if(P[size].rows() == size && P[size].cols() == size)
+    P.resize(size + 1, Vec());
+  if(P[size].size() == size)
     return P[size];
   auto& p(P[size]);
-  p.resize(size, size);
+  p.resize(size);
   if(size <= 2)
     return p;
-  Vec p0;
   if(size == 3)
-    p.row(0) = nextP(size);
+    p = nextP(size);
   else {
-    const auto pp(nextDeepP(size - 1).row(0) * T(size - 2));
-    p.row(0) = nextP(size);
-    for(int i = 1; i < p.cols(); i ++)
-      p(0, i) += pp[i - 1];
+    const auto pp(nextDeepP(size - 1) * T(size - 2));
+    p = nextP(size);
+    for(int i = 1; i < p.size(); i ++)
+      p[i] += pp[i - 1];
   }
-  p.row(0) /= T(size - 1);
-  for(int i = 1; i < p.rows(); i ++)
-    for(int j = 0; j < p.cols(); j ++)
-      p(i, j) = p(0, (j + p.cols() - i) % p.cols());
-  return p;
+  return p /= T(size - 1);
 }
 
 template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::minSq(const int& size) {
@@ -230,18 +246,16 @@ public:
 private:
   P0<T, 4> p;
   Vec   buf;
-  int   t;
 };
 
 template <typename T> inline P0B<T>::P0B() {
-  t = 0;
+  ;
 }
 
 template <typename T> inline P0B<T>::P0B(const int& size) {
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
-  t = 0;
 }
 
 template <typename T> inline P0B<T>::~P0B() {
@@ -249,8 +263,11 @@ template <typename T> inline P0B<T>::~P0B() {
 }
 
 template <typename T> inline T P0B<T>::next(const T& in) {
-  buf[(t ++) % buf.size()] = in;
-  return p.nextDeepP(buf.size()).row(t % buf.size()).dot(buf);
+  for(int i = 0; i < buf.size() - 1; i ++)
+    buf[i] = buf[i + 1];
+  buf[buf.size() - 1] = in;
+  return p.next(buf);
+  // return p.nextDeepP(buf.size()).dot(buf);
 }
 
 
