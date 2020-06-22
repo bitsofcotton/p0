@@ -51,10 +51,10 @@ int main(int argc, const char* argv[]) {
       Md = max(Md, abs(d - bd) * num_t(4));
     if(d != bd && Md != 0) {
       if(! isnan(MM) && MM != 0) {
-        d0 += (d - bd) * num_t(bet2 - bet1);
-        d1 += (d - bd) * num_t(bet1);
-        d2 += (d - bd) * num_t(bet2);
-        d3 += (d - bbd);
+        d0 += (d - bd) * MM * num_t(bet2 - bet1);
+        d1 += (d - bd) * MM * num_t(bet1);
+        d2 += (d - bd) * MM * num_t(bet2);
+        d3 += (d - bbd) * MM;
       }
       MM  = p.next(d / Md) * Md - d;
       if(! isfinite(MM) || isnan(MM) || t ++ < range * 2)
