@@ -21,16 +21,12 @@ typedef SimpleFloat<uint64_t, DUInt<uint64_t, 64>, 64, int32_t> num_t;
 int main(int argc, const char* argv[]) {
   std::string s;
   int range(40);
-  int loop(8);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  if(2 < argc)
-    loop  = std::atoi(argv[2]);
-  P0C<num_t, P0B<num_t> > p(range, loop);
+  P0B<num_t> p(range);
   num_t d0(0);
   auto  MM(d0);
   auto  MM0(d0);
-  auto  Md(d0);
   auto  d1(d0);
   auto  d2(d0);
   auto  d3(d0);
@@ -47,18 +43,14 @@ int main(int argc, const char* argv[]) {
     num_t d;
     std::stringstream ins(s);
     ins >> d;
-    if(bd != 0)
-      Md = max(Md, abs(d - bd) * num_t(4));
-    if(d != bd && Md != 0) {
+    if(d != bd) {
       if(! isnan(MM) && MM != 0) {
         d0 += (d - bd) * MM * num_t(bet2 - bet1);
         d1 += (d - bd) * MM * num_t(bet1);
         d2 += (d - bd) * MM * num_t(bet2);
         d3 += (d - bbd) * MM;
       }
-      MM  = p.next(d / Md) * Md - d;
-      if(! isfinite(MM) || isnan(MM) || t ++ < range * 2)
-        MM = num_t(0) / num_t(0);
+      MM  = p.next(d) - d;
       if((d3 - bd11) < (d1 - bd10)) {
         bet1 = 0;
         bd10 = d1;
