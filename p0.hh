@@ -169,11 +169,9 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
   if(P[size].size() == size)
     return P[size];
   auto& p(P[size]);
-  p.resize(size);
-  Mat   extends(p.size() * ratio - ratio + 1, p.size());
-  Mat   revextends(extends.rows(), extends.cols());
+  Mat   extends(size * ratio - ratio + 1, size);
   for(int i = 0; i < extends.rows(); i ++)
-    extends.row(i) = taylor(p.size(), T(i) / T(ratio));
+    extends.row(i) = taylor(size, T(i) / T(ratio));
   const auto reverse(taylor(extends.rows(), - T(1)));
   p = taylor(extends.rows(), T(extends.rows()));
   for(int i = 0; i < reverse.size(); i ++)
@@ -302,47 +300,6 @@ template <typename T> inline T P0B<T>::next(const T& in) {
     buf[i] = buf[i + 1];
   buf[buf.size() - 1] = in;
   return p.next(buf);
-  // return p.nextDeepP(buf.size()).dot(buf);
-}
-
-
-template <typename T, typename U> class P0C {
-public:
-  typedef SimpleVector<T> Vec;
-  inline P0C();
-  inline P0C(const int& size, const int& loop);
-  inline ~P0C();
-  T next(const T& in, const int& idx = 0);
-private:
-  std::vector<U> p;
-  int p0size;
-};
-
-template <typename T, typename U> inline P0C<T,U>::P0C() {
-  p0size = 0;
-}
-
-template <typename T, typename U> inline P0C<T,U>::P0C(const int& size, const int& loop) {
-  assert(1 < size && 1 < loop);
-  p0size = pow(2, loop - 1) - 1;
-  p.resize(pow(2, loop), U(size));
-}
-
-template <typename T, typename U> inline P0C<T,U>::~P0C() {
-  ;
-}
-
-template <typename T, typename U> T P0C<T,U>::next(const T& in, const int& idx) {
-  const static T quadPi(atan2(T(1), T(1)));
-  const auto inpi(in * quadPi);
-  // 0 -> 1, 2 -> ... -> 2^n - 1, ..., 2^(n + 1) - 2
-  const auto M(idx < p0size ?
-    atan2(next(sin(inpi), 2 * idx + 1),
-          next(cos(inpi), 2 * idx + 2)) - atan2(sin(inpi), cos(inpi)) :
-    atan2(p[2 * idx     - 2 * p0size].next(sin(inpi)),
-          p[2 * idx + 1 - 2 * p0size].next(cos(inpi))) -
-      atan2(sin(inpi), cos(inpi)));
-  return atan2(sin(M), cos(M)) / quadPi + in;
 }
 
 #define _P0_
