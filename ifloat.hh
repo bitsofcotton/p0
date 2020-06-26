@@ -795,8 +795,9 @@ template <typename T, typename W, int bits, typename U> inline bool             
 }
 
 template <typename T, typename W, int bits, typename U> inline bool             SimpleFloat<T,W,bits,U>::operator != (const SimpleFloat<T,W,bits,U>& src) const {
-  return ((s | src.s) & ((1 << INF) | (1 << NaN))) ||
-           (s != src.s || e != src.e || m != src.m);
+  return (((s | src.s) & ((1 << INF) | (1 << NaN))) ||
+           (s != src.s || e != src.e || m != src.m)) &&
+         ! (! m && ! src.m);
 }
 
 template <typename T, typename W, int bits, typename U> inline bool             SimpleFloat<T,W,bits,U>::operator <  (const SimpleFloat<T,W,bits,U>& src) const {
