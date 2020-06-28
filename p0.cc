@@ -47,7 +47,7 @@ int main(int argc, const char* argv[]) {
       d0 += (d - bd) * MM;
       MM  = num_t(0);
       for(int i = 0; i < p.size(); i ++) {
-        auto MM0i(p[i].next(dd[i] += (d - bd) * rr[i]));
+        auto MM0i(p[i].next(dd[i] += (d - bd) * rr[i]) - dd[i]);
         MM += MM0i *= (rr[i] = i ? num_t(arc4random() & 0x7fff) / num_t(0x10000) + num_t(1) / num_t(2) : num_t(1));
       }
       if(t ++ < range * 2)
