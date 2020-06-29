@@ -27,6 +27,8 @@ int main(int argc, const char* argv[]) {
   num_t d0(0);
   auto  MM(d0);
   auto  MM0(d0);
+  auto  Md(d0);
+  auto  d00(d0);
   auto  d1(d0);
   auto  d2(d0);
   auto  d3(d0);
@@ -44,13 +46,13 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     if(d != bd) {
-      if(! isnan(MM) && MM != 0) {
-        d0 += (d - bd) * MM * num_t(bet2 - bet1);
-        d1 += (d - bd) * MM * num_t(bet1);
-        d2 += (d - bd) * MM * num_t(bet2);
-        d3 += (d - bbd) * MM;
-      }
-      MM  = p.next(d) - d;
+      d0 += (d - bd) * MM0;
+      d1 += (d - bd)  * MM * num_t(bet1);
+      d2 += (d - bd)  * MM * num_t(bet2);
+      d3 += (d - bbd) * MM / num_t(2);
+      if(d00 == num_t(0))
+        d00 = d;
+      MM = p.next(d - d00);
       if((d3 - bd11) < (d1 - bd10)) {
         bet1 = 0;
         bd10 = d1;
