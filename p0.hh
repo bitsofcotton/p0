@@ -40,15 +40,15 @@ public:
   inline P0();
   inline ~P0();
   inline T    next(const Vec& in, const T& err = T(1) / T(80));
-  const Vec&  nextBothP(const int& size);
   inline Vec  taylor(const int& size, const T& step);
+  const Mat&  diff(const int& size);
   const Vec&  minSq(const int& size);
 private:
   const MatU& seed(const int& size, const bool& idft);
-  const Mat&  diff(const int& size);
   const Vec&  nextP(const int& size);
   const Vec&  nextDeepP(const int& size);
   const Vec&  nextReverseDeepP(const int& size);
+  const Vec&  nextBothP(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -107,12 +107,13 @@ template <typename T, int ratio> const typename P0<T,ratio>::MatU& P0<T,ratio>::
   auto& eidft(idft[size]);
   edft.resize(size, size);
   eidft.resize(size, size);
-  for(int i = 0; i < edft.rows(); i ++)
+  for(int i = 0; i < edft.rows(); i ++) {
     for(int j = 0; j < edft.cols(); j ++) {
       const auto theta(- T(2) * Pi() * T(i) * T(j) / T(edft.rows()));
       edft(i, j)  = complex<T>(cos(  theta), sin(  theta));
       eidft(i, j) = complex<T>(cos(- theta), sin(- theta)) / complex<T>(T(size));
     }
+  }
   if(f_idft)
     return eidft;
   return edft;
@@ -132,7 +133,7 @@ template <typename T, int ratio> const typename P0<T,ratio>::Mat& P0<T,ratio>::d
   T nd(0);
   T ni(0);
   for(int i = 1; i < DD.rows(); i ++) {
-    const auto phase(- J() * T(2) * Pi() * T(i) / T(DD.rows()));
+    const auto phase(J() * T(2) * Pi() * T(i) / T(DD.rows()));
     const auto phase2(complex<T>(T(1)) / phase);
     DD.row(i) *= phase;
     nd += abs(phase)  * abs(phase);
@@ -182,11 +183,11 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
   pa.emplace_back(p);
   for(int i = 0; i < ratio - 1; i ++) {
     for(int j = 0; j < i + 1; j ++)
-      p[j]  = T(0);
+      p[j] = T(0);
     for(int j = i + 1; j < pa[0].size(); j ++)
-      p[j]  = pa[0][j - i - 1];
+      p[j] = pa[0][j - i - 1];
     for(int j = 0; j <= i; j ++)
-      p    += pa[j] * pa[0][j - i + p.size() - 1];
+      p   += pa[j] * pa[0][j - i + p.size() - 1];
     pa.emplace_back(p);
   }
   return p = extends.transpose() * p;
@@ -201,14 +202,12 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
     return P[size];
   auto& p(P[size]);
   p.resize(size);
-  if(size <= 3) {
-    p = nextP(size) * T(size - 2);
-  } else {
-    const auto pp(nextDeepP(size - 1) * T(size - 3));
-    p = nextP(size);
-    for(int i = 1; i < p.size(); i ++)
-      p[i] += pp[i - 1];
-  }
+  if(size <= 3)
+    return p = nextP(size);
+  const auto pp(nextDeepP(size - 1) * T(size - 3));
+  p = nextP(size);
+  for(int i = 1; i < p.size(); i ++)
+    p[i] += pp[i - 1];
   return p /= T(size - 2);
 }
 
@@ -226,18 +225,16 @@ template <typename T, int ratio> const typename P0<T,ratio>::Vec& P0<T,ratio>::n
     p[0] = T(1);
     for(int i = 1; i < pq.size(); i ++)
       p[i] = - pq[pq.size() - i];
-    p /= pq[0];
-    p *= T(size - 2);
-  } else {
-    const auto pp(nextDeepP(size - 1) * T(size - 3));
-    const auto pq(nextP(size));
-    p[0] = T(1);
-    for(int i = 1; i < pq.size(); i ++)
-      p[i] = - pq[pq.size() - i];
-    p /= pq[0];
-    for(int i = 1; i < p.size(); i ++)
-      p[i] += pp[i - 1];
+    return p /= pq[0];
   }
+  const auto pp(nextDeepP(size - 1) * T(size - 3));
+  const auto pq(nextP(size));
+  p[0] = T(1);
+  for(int i = 1; i < pq.size(); i ++)
+    p[i] = - pq[pq.size() - i];
+  p /= pq[0];
+  for(int i = 1; i < p.size(); i ++)
+    p[i] += pp[i - 1];
   return p /= T(size - 2);
 }
 
@@ -277,8 +274,10 @@ public:
   inline ~P0B();
   inline T next(const T& in);
 private:
-  P0<T, 8> p;
-  Vec   buf;
+  Vec buf;
+  Vec buf2;
+  T   M;
+  T   Mb;
 };
 
 template <typename T> inline P0B<T>::P0B() {
@@ -289,6 +288,8 @@ template <typename T> inline P0B<T>::P0B(const int& size) {
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
+  buf2 = buf;
+  M = Mb = T(0);
 }
 
 template <typename T> inline P0B<T>::~P0B() {
@@ -296,10 +297,17 @@ template <typename T> inline P0B<T>::~P0B() {
 }
 
 template <typename T> inline T P0B<T>::next(const T& in) {
-  for(int i = 0; i < buf.size() - 1; i ++)
-    buf[i] = buf[i + 1];
+  static P0<T> p;
+  for(int i = 0; i < buf.size() - 1; i ++) {
+    buf[ i] = buf[i + 1];
+    buf2[i] = buf2[i + 1];
+  }
   buf[buf.size() - 1] = in;
-  return p.next(buf);
+  buf2[buf2.size() - 1] += (Mb < num_t(0) ? M - in : in - M);
+  const auto ms(p.minSq(buf2.size()).dot(buf2));
+  Mb = in - M;
+  M  = p.next(buf);
+  return (Mb < num_t(0) ? - (M - in + ms) : M - in + ms) + in;
 }
 
 #define _P0_
