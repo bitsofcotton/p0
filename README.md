@@ -5,9 +5,12 @@ And there exists the sampling theorem.
 
 # How to use:
     ...
-    P0B<double> p(range);
-    xnext = p.next(x);
+    P0<double> p(range);
+    SimpleVector<double> b(range);
+    // ... b operation ...
+    pred = p.next(b);
     ...
 
 # How to use (commandline):
-    ./p0 <range> < data.txt
+    ./p0 <range> <loop> < data.txt
+
