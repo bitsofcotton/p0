@@ -18,13 +18,6 @@ typedef SimpleFloat<DUInt<uint64_t, 64>, DUInt<DUInt<uint64_t, 64>, 128>, 128, i
 #include "simplelin.hh"
 #include "p0.hh"
 
-template <typename T> const T& sgn(const T& x) {
-  const static T zero(0);
-  const static T one(1);
-  const static T mone(- 1);
-  return x == zero ? zero : (x < zero ? mone : one);
-}
-
 int main(int argc, const char* argv[]) {
   std::string s;
   int range(12);
