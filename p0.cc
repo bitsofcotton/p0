@@ -37,16 +37,16 @@
 
 int main(int argc, const char* argv[]) {
   int range(30);
-  int loop(200);
-  int shift(16);
+  int denom(10000);
+  int loop(8000);
   if(1 < argc)
     range = std::atoi(argv[1]);
   if(2 < argc)
-    loop  = std::atoi(argv[2]);
+    denom = std::atoi(argv[2]);
   if(3 < argc)
-    shift = std::atoi(argv[3]);
+    loop  = std::atoi(argv[3]);
   std::vector<P0B<num_t> > p;
-  p.resize(loop ? loop : 1, P0B<num_t>(range));
+  p.resize(loop, P0B<num_t>(range));
   std::string s;
   num_t d(0);
   auto  d0(d);
@@ -55,29 +55,16 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    if(d != bd) {
-      const auto delta(d - bd);
-      d0 += delta * MM;
-      if(loop) {
-        auto dd(delta);
-        MM  = num_t(1);
-        for(int i = 0; i < p.size(); i ++) {
-          MM += p[i].next(dd);
-          dd *= delta / num_t(i + 2);
-        }
-#if !defined(_FLOAT_BITS_)
-        MM = MM < num_t(0) ? - log(- MM) : log(MM);
-#else
-        MM = MM < num_t(0) ? - floor(log(- MM)) : floor(log(MM));
-#endif
-      } else
-        MM = p[0].next(delta);
+    if(d != bd && bd != num_t(0)) {
+      d0 += (d - bd) * MM;
+      const auto  d0(log((d - bd) / num_t(denom) + num_t(1)));
+            num_t dd(1);
+      MM  = num_t(0);
+      for(int i = 0; i < p.size(); i ++)
+        MM += p[i].next(dd *= d0 / num_t(i + 1));
+      MM *= num_t(denom);
     }
-#if !defined(_FLOAT_BITS_)
-    std::cout << d0 * pow((long double)2, - (long double)shift) << ", " << MM << std::endl;
-#else
-    std::cout << myint((d0 >> (long long)shift).operator myuint()) << ", " << myint(MM.operator myuint()) << std::endl;
-#endif
+    std::cout << d0 << ", " << MM << std::endl << std::flush;
     bd = d;
   }
   return 0;
