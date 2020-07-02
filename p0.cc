@@ -43,8 +43,7 @@ int main(int argc, const char* argv[]) {
   int range(30);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  P0B<num_t, false> p(abs(range));
-  P0B<num_t, true > q(abs(range));
+  P0B<num_t> p(range);
   std::string s;
   num_t d(0);
   auto  d0(d);
@@ -55,7 +54,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     if(d != bd && bd != num_t(0)) {
       d0 += (d - bd) * MM;
-      MM  = (range < 0 ? p.next(d) : q.next(d)) - d;
+      MM  = p.next(d) - d;
     }
     std::cout << d0 << ", " << MM << std::endl << std::flush;
     bd = d;
