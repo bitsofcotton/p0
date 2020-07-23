@@ -3,14 +3,13 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include "assert.h"
+#include <assert.h>
 
 #if !defined(_FLOAT_BITS_)
   #include <complex>
   #include <cmath>
   using namespace std;
   typedef long double num_t;
-  #define mybits 80
 #else
   #include "ifloat.hh"
   template <typename T> using complex = Complex<T>;
@@ -49,12 +48,16 @@ int main(int argc, const char* argv[]) {
   auto  d0(d);
   auto  bd(d);
   auto  MM(d);
+  int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    if(d != bd && bd != num_t(0)) {
-      d0 += (d - bd) * MM;
+    if(d != bd) {
+      //d0 += (d - bd) * MM;
+      d0 += d - bd - MM;
       MM  = p.next(d) - d;
+      if(t ++ <= range * 2)
+        MM = num_t(0);
     }
     std::cout << d0 << ", " << MM << std::endl << std::flush;
     bd = d;
