@@ -61,7 +61,7 @@ int main(int argc, const char* argv[]) {
       if(t ++ <= range * 3 || isnan(MM) || ! isfinite(MM))
         MM = num_t(0);
     }
-    std::cout << d0 << ", " << MM << ", " << d1 << std::endl << std::flush;
+    std::cout << d0 << ", " << MM << std::endl << std::flush;
     bd = d;
   }
   return 0;
