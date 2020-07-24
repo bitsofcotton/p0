@@ -43,6 +43,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc)
     range = std::atoi(argv[1]);
   P0B<num_t> p(range);
+  auto  q(p);
   std::string s;
   num_t d(0);
   auto  d0(d);
@@ -53,10 +54,11 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     if(d != bd) {
-      //d0 += (d - bd) * MM;
-      d0 += d - bd - MM;
-      MM  = p.next(d) - d;
-      if(t ++ <= range * 2)
+      d0 += (d - bd) * MM;
+      const auto sd(sqrt(d));
+      if(isfinite(d) && ! isnan(d))
+        MM = p.next(sd) / q.next(num_t(1) / sd) - d;
+      if(t ++ <= range * 3 || isnan(MM) || ! isfinite(MM))
         MM = num_t(0);
     }
     std::cout << d0 << ", " << MM << std::endl << std::flush;
