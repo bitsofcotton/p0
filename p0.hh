@@ -38,7 +38,7 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  inline T    next(const Vec& in, const T& err = T(1) / T(8000));
+  inline T    next(const Vec& in, const T& err = T(1) / T(80000));
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size, const bool& idft);
   const Mat&  diff(const int& size);
