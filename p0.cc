@@ -56,37 +56,11 @@
 #include "simplelin.hh"
 #include "p0.hh"
 
-template <typename T> T verbose(const T& d0, const T& b, const bool& flag) {
-        T    res(0);
-        auto d(d0);
-  const auto bb(flag ? b * b : b);
-  const auto bn(flag ? b : b * b);
-  for(int i = 1; i < 80 && T(1) <= d; i ++) {
-    const auto r(int((d - T(int(d / pow(bb, T(i)))) * pow(bb, T(i))) / pow(bb, T(i - 1))));
-    res += (flag ? T(int(sqrt(T(r)))) : T(r * r)) * pow(bn, T(i - 1));
-    d   -= T(r) * pow(bb, T(i - 1));
-  }
-  for(int i = 0; i < 80 && T(0) < d; i ++) {
-    const auto r(int((d - T(int(d * pow(bb, T(i)))) / pow(bb, T(i))) * pow(bb, T(i + 1))));
-    res += (flag ? T(int(sqrt(T(r)))) : T(r * r)) * pow(bn, - T(i + 1));
-    d   -= T(r) * pow(bb, - T(i + 1));
-  }
-  return res;
-}
-
 int main(int argc, const char* argv[]) {
   int range(12);
-  int base(7);
-  int div(30);
   if(1 < argc)
-    range = std::atoi(argv[1]);
-  if(2 < argc)
-    base  = std::atoi(argv[2]);
-  if(3 < argc)
-    div   = std::atoi(argv[3]);
-  std::vector<P0B<num_t> > p;
-  p.resize(div, P0B<num_t>(range));
-  auto  q(p);
+    range  = std::atoi(argv[1]);
+  P0B<num_t> p(range);
   std::string s;
   num_t d(0);
   auto  d0(d);
@@ -97,26 +71,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     if(d != bd) {
       d0 += (d - bd) * MM;
-      MM = num_t(0);
-      int cnt(0);
-      for(int i = 0; i < p.size(); i ++) {
-        const auto dd0(d + num_t(base) * num_t(i) / num_t(int(p.size())));
-        const auto dd(dd0 < num_t(0) ? - verbose(- dd0, num_t(base), false)
-                                     :   verbose(  dd0, num_t(base), false));
-        const auto sd(sqrt(dd));
-        try {
-          const auto lM0(p[i].next(sd) / q[i].next(num_t(1) / sd));
-          if(isfinite(lM0) && ! isnan(lM0)) {
-            MM += (lM0 < num_t(0) ? - verbose(- lM0, num_t(base), true)
-                                  :   verbose(  lM0, num_t(base), true)) - dd0;
-            cnt ++;
-          }
-        } catch(...) {
-          ;
-        }
-      }
-      if(cnt)
-        MM /= num_t(cnt);
+      MM  = p.next(d) - d;
     }
     std::cout << d0 << ", " << MM << std::endl << std::flush;
     bd = d;
