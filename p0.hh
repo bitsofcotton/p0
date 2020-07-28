@@ -60,7 +60,6 @@ template <typename T> inline P0<T>::~P0() {
 
 template <typename T> inline T P0<T>::next(const Vec& in, const T& err) {
   assert(in.size());
-  return nextP(in.size()).dot(in);
   Vec   work(in.size() + 1);
   for(int i = 0; i < in.size(); i ++)
     work[i] = in[i];
