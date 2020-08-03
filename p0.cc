@@ -64,15 +64,15 @@ int main(int argc, const char* argv[]) {
   P0B<num_t> p(range);
   num_t d(0);
   auto  d0(d);
-  auto  bd(d);
   auto  M0(d);
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
+    const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
     d0 += (d - bd) * M0;
     if(d != bd) {
-      M0 = p.next(bd = d) - d;
+      M0 = p.next(d) - d;
       if(t ++ <= range * 2) M0 = num_t(0);
     }
     std::cout << d0 << ", " << M0 << std::endl << std::flush;
