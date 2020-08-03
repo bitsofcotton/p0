@@ -1,7 +1,7 @@
 /*
  BSD 3-Clause License
 
-Copyright (c) 2019-2020, bitsofcotton
+Copyright (c) 2019-2020, bitsofcotton (kazunobu watatsu)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,11 +38,12 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  inline T    next(const Vec& in, const T& err = T(1) / T(80000));
-  inline T    next0(const Vec& in, const T& err = T(1) / T(80000));
+  inline T    next(const Vec& in, const T& err = T(1) / T(8000));
+  inline T    next0(const Vec& in, const T& err = T(1) / T(8000));
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
-  const Mat&  diff(const int& size0);
+  const Mat&  diff(const int& size);
+  inline Mat  diffinv(const int& size, const int& k);
 private:
   const Mat&  lpf(const int& size0);
   const Vec&  nextP(const int& size);
@@ -82,7 +83,7 @@ template <typename T> inline T P0<T>::next0(const Vec& in, const T& err) {
   res = nextP(in.size()).dot(in);
   const auto normin(sqrt(in.dot(in)) / T(in.size()));
   auto  tilt(normin);
-  while(err * normin < abs(tilt)) {
+  while(in.dot(in) != T(0) && err * normin < abs(tilt)) {
     tilt  = minSq(work.size()).dot(work);
     Vec buf(in.size());
     for(int i = 0; i < buf.size(); i ++)
@@ -131,34 +132,32 @@ template <typename T> const typename P0<T>::MatU& P0<T>::seed(const int& size0) 
   return size0 < 0 ? eidft : edft;
 }
 
-template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size0) {
-  const auto size(abs(size0));
+template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size) {
+  assert(0 < size);
   static vector<Mat> D;
-  static vector<Mat> I;
   if(D.size() <= size)
     D.resize(size + 1, Mat());
-  if(I.size() <= size)
-    I.resize(size + 1, Mat());
   auto& dd(D[size]);
-  auto& ii(I[size]);
   if(dd.rows() != size || dd.cols() != size) {
     auto DD(seed(size));
-    auto II(DD);
     DD.row(0) *= complex<T>(T(0));
-    T nd(0);
-    T ni(0);
-    for(int i = 1; i < DD.rows(); i ++) {
-      const auto phase(J() * T(2) * Pi() * T(i) / T(DD.rows()));
-      const auto phase2(complex<T>(T(1)) / phase);
-      DD.row(i) *= phase;
-      II.row(i) /= phase;
-      nd += abs(phase)  * abs(phase);
-      ni += abs(phase2) * abs(phase2);
-    }
-    dd = (seed(- size) * DD).template real<T>() * sqrt(sqrt(T(DD.rows() - 1) / (nd * ni)));
-    ii = (seed(- size) * II).template real<T>() * sqrt(sqrt(T(II.rows() - 1) / (nd * ni)));
+    for(int i = 1; i < DD.rows(); i ++)
+      DD.row(i) *= J() * T(2) * Pi() * T(i) / T(DD.rows());
+    dd = (seed(- size) * DD).template real<T>();
+    Vec calibrate(dd.rows());
+    for(int i = 0; i < calibrate.size(); i ++)
+      calibrate[i] = sin(T(i) / T(calibrate.size()) * T(2) * Pi());
+    dd /= - dd.row(dd.rows() / 2).dot(calibrate);
   }
-  return size0 < 0 ? ii : dd;
+  return dd;
+}
+
+template <typename T> inline typename P0<T>::Mat P0<T>::diffinv(const int& size, const int& k) {
+  auto DD(seed(size));
+  DD.row(0) *= complex<T>(T(0));
+  for(int i = 1; i < DD.rows(); i ++)
+    DD.row(i) *= pow(J() * T(2) * Pi() * T(i) / T(DD.rows()), T(1) / T(k));
+  return (seed(- size) * DD).template real<T>();
 }
 
 template <typename T> const typename P0<T>::Mat& P0<T>::lpf(const int& size0) {
@@ -209,14 +208,15 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
   static vector<Vec> P;
   if(P.size() <= size)
     P.resize(size + 1, Vec());
-  if(P[size].size() == size)
-    return P[size];
   auto& p(P[size]);
-  const auto reverse(lpf(size).transpose() * taylor(size, - T(1)));
-  p = lpf(size).transpose() * taylor(size, T(size));
-  for(int i = 0; i < reverse.size(); i ++)
-    p[i] += reverse[reverse.size() - i - 1];
-  return p /= T(2);
+  if(p.size() != size) {
+    const auto reverse(lpf(size).transpose() * taylor(size, - T(1)));
+    p = lpf(size).transpose() * taylor(size, T(size));
+    for(int i = 0; i < reverse.size(); i ++)
+      p[i] += reverse[reverse.size() - i - 1];
+    p /= T(2);
+  }
+  return p;
 }
 
 template <typename T> const typename P0<T>::Vec& P0<T>::minSq(const int& size) {
@@ -224,15 +224,15 @@ template <typename T> const typename P0<T>::Vec& P0<T>::minSq(const int& size) {
   static vector<Vec> S;
   if(S.size() <= size)
     S.resize(size + 1, Vec());
-  if(S[size].size() == size)
-    return S[size];
   auto& s(S[size]);
-  s.resize(size);
-  const T    xsum(size * (size - 1) / 2);
-  const T    xdot(size * (size - 1) * (2 * size - 1) / 6);
-  const auto denom(xdot * T(size) - xsum * xsum);
-  for(int i = 0; i < s.size(); i ++)
-    s[i] = (T(i) * T(size) - xsum) / denom;
+  if(s.size() != size) {
+    s.resize(size);
+    const T    xsum(size * (size - 1) / 2);
+    const T    xdot(size * (size - 1) * (2 * size - 1) / 6);
+    const auto denom(xdot * T(size) - xsum * xsum);
+    for(int i = 0; i < s.size(); i ++)
+      s[i] = (T(i) * T(size) - xsum) / denom;
+  }
   return s;
 }
 
@@ -247,8 +247,6 @@ public:
   inline T next(const T& in);
 private:
   Vec buf;
-  Vec bufd;
-  Vec bufi;
 };
 
 template <typename T> inline P0B<T>::P0B() {
@@ -259,7 +257,6 @@ template <typename T> inline P0B<T>::P0B(const int& size) {
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
-  bufd = bufi = buf;
 }
 
 template <typename T> inline P0B<T>::~P0B() {
@@ -271,27 +268,7 @@ template <typename T> inline T P0B<T>::next(const T& in) {
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i] = buf[i + 1];
   buf[buf.size() - 1] = in;
-  for(int i = 0; i < bufd.size() - 1; i ++) {
-    bufd[i] = bufd[i + 1];
-    bufi[i] = bufi[i + 1];
-  }
-  bufd[bufd.size() - 1] = p.diff(  buf.size()).row(buf.size() - 1).dot(buf);
-  bufi[bufi.size() - 1] = p.diff(- buf.size()).row(buf.size() - 1).dot(buf);
-  VecU bufdd(bufd.size());
-  VecU bufii(bufi.size()); 
-  for(int i = 0; i < bufd.size() - 1; i ++) {
-    bufdd[i] = complex<T>(bufd[i + 1]);
-    bufii[i] = complex<T>(bufi[i + 1]);
-  }
-  bufdd[bufdd.size() - 1] = complex<T>(p.next(bufd));
-  bufii[bufii.size() - 1] = complex<T>(p.next(bufi));
-  const auto freqd(p.seed(bufdd.size()) * bufdd);
-  const auto freqi(p.seed(bufii.size()) * bufii);
-        VecU freq(freqd.size());
-  freq[0] = complex<T>(T(0));
-  for(int i = 1; i < freq.size(); i ++)
-    freq[i] = sqrt(freqd[i] * freqi[i]);
-  return (in + p.seed(- freq.size()).row(freq.size() - 1).dot(freq).real() + p.next(buf)) / T(2);
+  return p.next(buf);
 }
 
 #define _P0_
