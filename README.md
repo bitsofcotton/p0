@@ -4,17 +4,14 @@ This suppose original data stream is in L2(R).
 And there exists the sampling theorem.
 
 # How to use:
-    ...
     P0<double> p;
     SimpleVector<double> b(range);
     ...
     pred = p.next(b);
-    ...
-    // or we bet:
+    // Or we can use:
     P0B<double> p(range);
     ...
     xnext = p.next(x);
-    ...
 
 # How to use (commandline):
     ./p0 <range> < data.txt
