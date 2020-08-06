@@ -140,7 +140,7 @@ template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size0) {
   if(I.size() <= size)
     I.resize(size + 1, Mat());
   auto& dd(D[size]);
-  auto& ii(D[size]);
+  auto& ii(I[size]);
   if(dd.rows() != size || dd.cols() != size) {
     auto DD(seed(size));
     auto II(DD);
