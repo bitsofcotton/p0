@@ -43,12 +43,11 @@ public:
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
   const Mat&  diff(const int& size0);
-  const Vec&  nextR(const int& size);
 private:
   const Mat&  lpf(const int& size0);
   const Vec&  nextP(const int& size);
   const Vec&  nextQ(const int& size);
-  //const Vec&  nextR(const int& size);
+  const Vec&  nextR(const int& size);
   const Vec&  minSq(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
