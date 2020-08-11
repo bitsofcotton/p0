@@ -233,7 +233,7 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextQ(const int& size) {
     p.resize(size);
     p[0] = T(1);
     for(int i = 1; i < p.size(); i ++)
-      p[p.size() - i] -= pp[i];
+      p[p.size() - i] = - pp[i];
     p /= pp[0];
     p += pp;
     p /= T(2);
