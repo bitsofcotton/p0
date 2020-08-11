@@ -46,6 +46,8 @@ public:
 private:
   const Mat&  lpf(const int& size0);
   const Vec&  nextP(const int& size);
+  const Vec&  nextQ(const int& size);
+  const Vec&  nextR(const int& size);
   const Vec&  minSq(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
@@ -78,7 +80,7 @@ template <typename T> inline T P0<T>::next0(const Vec& in, const T& err) {
   for(int i = 0; i < in.size(); i ++)
     work[i] = in[i];
         auto& res(work[work.size() - 1]);
-  res = nextP(in.size()).dot(in);
+  res = nextR(in.size()).dot(in);
   const auto  normin(sqrt(in.dot(in)) / T(in.size()));
         auto  tilt(normin);
   if(in.dot(in) != T(0))
@@ -87,7 +89,7 @@ template <typename T> inline T P0<T>::next0(const Vec& in, const T& err) {
       Vec buf(in.size());
       for(int i = 0; i < buf.size(); i ++)
         buf[i] = in[i] - tilt * T(i);
-      res   = nextP(buf.size()).dot(buf) + tilt * T(buf.size());
+      res   = nextR(buf.size()).dot(buf) + tilt * T(buf.size());
       tilt -= minSq(work.size()).dot(work);
     }
   return res;
@@ -210,11 +212,44 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
     P.resize(size + 1, Vec());
   auto& p(P[size]);
   if(p.size() != size) {
-    const auto reverse(lpf(size).transpose() * taylor(size, - T(1)));
-    p = lpf(size).transpose() * taylor(size, T(size));
+    const auto reverse(taylor(size, - T(1)));
+    p = taylor(size, T(size));
     for(int i = 0; i < reverse.size(); i ++)
       p[i] += reverse[reverse.size() - i - 1];
     p /= T(2);
+  }
+  return p;
+}
+
+template <typename T> const typename P0<T>::Vec& P0<T>::nextQ(const int& size) {
+  assert(1 < size);
+  static vector<Vec> P;
+  if(P.size() <= size)
+    P.resize(size + 1, Vec());
+  auto& p(P[size]);
+  if(p.size() != size) {
+    const auto& pp(nextP(size));
+    p = pp;
+    p[p.size() - 1] += pp[0];
+    for(int i = 1; i < p.size(); i ++)
+      p[p.size() - 1 - i] -= pp[i];
+    p /= T(2);
+  }
+  return p;
+}
+
+template <typename T> const typename P0<T>::Vec& P0<T>::nextR(const int& size) {
+  assert(1 < size);
+  static vector<Vec> P;
+  if(P.size() <= size)
+    P.resize(size + 1, Vec());
+  auto& p(P[size]);
+  if(p.size() != size) {
+    p = nextQ(size);
+    for(int i = 3; i < size; i ++)
+      for(int j = 0; j < i; j ++)
+        p[j - i + p.size()] += nextQ(i)[j];
+    p /= T(size - 3 + 1);
   }
   return p;
 }
