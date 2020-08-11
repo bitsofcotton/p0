@@ -249,10 +249,10 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextR(const int& size) {
   auto& p(P[size]);
   if(p.size() != size) {
     p = nextQ(size);
-    for(int i = 4; i < size; i ++)
+    for(int i = 3; i < size; i ++)
       for(int j = 0; j < i; j ++)
         p[j - i + p.size()] += nextQ(i)[j];
-    p /= T(size - 4 + 1);
+    p /= T(size - 3 + 1);
   }
   return p;
 }
