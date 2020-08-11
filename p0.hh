@@ -43,12 +43,11 @@ public:
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
   const Mat&  diff(const int& size0);
-  const Vec&  nextR(const int& size);
 private:
   const Mat&  lpf(const int& size0);
   const Vec&  nextP(const int& size);
   const Vec&  nextQ(const int& size);
-  //const Vec&  nextR(const int& size);
+  const Vec&  nextR(const int& size);
   const Vec&  minSq(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
@@ -249,10 +248,10 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextR(const int& size) {
   auto& p(P[size]);
   if(p.size() != size) {
     p = nextQ(size);
-    for(int i = 4; i < size; i ++)
+    for(int i = 3; i < size; i ++)
       for(int j = 0; j < i; j ++)
         p[j - i + p.size()] += nextQ(i)[j];
-    p /= T(size - 4 + 1);
+    p /= T(size - 3 + 1);
   }
   return p;
 }
