@@ -306,6 +306,10 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextU(const int& size0) 
     p.resize(size0);
     for(int i = 0; i < p.size(); i ++)
       p[i] = half.row(i * 2).dot(q);
+    auto sum(p[0]);
+    for(int i = 1; i < p.size(); i ++)
+      sum += p[i];
+    p /= sum;
   }
   return p;
 }
