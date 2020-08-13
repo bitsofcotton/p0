@@ -60,8 +60,12 @@
 int main(int argc, const char* argv[]) {
 /*
   P0<num_t> p;
-  for(int i = 0; i < 40; i ++)
+  num_t ss(0);
+  for(int i = 0; i < 40; i ++) {
     std::cout << p.nextU(40)[i] << std::endl;
+    ss += p.nextU(40)[i];
+  }
+  std::cout << std::endl << ss << std::endl;
   return 0;
 */
   std::cout << std::setprecision(30);
