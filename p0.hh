@@ -273,10 +273,6 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextT(const int& size) {
     p.resize(size);
     for(int i = 0; i < p.size(); i ++)
       p[i] = retry(retry.rows() - 1, i) - (retry(1, i) - (i == 1 ? T(1) : T(0))) * T(p.size());
-    auto sum(p[0]);
-    for(int i = 1; i < p.size(); i ++)
-      sum += p[i];
-    p /= sum;
   }
   return p;
 }
@@ -306,10 +302,6 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextU(const int& size0) 
     p.resize(size0);
     for(int i = 0; i < p.size(); i ++)
       p[i] = half.row(i * 2).dot(q);
-    auto sum(p[0]);
-    for(int i = 1; i < p.size(); i ++)
-      sum += p[i];
-    p /= sum;
   }
   return p;
 }
