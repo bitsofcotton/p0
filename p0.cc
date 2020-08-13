@@ -58,12 +58,18 @@
 #include "p0.hh"
 
 int main(int argc, const char* argv[]) {
+/*
+  P0<num_t> p;
+  for(int i = 0; i < 40; i ++)
+    std::cout << p.nextU(40)[i] << std::endl;
+  return 0;
+*/
   std::cout << std::setprecision(30);
   std::string s;
   int range(20);
   if(1 < argc)
     range  = std::atoi(argv[1]);
-  P0B<num_t> p(range);
+  P0B<num_t> p(abs(range));
   num_t d(0);
   auto  d0(d);
   auto  M(d);
