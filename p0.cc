@@ -62,7 +62,7 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int range(20);
   if(1 < argc)
-    range  = std::atoi(argv[1]);
+    range = std::atoi(argv[1]);
   P0B<num_t> p(range);
   num_t d(0);
   auto  d0(d);
@@ -73,7 +73,6 @@ int main(int argc, const char* argv[]) {
   auto  bbd(d);
   auto  M(d);
   auto  M0(d);
-  auto  M1(d);
   int   t(0);
   auto  bet0(t);
   auto  bet1(t);
