@@ -83,14 +83,14 @@ int main(int argc, const char* argv[]) {
     d0 += (d - bd) * M;
     if(d != bd) {
       if(range < 0)
-        M = p.next(d) - d;
+        M   = p.next(d);
       else {
         const auto dd(d + bd);
         d1 += (d - bd)  * M0 * num_t(bet0);
         d2 += (d - bbd) * M0;
         d3 += (d - bd)  * M0 * num_t(bet1);
         d4 += (d - bbd) * M0;
-        M0  = p.next(dd) - dd;
+        M0  = p.next(dd);
         if(d2 <= d1) {
           bet0 = 0;
           d1   = d2 = num_t(0);

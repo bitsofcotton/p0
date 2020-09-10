@@ -38,6 +38,7 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
+  inline Vec  taylor0(const int& size, const T& step);
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
   const Mat&  diff(const int& size0);
@@ -45,10 +46,7 @@ public:
   const Vec&  nextQ(const int& size);
   const Vec&  nextR(const int& size);
   const Vec&  nextS(const int& size);
-  const Vec&  nextT(const int& size);
-  const Vec&  nextU(const int& size);
   inline const Vec& next(const int& size);
-  const Mat&  lpf(const int& size0);
   const Vec&  minSq(const int& size);
   const T&    Pi() const;
   inline T    dot1(const Vec& x);
@@ -130,31 +128,7 @@ template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size0) {
   return size0 < 0 ? ii : dd;
 }
 
-template <typename T> const typename P0<T>::Mat& P0<T>::lpf(const int& size0) {
-  const auto size(abs(size0));
-  static vector<Mat> L;
-  static vector<Mat> H;
-  if(L.size() <= size)
-    L.resize(size + 1, Mat());
-  if(H.size() <= size)
-    H.resize(size + 1, Mat());
-  auto& l(L[size]);
-  auto& h(H[size]);
-  if(l.rows() != size || l.cols() != size) {
-    auto LL(seed(size));
-    auto HH(LL);
-    for(int i = 0; i < LL.rows(); i ++)
-      if(i < LL.rows() / 2)
-        HH.row(i) *= complex<T>(T(0));
-      else
-        LL.row(i) *= complex<T>(T(0));
-    l = (seed(- size) * LL).template real<T>();
-    h = (seed(- size) * HH).template real<T>();
-  }
-  return size0 < 0 ? h : l;
-}
-
-template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
+template <typename T> inline typename P0<T>::Vec P0<T>::taylor0(const int& size, const T& step) {
   const int  step0(max(0, min(size - 1, int(floor(step)))));
   const auto residue(step - T(step0));
         Vec  res(size);
@@ -183,6 +157,17 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
     }
   }
   return res;
+}
+
+template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
+  if(T(0) <= step && step <= T(size - 1)) {
+    const auto reverse(taylor0(size, T(size - 1) - step));
+          auto res(taylor0(size, step));
+    for(int i = 0; i < res.size(); i ++)
+      res[i] += reverse[reverse.size() - 1 - i];
+    return res /= T(2);
+  }
+  return taylor0(size, step);
 }
 
 template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
@@ -243,30 +228,6 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextS(const int& size) {
     P.resize(size + 1, Vec());
   auto& p(P[size]);
   if(p.size() != size) {
-    const auto lpf0(lpf(size).transpose());
-    p = lpf0 * nextR(size);
-    const auto hpf0(lpf(- size).transpose());
-          auto hpf(hpf0);
-    while(true) {
-      const auto q(p);
-      for(int i = 0; i < hpf.cols() / 2; i ++)
-        hpf.setCol(hpf.cols() - 1 - i * 2, - hpf.col(hpf.cols() - 1 - i * 2));
-      p  += hpf * (lpf0 * nextR(size));
-      if(q == p) break;
-      hpf = hpf * hpf0;
-    }
-    p /= dot1(p);
-  }
-  return p;
-}
-
-template <typename T> const typename P0<T>::Vec& P0<T>::nextT(const int& size) {
-  assert(1 < size);
-  static vector<Vec> P;
-  if(P.size() <= size)
-    P.resize(size + 1, Vec());
-  auto& p(P[size]);
-  if(p.size() != size) {
     Mat minusMinSq(size + 1, size + 1);
     Mat predict(size + 1, size + 1);
     for(int i = 0; i < minusMinSq.rows(); i ++)
@@ -275,7 +236,7 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextT(const int& size) {
     for(int i = 1; i < minusMinSq.rows(); i ++)
       minusMinSq.row(i) -= minSq(size + 1) * T(i);
     predict(predict.rows() - 1, predict.cols() - 1) = T(0);
-    const auto& pp(nextS(size));
+    const auto& pp(nextR(size));
     for(int i = 0; i < pp.size(); i ++)
       predict(predict.rows() - 1, i) = pp[i];
     auto retry(minusMinSq * predict);
@@ -293,33 +254,8 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextT(const int& size) {
   return p;
 }
 
-template <typename T> const typename P0<T>::Vec& P0<T>::nextU(const int& size) {
-  assert(1 < size);
-  static vector<Vec> P;
-  if(P.size() <= size)
-    P.resize(size + 1, Vec());
-  auto& p(P[size]);
-  if(p.size() != size) {
-    Mat half(size + 2, size);
-    for(int i = 0; i < half.rows(); i ++)
-      for(int j = 0; j < half.cols(); j ++)
-        half(i, j) = (i == j ? T(1) : T(0));
-    const auto& pp(nextT(size));
-    for(int i = 0; i < pp.size(); i ++) {
-      half(half.rows() - 2, i) = pp[i];
-      half(half.rows() - 1, i) = pp[i] * pp[pp.size() - 1];
-      if(0 < i) half(half.rows() - 1, i) += pp[i - 1];
-    }
-    p = half.transpose() *
-      (taylor(half.rows(), T(half.rows()) - T(3) / T(2)) +
-       taylor(half.rows(), T(half.rows()) - T(5) / T(2)));
-    p /= dot1(p);
-  }
-  return p;
-}
-
 template <typename T> inline const typename P0<T>::Vec& P0<T>::next(const int& size) {
-  return nextU(size);
+  return nextS(size);
 }
 
 template <typename T> inline T P0<T>::dot1(const Vec& x) {
