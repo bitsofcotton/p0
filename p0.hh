@@ -38,7 +38,6 @@ public:
   typedef SimpleMatrix<complex<T> > MatU;
   inline P0();
   inline ~P0();
-  inline Vec  taylor0(const int& size, const T& step);
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
   const Mat&  diff(const int& size0);
@@ -128,7 +127,7 @@ template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size0) {
   return size0 < 0 ? ii : dd;
 }
 
-template <typename T> inline typename P0<T>::Vec P0<T>::taylor0(const int& size, const T& step) {
+template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
   const int  step0(max(0, min(size - 1, int(floor(step)))));
   const auto residue(step - T(step0));
         Vec  res(size);
@@ -157,17 +156,6 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor0(const int& size,
     }
   }
   return res;
-}
-
-template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
-  if(T(0) <= step && step <= T(size - 1)) {
-    const auto reverse(taylor0(size, T(size - 1) - step));
-          auto res(taylor0(size, step));
-    for(int i = 0; i < res.size(); i ++)
-      res[i] += reverse[reverse.size() - 1 - i];
-    return res /= T(2);
-  }
-  return taylor0(size, step);
 }
 
 template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
