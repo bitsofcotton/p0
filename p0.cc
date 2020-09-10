@@ -83,7 +83,7 @@ int main(int argc, const char* argv[]) {
     d0 += (d - bd) * M;
     if(d != bd) {
       if(range < 0)
-        M = p.next(d) - d;
+        M   = p.next(d) - d;
       else {
         const auto dd(d + bd);
         d1 += (d - bd)  * M0 * num_t(bet0);
