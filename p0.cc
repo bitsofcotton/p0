@@ -64,6 +64,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc)
     range = std::atoi(argv[1]);
   P0B<num_t> p(abs(range));
+  auto  q(p);
   num_t d(0);
   auto  d0(d);
   auto  d1(d);
@@ -83,14 +84,14 @@ int main(int argc, const char* argv[]) {
     d0 += (d - bd) * M;
     if(d != bd) {
       if(range < 0)
-        M   = p.next(d) - d;
+        M   = (p.next(d) + num_t(1) / q.next(num_t(1) / d)) / num_t(2) - d;
       else {
         const auto dd(d + bd);
         d1 += (d - bd)  * M0 * num_t(bet0);
         d2 += (d - bbd) * M0;
         d3 += (d - bd)  * M0 * num_t(bet1);
         d4 += (d - bbd) * M0;
-        M0  = p.next(dd) - dd;
+        M0  = (p.next(dd) + num_t(1) / q.next(num_t(1) / dd)) / num_t(2) - dd;
         if(d2 <= d1) {
           bet0 = 0;
           d1   = d2 = num_t(0);

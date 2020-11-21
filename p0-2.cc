@@ -63,9 +63,9 @@ int main(int argc, const char* argv[]) {
   int range(20);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  P0<num_t> p;
-  for(int i = 0; i < range; i ++)
-    std::cout << p.next(range)[i] << std::endl;
+  const auto pn(P0<num_t>().next(range));
+  for(int i = 0; i < pn.size(); i ++)
+    std::cout << pn[i] << std::endl;
   std::cout << std::endl;
   return 0;
 }
