@@ -1,7 +1,7 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.
-This suppose original data stream is in L2(R).
-And there exists the sampling theorem.
+This suppose original data stream is in L2(R),
+and original data stream isn't a essential singularity function in sampling meaning.
 
 # How to use:
     P0<double> p;
@@ -16,3 +16,5 @@ And there exists the sampling theorem.
 # How to use (commandline):
     ./p0 <range> < data.txt
 
+# Configurable variables:
+P0's integrate number is configurable. It is ideally around ceil(lg(dim pole)).
