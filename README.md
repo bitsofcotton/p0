@@ -1,7 +1,8 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.  
-This suppose original data stream is in C^1(R) (exists! f': continuous) in before sampling meaning,
-and in sampled meaning, suppose original data stream is in L2(R).
+This suppose original data stream is in C^1(R) : (exists! f': continuous) :
+(This is constructive with using discrete {a\_k}\_k, f(x)=Sum\_{n=0}^{n=x}Sum\_{k=0}^{k=n}a\_k)
+in before sampling meaning, and in sampled meaning, suppose original data stream is in L2(R).
 
 # How to use:
     P0<double> p;
