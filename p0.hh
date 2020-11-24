@@ -385,8 +385,7 @@ template <typename T> inline T P0B<T>::next(const T& in) {
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i] = buf[i + 1];
   buf[buf.size() - 1] = in;
-//  return p.next(buf.size()).dot(buf);
-  return p.next(buf);
+  return p.next(buf.size()).dot(buf);
 }
 
 #define _P0_
