@@ -27,4 +27,4 @@ And, we can weaken this with cauchy's integrate theorem on ja.wikipedia.org link
 
 And, if there's laurent series isn't essential singularity point on the domain, with f(x_0+\[0,1\[) case, the series can be described as taylor series around there (1+x+...+x^n+..., x in \[0,1\[). So we can suppose if, the case below and, around x=x_0, D:={|x-x_0|<1}, there exists taylor series descriptions near them if there's a real function.
 
-And, if f(x)=x, diff(x)=1, so with DFT differential, Sum_&theta;^N(Sum_t^N(t*exp(2&pi;it&theta;/N)*2*&pi;*i*&theta;/N)
+DFT differential itself is ideal for trigometric function multiply sums. So tilt itself has curved result.
