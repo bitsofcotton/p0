@@ -66,10 +66,11 @@ int main(int argc, const char* argv[]) {
   if(2 < argc)
     ++ mm;
   P0B<num_t> p(abs(range));
+  auto  q(p);
   num_t d(0);
   auto  d0(d);
   auto  d1(d);
-  auto  d2(d);
+  auto  e1(d);
   auto  M(d);
   auto  bd(d);
   int   t(0);
@@ -83,8 +84,9 @@ int main(int argc, const char* argv[]) {
     }
     d0 += mm ? d - M : d * M;
     if(d != num_t(0)) {
-      d2 += (d1 += d);
-      M = p.next(d2) - d2 - d1;
+      d1 += d;
+      e1 += num_t(1) / d;
+      M   = p.next(d1) - d1 + num_t(1) / (q.next(e1) - e1);
       if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
     }
     std::cout << d0 << ", " << M << std::endl;
