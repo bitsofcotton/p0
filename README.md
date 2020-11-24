@@ -1,7 +1,6 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.  
-This suppose original data stream is in C1(R) in before sampling meaning,
-and in sampled meaning, suppose original data stream is in L2(R).
+This suppose original data stream is in L2(R) in sampling meaning.
 
 # How to use:
     P0<double> p;
@@ -15,6 +14,7 @@ and in sampled meaning, suppose original data stream is in L2(R).
 
 # How to use (commandline):
     ./p0 <range> < data.txt
+    # N.B. range > 0 for random walk (C0), range < 0 for random value itself.
 
 # pf
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
@@ -24,7 +24,5 @@ we can cut them as error in numerical calculation on some cut off.
 And in sampled meaning, we can't suppose real cut off on coefficients.
 So the cut off error can be configured with P0 class variable.
 
-# Tips
-f in C1 supposes : exists! f': continuous.  
-This is constructive with using discrete {a\_k}\_k, f(x)=Sum\_{n=0}^{n=x}Sum\_{k=0}^{k=n}a\_k,
-so this is the predictor on Sum\_{k=0}^{k=x}a\_k sequence of points.
+And, f in C1 supposes : exists! f': continuous.  
+We avoid this condition with constructing sequence with discrete {a\_k}\_k, f(x)=Sum\_{n=0}^{n=x}Sum\_{k=0}^{k=n}a\_k.
