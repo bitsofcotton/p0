@@ -23,5 +23,8 @@ we can cut them as error in numerical calculation on some cut off.
 And in sampled meaning, we can't suppose real cut off on coefficients.
 So the cut off error can be configured with P0 class variable.
 
-And, f in C1 supposes : exists! f': continuous.  
-We avoid this condition with constructing sequence with discrete {a\_k}\_k, f(x)=Sum\_{n=0}^{n=x}Sum\_{k=0}^{k=n}a\_k.
+And, we can weaken this with cauchy's integrate theorem on ja.wikipedia.org link, C1 condition to C0 condition (epsilon delta).
+
+And, f in C0 supposes : f: continuous.  
+We avoid this condition with constructing sequence with discrete {a\_k}\_k, f(x)=Sum\_{k=0}^{k=x}a\_k.
+
