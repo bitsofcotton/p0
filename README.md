@@ -21,4 +21,5 @@ If original function is in C^&infin;, there f(z+\bar{z}) in C^&infin; on z in C.
 So rotate &pi;/4, f is holomorphic because the function is described as f(z), so d/d\bar{z}f = 0.
 So with gutzmer's inequation, f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.  
+And in sampled meaning, we can't suppose real cut off on coefficients.  
 And, the cut off error can be configured with P0 class variable.
