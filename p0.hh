@@ -46,8 +46,6 @@ public:
   const Vec&  nextQ(const int& size);
   const Vec&  nextR(const int& size);
   const Vec&  nextS(const int& size);
-  const Vec&  nextT(const int& size);
-  const Vec&  nextU(const int& size);
   inline const Vec& next(const int& size);
   inline       T    next(const Vec& data);
   const Vec&  minSq(const int& size);
@@ -252,59 +250,12 @@ template <typename T, int residue> const typename P0<T,residue>::Vec& P0<T,resid
   return p;
 }
 
-template <typename T, int residue> const typename P0<T,residue>::Vec& P0<T,residue>::nextT(const int& size) {
-  assert(1 < size);
-  assert(0 < residue);
-  static vector<Vec> P;
-  if(P.size() <= size)
-    P.resize(size + 1, Vec());
-  auto& p(P[size]);
-  if(p.size() != size) {
-    auto D(diff(  size));
-    auto I(diff(- size));
-    for(int i = 1; i < I.rows(); i ++)
-      for(int j = 0; j < I.cols(); j ++)
-        I(i, j) += T(i) / T(I.rows()) / T(I.cols()) - T(1) / T(I.cols());
-    for(int i = 0; i < residue; i ++) {
-      D = D * D;
-      I = I * I;
-    }
-    const auto& n(nextS(size));
-          auto  nn(I.row(0) * n[0]);
-    for(int i = 1; i < n.size(); i ++)
-      nn += I.row(i) * n[i];
-    for(int i = 1; i < n.size(); i ++)
-      I.row(i - 1) = I.row(i);
-    I.row(I.rows() - 1) = nn;
-    p  = (D * I).row(D.rows() - 1);
-    p /= dot1(p);
-    std::cerr << "t" << std::flush;
-  }
-  return p;
-}
-
-template <typename T, int residue> const typename P0<T,residue>::Vec& P0<T,residue>::nextU(const int& size) {
-  assert(1 < size);
-  static vector<Vec> P;
-  if(P.size() <= size)
-    P.resize(size + 1, Vec());
-  auto& p(P[size]);
-  if(p.size() != size) {
-    p = nextT(size);
-    for(int i = 3; i < size; i ++)
-      for(int j = 0; j < i; j ++)
-        p[j - i + p.size()] += nextT(i)[j];
-    p /= dot1(p);
-  }
-  return p;
-}
-
 template <typename T, int residue> inline const typename P0<T,residue>::Vec& P0<T,residue>::next(const int& size) {
-  return nextU(size);
+  return nextS(size);
 }
 
 template <typename T, int residue> inline T P0<T,residue>::next(const Vec& data) {
-  const auto& n(nextU(data.size()));
+  const auto& n(nextS(data.size()));
         auto  e(data);
         auto  l(data);
   for(int i = 0; i < data.size(); i ++) {
@@ -385,7 +336,8 @@ template <typename T> inline T P0B<T>::next(const T& in) {
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i] = buf[i + 1];
   buf[buf.size() - 1] = in;
-  return p.next(buf.size()).dot(buf);
+  //return p.next(buf.size()).dot(buf);
+  return p.next(buf);
 }
 
 #define _P0_
