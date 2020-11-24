@@ -1,6 +1,7 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.  
-This suppose original data stream is in C^&infin;(R) in sampling meaning.
+This suppose original data stream is in C^&infin;(R) in before sampling meaning,
+and in sampled meaning, suppose original data stream is in L2(R).
 
 # How to use:
     P0<double> p;
