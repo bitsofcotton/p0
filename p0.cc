@@ -53,6 +53,7 @@
 #   error cannot handle float
 # endif
 #endif
+
 #include "simplelin.hh"
 #include "p0.hh"
 
@@ -60,34 +61,52 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int range(20);
-  int mm(0);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  if(2 < argc)
-    ++ mm;
   P0B<num_t> p(abs(range));
   auto  q(p);
   num_t d(0);
   auto  d0(d);
   auto  d1(d);
-  auto  e1(d);
+  auto  d2(d);
+  auto  d3(d);
+  auto  d4(d);
+  auto  dd(d);
+  auto  bbd(d);
   auto  M(d);
-  auto  bd(d);
+  auto  M0(d);
   int   t(0);
+  auto  bet0(t);
+  auto  bet1(t);
   while(std::getline(std::cin, s, '\n')) {
+    const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    if(0 < range) {
-      const auto bd0(d);
-      d -= bd;
-      bd = bd0;
-    }
-    d0 += mm ? d - M : d * M;
-    if(d != num_t(0)) {
-      d1 += d;
-      e1 += num_t(1) / d;
-      M   = p.next(d1) - d1 + num_t(1) / (q.next(e1) - e1);
-      if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
+    d0 += (d - bd) * M;
+    if(d != bd) {
+      dd += num_t(1) / (d - bd);
+      if(range < 0)
+        M   = (p.next(d) - d + num_t(1) / (q.next(dd) - dd));
+      else {
+        d1 += (d - bd)  * M0 * num_t(bet0);
+        d2 += (d - bbd) * M0;
+        d3 += (d - bd)  * M0 * num_t(bet1);
+        d4 += (d - bbd) * M0;
+        M0  = (p.next(d) - d + num_t(1) / (q.next(dd) - dd));
+        if(d2 <= d1) {
+          bet0 = 0;
+          d1   = d2 = num_t(0);
+        }
+        if(d3 <= d4) {
+          bet1 = 0;
+          d3   = d4 = num_t(0);
+        }
+        bet0 ++;
+        bet1 ++;
+        M   = M0 * num_t(bet0 - bet1);
+        bbd = bd;
+      }
+      if(! isfinite(M) || isnan(M) || t ++ <= abs(range) * 2) M = num_t(0);
     }
     std::cout << d0 << ", " << M << std::endl;
   }
