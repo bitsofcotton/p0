@@ -1,6 +1,6 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.  
-This suppose original function in the domain needs in L2(R) to guarantee non essential singularity points on there.
+This suppose original function in the domain needs in L2(R) to guarantee no essential singularity points on there.
 
 # How to use:
     P0<double> p;
