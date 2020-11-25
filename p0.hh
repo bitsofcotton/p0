@@ -145,8 +145,8 @@ template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
       p[0] = T(0);
       p[p.size() - 1] = T(1);
     } else {
-      const auto reverse(taylor(size, - T(1) / T(2)));
-      p = taylor(size, T(size - 1) + T(1) / T(2));
+      const auto reverse(taylor(size, - T(1)));
+      p = taylor(size, T(size));
       for(int i = 0; i < reverse.size(); i ++)
         p[i] += reverse[reverse.size() - i - 1];
       p /= T(2);
