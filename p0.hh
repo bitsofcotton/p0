@@ -115,14 +115,14 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
   const int  step00(max(0, min(size - 1, int(floor(step)))));
   const auto residue0(step - T(step00));
   const auto step0(step00 == size - 1 || abs(residue0) <= T(1) / T(2) ? step00 : step00 + 1);
-        auto residue(step - T(step0));
+  const auto residue(step - T(step0));
         Vec  res(size);
   for(int i = 0; i < size; i ++)
     res[i] = i == step0 ? T(1) : T(0);
   if(residue == T(0))
     return res;
-  const auto D(diff(size) * 2);
-  residue /= T(2);
+  // if we deal with (D *= r, residue /= r), it is identical with (D, residue)
+  const auto D(diff(size));
         auto dt(D.col(step0) * residue);
   for(int i = 2; ; i ++) {
     const auto last(res);
