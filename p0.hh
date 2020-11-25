@@ -142,7 +142,7 @@ template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
     P.resize(size + 1, Vec());
   auto& p(P[size]);
   if(p.size() != size) {
-    if(size <= 2) {
+    if(size <= 1) {
       p.resize(size);
       p[0] = T(0);
       p[p.size() - 1] = T(1);
