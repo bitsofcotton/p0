@@ -41,7 +41,7 @@ public:
   const MatU& seed(const int& size0);
   const Mat&  diff(const int& size);
   inline Vec  taylor(const int& size, const T& step);
-  const Vec&  nextHalf(const int& size);
+  const Vec&  next(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -115,14 +115,15 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
   const int  step00(max(0, min(size - 1, int(floor(step)))));
   const auto residue0(step - T(step00));
   const auto step0(step00 == size - 1 || abs(residue0) <= T(1) / T(2) ? step00 : step00 + 1);
-  const auto residue(step - T(step0));
+        auto residue(step - T(step0));
         Vec  res(size);
   for(int i = 0; i < size; i ++)
     res[i] = i == step0 ? T(1) : T(0);
   if(residue == T(0))
     return res;
-  const auto& D(diff(size));
-        auto  dt(D.col(step0) * residue);
+  const auto D(diff(size) * 2);
+  residue /= T(2);
+        auto dt(D.col(step0) * residue);
   for(int i = 2; ; i ++) {
     const auto last(res);
     res += dt;
@@ -132,7 +133,7 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
   return res;
 }
 
-template <typename T> const typename P0<T>::Vec& P0<T>::nextHalf(const int& size) {
+template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
   assert(0 < size);
   static vector<Vec> P;
   if(P.size() <= size)
@@ -152,7 +153,7 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextHalf(const int& size
     }
     std::cerr << "p" << std::flush;
     if(1 < size) {
-      const auto& back(nextHalf(size - 1));
+      const auto& back(next(size - 1));
       for(int i = 0; i < back.size(); i ++)
         p[i - back.size() + p.size()] += back[i] * T(size - 1);
       p /= T(size);
@@ -171,9 +172,7 @@ public:
   inline ~P0B();
   inline T next(const T& in);
 private:
-  Vec buf0;
-  Vec buf1;
-  int t;
+  Vec buf;
 };
 
 template <typename T> inline P0B<T>::P0B() {
@@ -181,13 +180,9 @@ template <typename T> inline P0B<T>::P0B() {
 }
 
 template <typename T> inline P0B<T>::P0B(const int& size) {
-  buf0.resize(size);
-  buf1.resize(size);
-  for(int i = 0; i < buf0.size(); i ++) {
-    buf0[i] = T(0);
-    buf1[i] = T(0);
-  }
-  t = 0;
+  buf.resize(size);
+  for(int i = 0; i < buf.size(); i ++)
+    buf[i] = T(0);
 }
 
 template <typename T> inline P0B<T>::~P0B() {
@@ -196,16 +191,10 @@ template <typename T> inline P0B<T>::~P0B() {
 
 template <typename T> inline T P0B<T>::next(const T& in) {
   static P0<T> p;
-  if((t ++) & 1) {
-    for(int i = 0; i < buf0.size() - 1; i ++)
-      buf0[i] = buf0[i + 1];
-    buf0[buf0.size() - 1] = in;
-    return p.nextHalf(buf0.size()).dot(buf0);
-  }
-  for(int i = 0; i < buf1.size() - 1; i ++)
-    buf1[i] = buf1[i + 1];
-  buf1[buf1.size() - 1] = in;
-  return p.nextHalf(buf1.size()).dot(buf1);
+  for(int i = 0; i < buf.size() - 1; i ++)
+    buf[i] = buf[i + 1];
+  buf[buf.size() - 1] = in;
+  return p.next(buf.size()).dot(buf);
 }
 
 #define _P0_
