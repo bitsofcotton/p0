@@ -60,18 +60,17 @@
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int range(20);
+        int  range(20);
+  const auto mm(2 < argc);
   if(1 < argc)
     range = std::atoi(argv[1]);
   P0B<num_t> p(abs(range));
-  auto  q(p);
   num_t d(0);
   auto  d0(d);
   auto  d1(d);
   auto  d2(d);
   auto  d3(d);
   auto  d4(d);
-  auto  dd(d);
   auto  bbd(d);
   auto  M(d);
   auto  M0(d);
@@ -82,31 +81,26 @@ int main(int argc, const char* argv[]) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    d0 += (d - bd) * M;
+    d0 += mm ? d - bd - M : (d - bd) * M;
     if(d != bd) {
-      dd += num_t(1) / (d - bd);
       if(range < 0)
-        M   = (p.next(d) - d + num_t(1) / (q.next(dd) - dd));
+        M   = p.next(d) - d;
       else {
         d1 += (d - bd)  * M0 * num_t(bet0);
         d2 += (d - bbd) * M0;
         d3 += (d - bd)  * M0 * num_t(bet1);
         d4 += (d - bbd) * M0;
-        M0  = (p.next(d) - d + num_t(1) / (q.next(dd) - dd));
-        if(d2 <= d1) {
-          bet0 = 0;
-          d1   = d2 = num_t(0);
-        }
-        if(d3 <= d4) {
-          bet1 = 0;
-          d3   = d4 = num_t(0);
-        }
+        M0  = p.next(d) - d;
+        if(d2 <= d1)
+          d1 = d2 = num_t(bet0 = 0);
+        if(d3 <= d4)
+          d3 = d4 = num_t(bet1 = 0);
         bet0 ++;
         bet1 ++;
         M   = M0 * num_t(bet0 - bet1);
         bbd = bd;
       }
-      if(! isfinite(M) || isnan(M) || t ++ <= abs(range) * 2) M = num_t(0);
+      if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
     }
     std::cout << d0 << ", " << M << std::endl;
   }
