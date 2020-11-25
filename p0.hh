@@ -121,7 +121,13 @@ template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, 
     res[i] = i == step0 ? T(1) : T(0);
   if(residue == T(0))
     return res;
+  // N.B.
   // if we deal with (D *= r, residue /= r), it is identical with (D, residue)
+  // So ||D^n * residue^n|| / T(n!) < 1 case, this loop converges.
+  // but with n^n v.s. n!, differential of n! is faster than n^n.
+  // (n! < n^n but a^n < n! somewhere).
+  // And, we treat D * residue as a block, so Readme.md's condition 1/x^k needs
+  // to be in the series in this.
   const auto D(diff(size));
         auto dt(D.col(step0) * residue);
   for(int i = 2; ; i ++) {
@@ -144,13 +150,8 @@ template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
       p.resize(size);
       p[0] = T(0);
       p[p.size() - 1] = T(1);
-    } else {
-      const auto reverse(taylor(size, - T(1)));
+    } else
       p = taylor(size, T(size));
-      for(int i = 0; i < reverse.size(); i ++)
-        p[i] += reverse[reverse.size() - i - 1];
-      p /= T(2);
-    }
     std::cerr << "p" << std::flush;
     if(1 < size) {
       const auto& back(next(size - 1));
