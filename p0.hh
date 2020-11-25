@@ -40,12 +40,10 @@ public:
   inline ~P0();
   inline Vec  taylor(const int& size, const T& step);
   const MatU& seed(const int& size0);
-  const Mat&  diff(const int& size0);
-  const Mat&  diffCalibrate(const int& size);
+  const Mat&  diff(const int& size);
   const Vec&  nextP(const int& size);
   const Vec&  next(const int& size);
   const T&    Pi() const;
-  inline T    dot1(const Vec& x);
   const complex<T>& J() const;
 };
 
@@ -95,41 +93,23 @@ template <typename T> const typename P0<T>::MatU& P0<T>::seed(const int& size0) 
   return size0 < 0 ? eidft : edft;
 }
 
-template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size0) {
-  const auto size(abs(size0));
-  static vector<Mat> D;
-  static vector<Mat> I;
-  if(D.size() <= size)
-    D.resize(size + 1, Mat());
-  if(I.size() <= size)
-    I.resize(size + 1, Mat());
-  auto& dd(D[size]);
-  auto& ii(I[size]);
-  if(dd.rows() != size || dd.cols() != size) {
-    auto DD(seed(size));
-    DD.row(0) *= complex<T>(T(0));
-    auto II(DD);
-    for(int i = 1; i < DD.rows(); i ++) {
-      DD.row(i) *= J() * T(2) * Pi() * T(i) / T(DD.rows());
-      II.row(i) /= J() * T(2) * Pi() * T(i) / T(DD.rows());
-    }
-    dd = (seed(- size) * DD).template real<T>();
-    ii = (seed(- size) * II).template real<T>();
-  }
-  return size0 < 0 ? ii : dd;
-}
-
-template <typename T> const typename P0<T>::Mat& P0<T>::diffCalibrate(const int& size) {
+template <typename T> const typename P0<T>::Mat& P0<T>::diff(const int& size) {
   assert(0 < size);
   static vector<Mat> D;
   if(D.size() <= size)
     D.resize(size + 1, Mat());
   auto& dd(D[size]);
-  dd = diff(size);
-  Vec calibrate(dd.rows());
-  for(int i = 0; i < calibrate.size(); i ++)
-    calibrate[i] = sin(T(i) / T(calibrate.size()) * T(2) * Pi());
-  return dd *= - T(2) * Pi() / T(dd.rows()) / dd.row(dd.rows() / 2).dot(calibrate);
+  if(dd.rows() != size || dd.cols() != size) {
+    auto DD(seed(size));
+    for(int i = 1; i < DD.rows(); i ++)
+      DD.row(i) *= - J() * T(2) * Pi() * T(i) / T(DD.rows());
+    dd = (seed(- size) * DD).template real<T>();
+    Vec calibrate(dd.rows());
+    for(int i = 0; i < calibrate.size(); i ++)
+      calibrate[i] = sin(T(i) / T(calibrate.size()) * T(2) * Pi());
+    dd *= - T(2) * Pi() / dd.row(dd.rows() / 2).dot(calibrate);
+  }
+  return dd;
 }
 
 template <typename T> inline typename P0<T>::Vec P0<T>::taylor(const int& size, const T& step) {
@@ -161,10 +141,11 @@ template <typename T> const typename P0<T>::Vec& P0<T>::nextP(const int& size) {
   auto& p(P[size]);
   if(p.size() != size) {
     const auto reverse(taylor(size, - T(1) / T(2)));
-    p = taylor(size, T(size));
+    p = taylor(size, T(size - 1) + T(1) / T(2));
     for(int i = 0; i < reverse.size(); i ++)
       p[i] += reverse[reverse.size() - i - 1];
-    p /= dot1(p);
+    p /= T(2);
+    std::cerr << "p" << std::flush;
   }
   return p;
 }
@@ -180,17 +161,9 @@ template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
     for(int i = 3; i < size; i ++)
       for(int j = 0; j < i; j ++)
         p[j - i + p.size()] += nextP(i)[j];
-    p /= dot1(p);
-    std::cerr << "q" << std::flush;
+    p /= T(size - 3 + 1);
   }
   return p;
-}
-
-template <typename T> inline T P0<T>::dot1(const Vec& x) {
-  auto sum(x[0]);
-  for(int i = 1; i < x.size(); i ++)
-    sum += x[i];
-  return sum;
 }
 
 
@@ -214,10 +187,12 @@ template <typename T> inline P0B<T>::P0B() {
 
 template <typename T> inline P0B<T>::P0B(const int& size) {
   buf0.resize(size);
-  for(int i = 0; i < buf0.size(); i ++)
+  buf1.resize(size);
+  for(int i = 0; i < buf0.size(); i ++) {
     buf0[i] = T(0);
-  buf1 = buf0;
-  t    = 0;
+    buf1[i] = T(0);
+  }
+  t = 0;
 }
 
 template <typename T> inline P0B<T>::~P0B() {
