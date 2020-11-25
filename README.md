@@ -1,5 +1,6 @@
 # bitsofcotton/p0
-Generic predictor that not depends on data itself but doesn't win good randoms.
+Generic predictor that not depends on data itself but doesn't win good randoms.  
+This suppose original function in the domain needs in L2(R) to guarantee no essential singularity points on there.
 
 # How to use:
     P0<double> p;
@@ -13,7 +14,7 @@ Generic predictor that not depends on data itself but doesn't win good randoms.
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # N.B. range > 0 for random walk (C0), range < 0 for random value itself.
+    # We suppose input as C0, range < 0 for plain prediction, 0 < range for error collecting.
 
 # pf
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
