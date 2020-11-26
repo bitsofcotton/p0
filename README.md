@@ -28,3 +28,8 @@ And, if there's laurent series isn't essential singularity point on the domain, 
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
+# Tips
+If sampling itself is not enough, it is hard to get taylor series we suppose without error, so prediction fails.
+
+# Archived
+This repository is archived. So without bug reports, will no change.
