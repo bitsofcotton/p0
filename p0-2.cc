@@ -63,13 +63,7 @@ int main(int argc, const char* argv[]) {
   int range(20);
   if(1 < argc)
     range = std::atoi(argv[1]);
-/*
-  const auto pn(P0<num_t>().next(range));
-*/
-  SimpleVector<num_t> pn(range);
-  for(int i = 0; i < pn.size(); i ++)
-    pn[i] = sin(num_t(i) * num_t(2) * atan2(num_t(1), num_t(1)) * num_t(4) / num_t(pn.size()));
-  pn = P0<num_t>().diff(pn.size()) * pn;
+  const auto pn(P0<num_t>().taylor(range, num_t(range + (range / 20))));
   for(int i = 0; i < pn.size(); i ++)
     std::cout << pn[i] << std::endl;
   std::cout << std::endl;
