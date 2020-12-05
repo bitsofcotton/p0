@@ -177,6 +177,7 @@ template <typename T, bool recur> const typename P0<T,recur>::Vec& P0<T,recur>::
       if(err.dot(err) / sqrt(bnext.dot(bnext) * nnext.dot(nnext)) <= T(0))
         break;
     }
+    p = mnext.row(mnext.rows() - 1);
   }
   return p;
 }
