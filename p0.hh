@@ -42,7 +42,6 @@ public:
   const Mat&  diff(const int& size);
   inline Vec  taylor(const int& size, const T& step);
   const Vec&  next(const int& size);
-  const Vec&  omega(const int& size);
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -153,31 +152,6 @@ template <typename T, bool recur> const typename P0<T,recur>::Vec& P0<T,recur>::
         p /= T(size);
       }
     }
-  }
-  return p;
-}
-
-template <typename T, bool recur> const typename P0<T,recur>::Vec& P0<T,recur>::omega(const int& size) {
-  assert(0 < size);
-  static vector<Vec> P;
-  if(P.size() <= size)
-    P.resize(size + 1, Vec());
-  auto& p(P[size]);
-  if(p.size() != size) {
-    Mat mnext(size, size);
-    for(int i = 0; i < mnext.rows() - 1; i ++)
-      for(int j = 0; j < mnext.cols(); j ++)
-        mnext(i, j) = i + 1 == j ? T(1) : T(0);
-    mnext.row(mnext.rows() - 1) = next(size);
-    while(true) {
-      const auto  bnext(mnext.row(mnext.rows() - 1));
-      mnext = mnext * mnext;
-      const auto& nnext(mnext.row(mnext.rows() - 1));
-      const auto  err(bnext - nnext);
-      if(err.dot(err) / sqrt(bnext.dot(bnext) * nnext.dot(nnext)) <= T(0))
-        break;
-    }
-    p = mnext.row(mnext.rows() - 1);
   }
   return p;
 }
