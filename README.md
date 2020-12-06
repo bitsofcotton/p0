@@ -2,6 +2,12 @@
 Generic predictor that not depends on data itself but doesn't win good randoms.  
 This suppose original function in the domain needs in L2(R) to guarantee no essential singularity points on there.
 
+# Contexts
+There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
+And, if we make DFT and IDFT on them, there exists differential on them in DFT meaning.
+(In continuous meaning, this is described a little on the books I refered,
+ but, in discrete meaning, I can't find preceding results but might be exists.)
+
 # How to use:
     P0<double> p;
     SimpleVector<double> b(range);
@@ -16,7 +22,7 @@ This suppose original function in the domain needs in L2(R) to guarantee no esse
     ./p0 <range> < data.txt
     # range < 0 for plain prediction, 0 < range for error collecting.
 
-# pf
+# Proof
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
 So rotate &pi;/4, f is holomorphic because the function is described as f(z), so d/d\bar{z}f = 0.
 So with gutzmer's inequation, f have laurent series and as the upper bound of coefficients,
