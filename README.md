@@ -36,5 +36,10 @@ And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x)
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
+# Another Download Sites
+* https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
+* https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
+* https://ja.osdn.net/projects/decompose/
+
 # Archive
 actually freeze with this.
