@@ -60,27 +60,37 @@
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-        int  range(20);
-  const auto mm(2 < argc);
+  int range(20);
+  int recur(1);
   if(1 < argc)
     range = std::atoi(argv[1]);
-  P0B<num_t, true> p(abs(range));
+  if(2 < argc)
+    recur = std::atoi(argv[2]);
+  std::vector<P0B<num_t, true> > p;
+  p.resize(abs(recur), P0B<num_t, true>(abs(range)));
   num_t d(0);
   auto  d0(d);
   auto  M(d);
+  std::vector<num_t> bM;
+  bM.resize(p.size(), num_t(0));
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    d0 += mm ? d - bd - M : (d - bd) * M;
+    d0 += recur < 0 ? d - bd - M : (d - bd) * M;
     if(d != bd) {
-      if(range < 0)
-        M  = p.next(d) - d;
-      else {
-        M -= d - bd;
-        M /= num_t(2);
-        M += p.next(d) - d;
+      const auto  bbM(bM);
+            num_t fact(1);
+      if(range < 0) {
+        M = bM[0] = p[0].next(d) - d;
+        for(int i = 1; i < p.size(); i ++)
+          M += bM[i] = p[i].next(bbM[i - 1] - (d - bd)) / (fact *= num_t(i + 1));
+      } else {
+        M = bM[0] = p[0].next(d) - d + (M - (d - bd)) / num_t(2);
+        for(int i = 1; i < p.size(); i ++)
+          M += bM[i] = (p[i].next(bbM[i - 1] - (d - bd)) +
+                          (bM[i] - (d - bd)) / num_t(2)) / (fact *= num_t(i + 1));
       }
       if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
     }

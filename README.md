@@ -19,8 +19,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range> < data.txt
+    ./p0 <range> <recur> < data.txt
     # range < 0 for plain prediction, 0 < range for error collecting.
+    # recur < 0 for delta, 0 < recur for delta inner product.
 
 # Proof
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
