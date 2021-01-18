@@ -66,13 +66,14 @@ int main(int argc, const char* argv[]) {
     range = std::atoi(argv[1]);
   std::vector<P0B<num_t, true> > p;
   if(range < 0) {
-    int   recur(2);
+    int   recur(3);
     num_t test(1);
-    for( ; 0 < recur && num_t(1) / test != num_t(0); recur ++)
-      test *= num_t(recur);
-    p.resize(recur * 2, P0B<num_t, true>(abs(range)));
+    for( ; 0 < recur && test != num_t(0); recur ++)
+      test *= num_t(2) / num_t(recur);
+    recur += max(0, int(num_t(recur) * log(num_t(2)) / log(num_t(recur))));
+    p.resize(recur, P0B<num_t, true>(abs(range)));
   } else
-    p.resize(1,         P0B<num_t, true>(abs(range)));
+    p.resize(1,     P0B<num_t, true>(abs(range)));
   num_t d(0);
   auto  d0(d);
   auto  M(d);
