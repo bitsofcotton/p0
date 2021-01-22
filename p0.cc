@@ -68,9 +68,8 @@ int main(int argc, const char* argv[]) {
   if(range < 0) {
     int   recur(3);
     num_t test(1);
-    for( ; 0 < recur && test != num_t(0); recur ++)
+    for( ; 0 < recur && num_t(1) + test != num_t(1); recur ++)
       test *= num_t(2) / num_t(recur);
-    recur += max(0, int(num_t(recur) * log(num_t(2)) / log(num_t(recur))));
     p.resize(recur, P0B<num_t, true>(abs(range)));
   } else
     p.resize(1,     P0B<num_t, true>(abs(range)));
@@ -86,14 +85,11 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     d0 += mm ? d - bd - M : (d - bd) * M;
     if(d != bd) {
-      if(range < 0) {
-        const auto  bbM(bM);
-              num_t fact(1);
-        M = bM[0] = p[0].next(d) - d;
-        for(int i = 1; i < p.size(); i ++)
-          bM[i] = (M += p[i].next(bbM[i - 1] - (d - bd)) / (fact *= num_t(i + 1)));
-      } else
-        M = p[0].next(d) - d;
+      const auto  bbM(bM);
+            num_t fact(1);
+      M = p[0].next(d) - d;
+      for(int i = 1; i < p.size(); i ++)
+        bM[i] = (M += p[i].next(bbM[i - 1] - (d - bd)) / (fact *= num_t(i + 1)));
       if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
     }
     std::cout << d0 << ", " << M << std::endl;
