@@ -40,6 +40,9 @@ N.B. DFT differential itself is ideal for trigometric function multiply sums. So
 # Tips
 If we don't predict well, please refer p2.
 
+# Tips
+This p0 uses weak differential, so integrate(diff) != id because of complex part is omitted (but Re diff(diff) is no matter if we calculate in R or C).
+
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
