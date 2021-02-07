@@ -89,7 +89,7 @@ int main(int argc, const char* argv[]) {
             num_t fact(1);
       M = p[0].next(d) - d;
       for(int i = 1; i < p.size(); i ++)
-        bM[i] = (M += p[i].next(bbM[i - 1] - (d - bd)) / (fact *= num_t(i + 1)));
+        bM[i] = (M += p[i].next((d - bd) - bbM[i - 1]) / (fact *= num_t(i + 1)));
       if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
     }
     std::cout << d0 << ", " << M << std::endl;
