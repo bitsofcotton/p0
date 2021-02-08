@@ -60,39 +60,26 @@
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-        int  range(20);
-  const auto mm(2 < argc);
-  if(1 < argc)
-    range = std::atoi(argv[1]);
-  std::vector<P0B<num_t, true> > p;
-  if(range < 0) {
-    int   recur(3);
-    num_t test(1);
-    for( ; 0 < recur && num_t(1) + test != num_t(1); recur ++)
-      test *= num_t(2) / num_t(recur);
-    p.resize(recur, P0B<num_t, true>(abs(range)));
-  } else
-    p.resize(1,     P0B<num_t, true>(abs(range)));
+  int   range(20);
+  if(1 < argc) range = std::atoi(argv[1]);
+  P0B<num_t, true> p(abs(range));
   num_t d(0);
   auto  d0(d);
+  auto  s0(d);
+  auto  s1(d);
   auto  M(d);
-  std::vector<num_t> bM;
-  bM.resize(p.size(), num_t(0));
-  int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    d0 += mm ? d - bd - M : (d - bd) * M;
-    if(d != bd) {
-      const auto  bbM(bM);
-            num_t fact(1);
-      M = p[0].next(d) - d;
-      for(int i = 1; i < p.size(); i ++)
-        bM[i] = (M += p[i].next((d - bd) - bbM[i - 1]) / (fact *= num_t(i + 1)));
-      if(! isfinite(M) || isnan(M) || t ++ <= abs(range)) M = num_t(0);
+    if(range < 0) {
+      if(d0 == num_t(0)) d0 = d;
+      d = atan(d - d0);
     }
-    std::cout << d0 << ", " << M << std::endl;
+    s0 += (d - bd) * (M - bd);
+    s1 += bd == num_t(0) ? num_t(0) : d - M;
+    if(d != bd) M = p.next(d);
+    std::cout << M << "," << s0 << "," << s1 << std::endl << std::flush;
   }
   return 0;
 }

@@ -20,8 +20,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # range < 0 for error collecting, 0 < range for plain prediction.
-    # if 2 < argc, delta result, otherwise, delta inner product result.
+    # range < 0 for arctan(input) prediction,
+    # 0 < range for plain prediction.
 
 # Proof
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
@@ -50,3 +50,4 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 
 # Archive
 actually freeze with this.
+
