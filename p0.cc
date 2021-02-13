@@ -60,9 +60,9 @@
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   range(20);
+  int   range(4);
   if(1 < argc) range = std::atoi(argv[1]);
-  P0B<num_t, true> p(abs(range));
+  P0B<num_t> p(abs(range));
   num_t d(0);
   auto  d0(d);
   auto  s0(d);
