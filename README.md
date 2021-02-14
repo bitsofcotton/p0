@@ -26,15 +26,14 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # Proof
 If original function is in C1, there exists f(z+\bar{z})+i\*f(z-\bar{z}) in C1 on z in C.
-so f is holomorphic around (1+i)\*t line, and z':=z-(1+i)\*&delta; translation and rotate whole F, each point have some R as holomorphic.
+so f is holomorphic around (1+i)\*some t line, and z':=z-(1+i)\*any &delta; translation and rotate whole F, each point have some R as holomorphic.
 So with gutzmer's inequation and edit integrate path, f have laurent series and as the upper bound of coefficients,
-we can cut them as error in numerical calculation on some cut off.  
+we can cut them as error in numerical calculation on some cut off.
+Since f is holomorphic around there, so taylor series description exists in weak differential meaning.  
 
-And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).
+And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
-And, if there's laurent series isn't essential singularity point on the domain, with f(x_0+\[0,1\[) case, the series can be described as taylor series around there (1+x+...+x^n+..., x in \[0,1\[). So we can suppose if, the case below and, around x=x_0, D:={|x-x_0|<1}, there exists taylor series descriptions near them if original function is a continuous real function.
-
-And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x)), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e.. But, if there's two algorithm concat with before a and after a, taylor series itself is defined, but, prediction depends the sample point we have.
+And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e..  
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
