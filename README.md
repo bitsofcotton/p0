@@ -31,7 +31,8 @@ So &theta; = &pi;/4 \pm &epsilon;, if we have a area, with gutzmer's inequation 
 f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.
 Since f is holomorphic around there, so taylor series description exists in weak differential meaning.  
-There's possibility to have area with lagrange multipliers with limit operations, but if then, it has to use the condition of f.
+There's possibility to have area with lagrange multipliers with limit operations, but if then, it has to use the condition of f
+other than the condition below C0.
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
