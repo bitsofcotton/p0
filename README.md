@@ -31,7 +31,7 @@ So &theta; = &pi;/4 \pm &epsilon;, if we have a area, with gutzmer's inequation 
 f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.
 If f has a laurent series around {x| |x-a|<1}, taylor series description exists in weak differential meaning because 1+x+x^2+...
-and x^k, k -&gt; \infty converges on there.  
+converges and x^k -&gt; 0 and k -&gt; \infty on there.  
 There's possibility to have area with lagrange multipliers with limit operations, but if then, it has to use the condition of f
 other than the condition below C0.
 
