@@ -30,7 +30,7 @@ So each &theta;, exists F: holomorphic function at some axis that real axis is s
 So &theta; = &pi;/4 \pm &epsilon;, if we have a area, with gutzmer's inequation and edit integrate path,
 f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.
-Since f is holomorphic around there, so taylor series description exists in weak differential meaning.  
+If f has a laurent series around {x| |x-a|<1}, taylor series description exists in weak differential meaning because 1+x+x^2+... converges on there.  
 There's possibility to have area with lagrange multipliers with limit operations, but if then, it has to use the condition of f
 other than the condition below C0.
 
