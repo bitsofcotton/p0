@@ -25,7 +25,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # the range actually used is range! .
 
 # Proof
-If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f_&theta;(z-\bar{z})\*tan(&theta;) in C1 on z in C.
+If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
 So each &theta;, exists F: holomorphic function that Re axis is same as f.
 So with gutzmer's inequation and edit integrate path, f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.
