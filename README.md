@@ -25,9 +25,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # the range actually used is range! .
 
 # Proof
-If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
-So rotate &pi;/4, f is holomorphic (around Re axis from residue theorem) because the function is described as f(z), so d/d\bar{z}f = 0.
-So with gutzmer's inequation, f have laurent series and as the upper bound of coefficients,
+If original function is in C1, there exists f(z+\bar{z})+i\*f(z-\bar{z}) in C1 on z in C.
+so f is holomorphic around Re axis, and z':=(1+i)\*&delta; translation and rotate whole F, each point have some R as holomorphic.
+So with gutzmer's inequation and edit integrate path, f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.  
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).
