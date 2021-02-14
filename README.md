@@ -26,7 +26,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # Proof
 If original function is in C1, there exists f(z+\bar{z}) in C1 on z in C.
-So rotate &pi;/4, f is holomorphic because the function is described as f(z), so d/d\bar{z}f = 0.
+So rotate &pi;/4, f is holomorphic (around Re axis from residue theorem) because the function is described as f(z), so d/d\bar{z}f = 0.
 So with gutzmer's inequation, f have laurent series and as the upper bound of coefficients,
 we can cut them as error in numerical calculation on some cut off.  
 
