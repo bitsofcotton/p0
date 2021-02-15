@@ -35,7 +35,7 @@ taylor series description exists in weak differential meaning because 1+x+x^2+..
 converges and x^k -&gt; 0 and k -&gt; \infty on there.  
 There's possibility to have area with lagrange multipliers with limit operations, but if then, it has to use the condition of f
 other than the condition below C0. And if then, tan(&theta;) should not have pole or infinite value.
-Pi(z-|z|cis(&pi;/4+t_k))\*(f(z+\bar{z})Sum((1+i\*tan(&pi;/4+t\_k))/(z-|z|cis(&pi;/4+t\_k)) with g(z) replace on (1+i)t???
+exp(Sum log(z-|z|cis(&pi;/4+t_k)))\*(f(z+\bar{z})Sum((1+i\*tan(&pi;/4+t\_k))/(z-|z|cis(&pi;/4+t\_k)) with g(z) replace on (1+i)t???
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
