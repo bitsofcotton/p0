@@ -42,7 +42,6 @@ public:
   const Mat&  diff(const int& size);
   inline Vec  taylor(const int& size, const T& step);
   const Vec&  next(const int& size);
-  inline int  betterRange(const int& size) const;
   const T&    Pi() const;
   const complex<T>& J() const;
 };
@@ -155,13 +154,6 @@ template <typename T> const typename P0<T>::Vec& P0<T>::next(const int& size) {
   return p;
 }
 
-template <typename T> inline int P0<T>::betterRange(const int& size) const {
-  assert(2 < size);
-  int res(1);
-  for(int i = 2; res * (i + 1) <= size; i ++) res *= i;
-  return res;
-}
-
 
 template <typename T> class P0B {
 public:
@@ -181,9 +173,7 @@ template <typename T> inline P0B<T>::P0B() {
 
 template <typename T> inline P0B<T>::P0B(const int& size) {
   assert(0 < size);
-  int bsize(size);
-  for(int i = 2; i < size; i ++) bsize *= i;
-  buf.resize(bsize);
+  buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
 }

@@ -22,7 +22,6 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0 <range> < data.txt
     # range < 0 for arctan(input) prediction,
     # 0 < range for plain prediction.
-    # the range actually used is range! .
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
