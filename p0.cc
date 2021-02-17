@@ -77,8 +77,10 @@ int main(int argc, const char* argv[]) {
       d = atan(d - d0);
     }
     if(d != bd) {
-      s0 += (d - bd) * (M - bd);
-      s1 += bd == num_t(0) ? num_t(0) : d - M;
+      if(bd != num_t(0)) {
+        s0 += (d - bd) * (M - bd);
+        s1 +=  d - M;
+      }
       M   = p.next(d);
     }
     std::cout << M << "," << s0 << "," << s1 << std::endl << std::flush;
