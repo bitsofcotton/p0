@@ -62,7 +62,7 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int   range(4);
   if(1 < argc) range = std::atoi(argv[1]);
-  P0B<num_t> p(abs(range));
+  P0B<num_t, true> p(abs(range));
   num_t d(0);
   auto  d0(d);
   auto  s0(d);
@@ -76,9 +76,11 @@ int main(int argc, const char* argv[]) {
       if(d0 == num_t(0)) d0 = d;
       d = atan(d - d0);
     }
-    s0 += (d - bd) * (M - bd);
-    s1 += bd == num_t(0) ? num_t(0) : d - M;
-    if(d != bd) M = p.next(d);
+    if(d != bd) {
+      s0 += (d - bd) * (M - bd);
+      s1 += bd == num_t(0) ? num_t(0) : d - M;
+      M   = p.next(d);
+    }
     std::cout << M << "," << s0 << "," << s1 << std::endl << std::flush;
   }
   return 0;
