@@ -68,7 +68,9 @@ int main(int argc, const char* argv[]) {
 */
   SimpleVector<num_t> pn(range);
   for(int i = 0; i < pn.size(); i ++)
-    pn[i] = num_t(i * i);
+    pn[i] = //num_t(i * i);
+//      sin(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
+      cos(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
   pn = P0<num_t>().diff(pn.size()) * pn;
   for(int i = 0; i < pn.size(); i ++)
     std::cout << pn[i] << std::endl;

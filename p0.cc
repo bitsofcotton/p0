@@ -61,18 +61,13 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int   range(30);
-  int   skip(1);
   if(1 < argc) range = std::atoi(argv[1]);
-  if(2 < argc) skip  = std::atoi(argv[2]);
-  std::vector<P0B<num_t, true> > p;
-  p.resize(skip, P0B<num_t, true>(abs(range)));
+  P0B<num_t, true> p(abs(range));
   num_t d(0);
   auto  d0(d);
   auto  s0(d);
   auto  s1(d);
-  std::vector<num_t> M;
-  M.resize(p.size(), num_t(0));
-  int   t(0);
+  auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
@@ -83,16 +78,12 @@ int main(int argc, const char* argv[]) {
     }
     if(d != bd) {
       if(bd != num_t(0)) {
-        s0 += (d - bd) * M[0];
-        s1 += M[0] == num_t(0) ? num_t(0) : d - bd - M[0];
+        s0 += (d - bd) * M;
+        s1 += M == num_t(0) ? num_t(0) : d - bd - M;
       }
-      for(int i = 0; i < M.size() - 1; i ++)
-        M[i] = M[i + 1];
-      auto& MM(M[M.size() - 1]);
-      MM = p[(t ++) % p.size()].next(d - bd);
-      MM = MM == num_t(0) ? num_t(0) : (MM < num_t(0) ? - pow(- MM, num_t(1) / num_t(p.size())) : pow(MM, num_t(1) / num_t(p.size())));
+      M = p.next(d - bd);
     }
-    std::cout << M[M.size() - 1] << "," << s0 << "," << s1 << std::endl << std::flush;
+    std::cout << M << "," << s0 << "," << s1 << std::endl << std::flush;
   }
   return 0;
 }
