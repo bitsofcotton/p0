@@ -67,23 +67,32 @@ int main(int argc, const char* argv[]) {
   auto  d0(d);
   auto  s0(d);
   auto  s1(d);
+  auto  s2(d);
+  auto  s3(d);
+  auto  s4(d);
+  int   tp(0);
+  auto  tm(tp);
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    if(range < 0) {
-      if(d0 == num_t(0)) d0 = d;
-      d = atan(d - d0);
-    }
+    const auto delta(range < 0 ? atan(d - bd) : d - bd);
     if(d != bd) {
-      if(bd != num_t(0)) {
-        s0 += (d - bd) * M;
-        s1 += M == num_t(0) ? num_t(0) : d - bd - M;
+      if(bd != num_t(0) && M != num_t(0)) {
+        tp ++;
+        tm ++;
+        s0 += delta * M * num_t(2 < argc ? tp - tm : 1);
+        s1 += delta - M;
+        s2 += (d - bd) * M * num_t(2 < argc ? tp - tm : 1);
+        s3 += delta * M * tp;
+        s4 -= delta * M * tm;
       }
-      M = p.next(d - bd);
+      if(num_t(0) < s3) s3 = num_t(tp = 0);
+      if(num_t(0) < s4) s4 = num_t(tm = 0);
+      M = p.next(delta);
     }
-    std::cout << M << "," << s0 << "," << s1 << std::endl << std::flush;
+    std::cout << M << "," << s0 << "," << s1 << ", " << s2 << ", " << tp << ", " << tm << std::endl << std::flush;
   }
   return 0;
 }
