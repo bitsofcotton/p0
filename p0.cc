@@ -63,6 +63,7 @@ int main(int argc, const char* argv[]) {
   int   range(30);
   if(1 < argc) range = std::atoi(argv[1]);
   P0B<num_t, true> p(abs(range));
+  auto  q(p);
   num_t d(0);
   auto  d0(d);
   auto  s0(d);
@@ -71,10 +72,8 @@ int main(int argc, const char* argv[]) {
   auto  s3(d);
   auto  s4(d);
   auto  s5(d);
-  auto  s6(d);
+  auto  ss(d);
   auto  M(d);
-  int   tp(0);
-  auto  tm(tp);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
@@ -82,20 +81,16 @@ int main(int argc, const char* argv[]) {
     const auto delta(range < 0 ? atan(d - bd) : d - bd);
     if(d != bd) {
       if(bd != num_t(0) && M != num_t(0)) {
-        tp ++; tm ++;
         s0 += range < 0 ? d - bd - tan(M) : delta - M;
         s1 += delta * M;
-        s2 += delta * M * num_t(tp - tm);
+        s2 += delta * M * ss;
         s3 += (d - bd) * M;
-        s4 += (d - bd) * M * num_t(tp - tm);
-        s5 += delta * M * num_t(tp);
-        s6 -= delta * M * num_t(tm);
+        s4 += (d - bd) * M * (range < 0 ? tan(ss) : ss);
+        ss  = q.next(s5 += delta - M);
       } else if(M == num_t(0)) std::cerr << "!" << std::flush;
-      if(num_t(0) < s5) s5 = num_t(tp = 0);
-      if(num_t(0) < s6) s6 = num_t(tm = 0);
       M = p.next(delta);
     }
-    std::cout << M << "," << (tp - tm) << ", " << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << s4 << std::endl << std::flush;
+    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << s4 << std::endl << std::flush;
   }
   return 0;
 }
