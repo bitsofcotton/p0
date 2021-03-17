@@ -20,7 +20,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # range < 0 for arctan(input) prediction,
+    # range < 0 for frequency space prediction.
     # 0 < range for plain prediction.
 
 # Proof

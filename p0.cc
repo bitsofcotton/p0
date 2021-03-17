@@ -63,34 +63,24 @@ int main(int argc, const char* argv[]) {
   int   range(30);
   if(1 < argc) range = std::atoi(argv[1]);
   P0B<num_t, true> p(abs(range));
-  auto  q(p);
+  P0C<num_t, true> q(abs(range));
   num_t d(0);
-  auto  d0(d);
   auto  s0(d);
   auto  s1(d);
-  auto  s2(d);
-  auto  s3(d);
-  auto  s4(d);
-  auto  s5(d);
-  auto  ss(d);
   auto  M(d);
+  int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    const auto delta(range < 0 ? atan(d - bd) : d - bd);
     if(d != bd) {
       if(bd != num_t(0) && M != num_t(0)) {
-        s0 += range < 0 ? d - bd - tan(M) : delta - M;
-        s1 += delta * M;
-        s2 += delta * M * ss;
-        s3 += (d - bd) * M;
-        s4 += (d - bd) * M * (range < 0 ? tan(ss) : ss);
-        ss  = q.next(s5 += delta - M);
-      } else if(M == num_t(0)) std::cerr << "!" << std::flush;
-      M = p.next(delta);
+        s0 += (d - bd) - M;
+        s1 += (d - bd) * M;
+      }
+      M = (range < 0 ? q.next(d) : p.next(d)) - d;
     }
-    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << s4 << std::endl << std::flush;
+    std::cout << M << "," << s0 << ", " << s1 << std::endl << std::flush;
   }
   return 0;
 }
