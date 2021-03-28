@@ -70,10 +70,13 @@ int main(int argc, const char* argv[]) {
   for(int i = 0; i < pn.size(); i ++)
     pn[i] = //num_t(i * i);
 //      sin(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
-      cos(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
+      cos((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
+//      cosh(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
   pn = P0<num_t>().diff(pn.size()) * pn;
-  for(int i = 0; i < pn.size(); i ++)
-    std::cout << pn[i] << std::endl;
+  for(int i = 0; i < pn.size(); i ++) {
+    std::cout << pn[i] << ", ";
+    std::cout << - sin((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1))) << std::endl;
+  }
   std::cout << std::endl;
   return 0;
 }
