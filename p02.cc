@@ -91,9 +91,10 @@ int main(int argc, const char* argv[]) {
           M[i] = (range < 0 ? q[(t & 1) * dd.size() + i].next(dd[i])
                             : p[(t & 1) * dd.size() + i].next(dd[i])) - dd[i];
           if(num_t(0) < (dd[i] - bd[i]) * M[i])
-            M0 += M[i];
+            M0 += M[i] * rr[i];
         }
       }
+      t ++;
       M0 /= num_t(dd.size());
     }
     std::cout << M0 << "," << s0 << ", " << s1 << std::endl << std::flush;
