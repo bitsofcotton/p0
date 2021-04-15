@@ -64,7 +64,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc)
     range = std::atoi(argv[1]);
 /*
-  const auto pn(P0<num_t>().next(range));
+  const auto pn(nextP0<num_t, true>(range));
 */
   SimpleVector<num_t> pn(range);
   for(int i = 0; i < pn.size(); i ++)
@@ -72,7 +72,7 @@ int main(int argc, const char* argv[]) {
 //      sin(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
       cos((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
 //      cosh(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
-  pn = P0<num_t>().diff(pn.size()) * pn;
+  pn = diff<num_t>(pn.size()) * pn;
   for(int i = 0; i < pn.size(); i ++) {
     std::cout << pn[i] << ", ";
     std::cout << - sin((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1))) << std::endl;

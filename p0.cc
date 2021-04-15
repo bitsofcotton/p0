@@ -62,7 +62,7 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int   range(30);
   if(1 < argc) range = std::atoi(argv[1]);
-  P0B<num_t, true> p(abs(range));
+  P0<num_t, true> p(abs(range));
   P0C<num_t, true> q(abs(range));
   num_t d(0);
   auto  s0(d);

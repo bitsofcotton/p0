@@ -62,9 +62,9 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int   range(30);
   if(1 < argc) range = std::atoi(argv[1]);
-  std::vector<P0B<num_t, true> > p;
+  std::vector<P0<num_t, true> > p;
   std::vector<P0C<num_t, true> > q;
-  p.resize(std::atoi(argv[2]) * 2, P0B<num_t, true>(abs(range)));
+  p.resize(std::atoi(argv[2]) * 2, P0<num_t, true>(abs(range)));
   q.resize(std::atoi(argv[2]) * 2, P0C<num_t, true>(abs(range)));
   num_t d(0);
   auto  s0(d);
