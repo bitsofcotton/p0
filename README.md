@@ -9,14 +9,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0<double> p;
-    SimpleVector<double> b(range);
-    ...
-    pred = p.next(b.size());
+    const auto& pred(nextP0<double, /* recursive */>(/* some size */));
     // Or we can use:
-    P0B<double> p(range);
+    P0<double> p(range);
     ...
-    xnext = p.next(x);
+      xnext = p.next(x);
 
 # How to use (commandline):
     ./p0 <range> < data.txt
