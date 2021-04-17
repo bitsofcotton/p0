@@ -23,15 +23,12 @@ int main(int argc, const char* argv[]) {
 */
   SimpleVector<num_t> pn(range);
   for(int i = 0; i < pn.size(); i ++)
-    pn[i] = //num_t(i * i);
-//      sin(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
-      cos((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
-//      cosh(num_t(i) / num_t(pn.size()) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)));
-  pn = diff<num_t>(pn.size()) * pn;
-  for(int i = 0; i < pn.size(); i ++) {
-    std::cout << pn[i] << ", ";
-    std::cout << - sin((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1))) << std::endl;
-  }
+    pn[i] =
+      cos((num_t(1) / num_t(8) + num_t(i) / num_t(pn.size())) * num_t(2) * num_t(4) * atan2(num_t(1), num_t(1)) * num_t(std::atoi(argv[2])));
+//  const auto qn(diff<num_t>(- pn.size()) * diff<num_t>(pn.size()) * pn);
+  const auto qn(diff<num_t>(pn.size()) * pn);
+  for(int i = 0; i < pn.size(); i ++)
+    std::cout << qn[i] << ", " << pn[i] << std::endl;
   std::cout << std::endl;
   return 0;
 }
