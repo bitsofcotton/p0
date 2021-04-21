@@ -15,8 +15,11 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   range(30);
+  int   range(3);
+  if(argc < 2)
+    std::cerr << "p0 <range>?" << std::endl;
   if(1 < argc) range = std::atoi(argv[1]);
+  std::cerr << "continue with p0 " << range << std::endl;
   P0<num_t, true> p(abs(range));
   P0C<num_t, true> q(abs(range));
   num_t d(0);
