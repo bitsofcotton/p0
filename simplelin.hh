@@ -1276,7 +1276,7 @@ template <typename T> SimpleVector<T> linearInvariant(const vector<SimpleVector<
 }
 
 // N.B. please refer bitsofcotton/randtools.
-template <typename T> SimpleVector<T> makeProgramInvariant(const SimpleVector<T>& in, const int& complexity, const T& index = T(1)) {
+template <typename T> SimpleVector<T> makeProgramInvariant(const SimpleVector<T>& in, const T& index = - T(1)) {
   SimpleVector<T> res(in.size() + (T(0) <= index ? 2 : 1));
   for(int i = 0; i < in.size(); i ++) {
     assert(- T(1) <= in[i] && in[i] <= T(1) && isfinite(in[i]));
@@ -1285,11 +1285,6 @@ template <typename T> SimpleVector<T> makeProgramInvariant(const SimpleVector<T>
   res[in.size()] = T(1);
   if(T(0) <= index)
     res[in.size() + 1] = tan(index * atan2(T(1), T(1)));
-  T pd(0);
-  for(int i = 0; i < in.size(); i ++)
-    pd += log(abs(in[i]));
-  if(0 <= complexity)
-    res *= exp((complexity ? T(complexity) * pd : - pd) / T(in.size()));
   return res;
 }
 

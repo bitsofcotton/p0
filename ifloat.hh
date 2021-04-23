@@ -1261,6 +1261,7 @@ template <typename T, typename W, int bits, typename U> std::ostream& operator <
 }
 
 template <typename T, typename W, int bits, typename U> std::istream& operator >> (std::istream& is, SimpleFloat<T,W,bits,U>& v) {
+  const static SimpleFloat<T,W,bits,U> two(2);
   const static SimpleFloat<T,W,bits,U> ten(10);
                SimpleFloat<T,W,bits,U> e(0);
   bool mode(false);
@@ -1285,7 +1286,7 @@ template <typename T, typename W, int bits, typename U> std::istream& operator >
         throw "Wrong input";
       fsign = true;
       break;
-    case 'e':
+    case '*':
       if(mode)
         goto ensure;
       if(sign)
@@ -1293,6 +1294,8 @@ template <typename T, typename W, int bits, typename U> std::istream& operator >
       mode  = true;
       sign  = false;
       fsign = false;
+      if(is.get() != '2') goto ensure;
+      if(is.get() != '^') goto ensure;
       break;
     case '.':
       throw "not implemented now";
@@ -1319,7 +1322,7 @@ template <typename T, typename W, int bits, typename U> std::istream& operator >
     else
       v = - v;
   }
-  v *= pow(ten, e);
+  v *= pow(two, e);
   return is;
 }
 
