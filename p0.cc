@@ -20,8 +20,10 @@ int main(int argc, const char* argv[]) {
     std::cerr << "p0 <range>?" << std::endl;
   if(1 < argc) range = std::atoi(argv[1]);
   std::cerr << "continue with p0 " << range << std::endl;
-  P0<num_t, true> p(abs(range));
-  P0C<num_t, true> q(abs(range));
+  P0<num_t, true> p0(abs(range));
+  P0C<num_t, true> q0(abs(range));
+  auto  p1(p0);
+  auto  q1(q0);
   num_t d(0);
   auto  s0(d);
   auto  s1(d);
@@ -35,7 +37,11 @@ int main(int argc, const char* argv[]) {
         s0 += (d - bd) - M;
         s1 += (d - bd) * M;
       }
-      M = (range < 0 ? q.next(d) : p.next(d)) - d;
+      const auto pn((range < 0 ? q0.next(d) : p0.next(d)) - d);
+      // original function lower and higher frequency part, middle is ignored.
+      M = (pn + num_t(1) / (range < 0 ? q1.next(num_t(1) / d)
+                                      : p1.next(num_t(1) / d)) - d) / num_t(2);
+      if(! isfinite(M) || isnan(M)) M = pn;
     }
     std::cout << M << "," << s0 << ", " << s1 << std::endl << std::flush;
   }
