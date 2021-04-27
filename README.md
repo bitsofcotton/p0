@@ -1,7 +1,5 @@
 # bitsofcotton/p0
 Generic predictor that not depends on data itself but doesn't win good randoms.  
-This suppose original function in the domain needs in L2(R) to guarantee no essential singularity points on there.
-
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
 And, if we make DFT and IDFT on them, there exists differential on them in DFT meaning.
@@ -38,6 +36,8 @@ And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedi
 And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e..  
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
+
+With atan(input) then tan(predict) causes L2(R) condition to be vanished.
 
 # Tips
 If we don't predict well, please refer p2.
