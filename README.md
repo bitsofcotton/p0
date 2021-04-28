@@ -50,6 +50,5 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
 * https://ja.osdn.net/users/bitsofcotton/
 
-# Archive
-actually freeze with this.
-
+# Refresh Archived
+This repository is close state without external libraries.
