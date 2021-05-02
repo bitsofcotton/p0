@@ -15,8 +15,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # range < 0 for frequency space prediction.
-    # 0 < range for plain prediction.
+    # range < 0 for vanilla prediction.
+    # 0 < range for denoise prediction.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -44,6 +44,9 @@ If we don't predict well, please refer p2.
 
 # Tips
 This p0 uses weak differential, so integrate(diff) != id because of complex part is omitted (but Re diff(diff) is no matter if we calculate in R or C).
+
+# Tips
+Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
