@@ -87,6 +87,45 @@ template <typename T, bool denoise> inline T P0<T, denoise>::next(const T& in) {
   return tan(nextP0<T, denoise>(buf.size()).dot(buf));
 }
 
+
+template <typename T, bool denoise = false> class P0W {
+public:
+  typedef SimpleVector<T> Vec;
+  inline P0W();
+  inline P0W(const int& size);
+  inline ~P0W();
+  inline T next(const T& in);
+private:
+  Vec buf;
+};
+
+template <typename T, bool denoise> inline P0W<T, denoise>::P0W() {
+  ;
+}
+
+template <typename T, bool denoise> inline P0W<T, denoise>::P0W(const int& size) {
+  assert(0 < size);
+  buf.resize(size);
+  for(int i = 0; i < buf.size(); i ++)
+    buf[i] = T(0);
+}
+
+template <typename T, bool denoise> inline P0W<T, denoise>::~P0W() {
+  ;
+}
+
+template <typename T, bool denoise> inline T P0W<T, denoise>::next(const T& in) {
+  for(int i = 0; i < buf.size() - 1; i ++)
+    buf[i]  = buf[i + 1];
+  buf[buf.size() - 1] = atan(in);
+  auto buf2(buf);
+  for(int i = 0; i < buf2.size(); i ++)
+    buf2[i] -= buf[0];
+  for(int i = 1; i < buf2.size(); i ++)
+    buf2[i] += buf2[i - 1];
+  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2) - buf2[buf2.size() - 1] + buf[0]);
+}
+
 #define _P0_
 #endif
 

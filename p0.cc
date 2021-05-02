@@ -20,8 +20,8 @@ int main(int argc, const char* argv[]) {
     std::cerr << "p0 <var>?" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << "continue with p0 " << var << std::endl;
-  P0<num_t, true>  p0(abs(var));
-  P0<num_t, false> q0(abs(var));
+  P0<num_t,  true> p0(abs(var));
+  P0W<num_t, true> q0(abs(var));
   auto  p1(p0);
   auto  q1(q0);
   num_t d(0);
