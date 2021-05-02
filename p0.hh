@@ -117,13 +117,15 @@ template <typename T, bool denoise> inline P0W<T, denoise>::~P0W() {
 template <typename T, bool denoise> inline T P0W<T, denoise>::next(const T& in) {
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i]  = buf[i + 1];
-  buf[buf.size() - 1] = atan(in);
+  buf[buf.size() - 1] = in;
   auto buf2(buf);
   for(int i = 0; i < buf2.size(); i ++)
     buf2[i] -= buf[0];
   for(int i = 1; i < buf2.size(); i ++)
     buf2[i] += buf2[i - 1];
-  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2) - buf2[buf2.size() - 1] + buf[0]);
+  for(int i = 0; i < buf2.size(); i ++)
+    buf2[i] = atan(buf2[i]);
+  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2)) - buf2[buf2.size() - 1] + buf[0];
 }
 
 #define _P0_
