@@ -118,14 +118,18 @@ template <typename T, bool denoise> inline T P0W<T, denoise>::next(const T& in) 
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i]  = buf[i + 1];
   buf[buf.size() - 1] = in;
+  auto avg(buf[0]);
+  for(int i = 1; i < buf.size(); i ++)
+    avg += buf[i];
+  avg /= T(buf.size());
   auto buf2(buf);
   for(int i = 0; i < buf2.size(); i ++)
-    buf2[i] -= buf[0];
+    buf2[i] -= avg;
   for(int i = 1; i < buf2.size(); i ++)
     buf2[i] += buf2[i - 1];
   for(int i = 0; i < buf2.size(); i ++)
     buf2[i] = atan(buf2[i]);
-  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2)) - buf2[buf2.size() - 1] + buf[0];
+  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2)) - buf2[buf2.size() - 1] + avg;
 }
 
 #define _P0_
