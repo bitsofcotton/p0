@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #if !defined(_P0_)
 
-template <typename T, bool denoise = false> const SimpleVector<T>& nextP0(const int& size) {
+template <typename T, bool walk = false> const SimpleVector<T>& nextP0(const int& size) {
   static vector<SimpleVector<T> > P;
   if(P.size() <= size)
     P.resize(size + 1, SimpleVector<T>());
@@ -42,9 +42,9 @@ template <typename T, bool denoise = false> const SimpleVector<T>& nextP0(const 
       p[0] = T(1);
     } else {
       p = taylor<T>(size, T(size));
-      if(denoise) {
+      if(walk) {
         std::cerr << "." << std::flush;
-        const auto& pp(nextP0<T, denoise>(size - 1));
+        const auto& pp(nextP0<T, walk>(size - 1));
         for(int i = 0; i < pp.size(); i ++)
           p[i - pp.size() + p.size()] += pp[i] * T(size - 1);
         p /= T(size);
@@ -54,7 +54,7 @@ template <typename T, bool denoise = false> const SimpleVector<T>& nextP0(const 
   return p;
 }
 
-template <typename T, bool denoise = false> class P0 {
+template <typename T, bool walk = false> class P0 {
 public:
   typedef SimpleVector<T> Vec;
   inline P0();
@@ -65,71 +65,26 @@ private:
   Vec buf;
 };
 
-template <typename T, bool denoise> inline P0<T, denoise>::P0() {
+template <typename T, bool walk> inline P0<T, walk>::P0() {
   ;
 }
 
-template <typename T, bool denoise> inline P0<T, denoise>::P0(const int& size) {
+template <typename T, bool walk> inline P0<T, walk>::P0(const int& size) {
   assert(0 < size);
   buf.resize(size);
   for(int i = 0; i < buf.size(); i ++)
     buf[i] = T(0);
 }
 
-template <typename T, bool denoise> inline P0<T, denoise>::~P0() {
+template <typename T, bool walk> inline P0<T, walk>::~P0() {
   ;
 }
 
-template <typename T, bool denoise> inline T P0<T, denoise>::next(const T& in) {
+template <typename T, bool walk> inline T P0<T, walk>::next(const T& in) {
   for(int i = 0; i < buf.size() - 1; i ++)
     buf[i]  = buf[i + 1];
   buf[buf.size() - 1] = atan(in);
-  return tan(nextP0<T, denoise>(buf.size()).dot(buf));
-}
-
-
-template <typename T, bool denoise = false> class P0W {
-public:
-  typedef SimpleVector<T> Vec;
-  inline P0W();
-  inline P0W(const int& size);
-  inline ~P0W();
-  inline T next(const T& in);
-private:
-  Vec buf;
-};
-
-template <typename T, bool denoise> inline P0W<T, denoise>::P0W() {
-  ;
-}
-
-template <typename T, bool denoise> inline P0W<T, denoise>::P0W(const int& size) {
-  assert(0 < size);
-  buf.resize(size);
-  for(int i = 0; i < buf.size(); i ++)
-    buf[i] = T(0);
-}
-
-template <typename T, bool denoise> inline P0W<T, denoise>::~P0W() {
-  ;
-}
-
-template <typename T, bool denoise> inline T P0W<T, denoise>::next(const T& in) {
-  for(int i = 0; i < buf.size() - 1; i ++)
-    buf[i]  = buf[i + 1];
-  buf[buf.size() - 1] = in;
-  auto avg(buf[0]);
-  for(int i = 1; i < buf.size(); i ++)
-    avg += buf[i];
-  avg /= T(buf.size());
-  auto buf2(buf);
-  for(int i = 0; i < buf2.size(); i ++)
-    buf2[i] -= avg;
-  for(int i = 1; i < buf2.size(); i ++)
-    buf2[i] += buf2[i - 1];
-  for(int i = 0; i < buf2.size(); i ++)
-    buf2[i] = atan(buf2[i]);
-  return tan(nextP0<T, denoise>(buf2.size()).dot(buf2)) - buf2[buf2.size() - 1] + avg;
+  return tan(nextP0<T, walk>(buf.size()).dot(buf));
 }
 
 #define _P0_
