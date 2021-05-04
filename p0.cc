@@ -39,8 +39,9 @@ int main(int argc, const char* argv[]) {
       }
       const auto pn((var < 0 ? q0.next(d) : p0.next(d)) - d);
       // original function lower and higher frequency part, middle is ignored.
-      M = (pn + num_t(1) / (var < 0 ? q1.next(num_t(1) / d)
-                                    : p1.next(num_t(1) / d)) - d) / num_t(2);
+      if(d == num_t(0)) M = pn;
+      else M = (pn + num_t(1) / (var < 0 ? q1.next(num_t(1) / d)
+                                         : p1.next(num_t(1) / d)) - d) / num_t(2);
       if(! isfinite(M) || isnan(M)) M = pn;
     }
     std::cout << M << "," << s0 << ", " << s1 << std::endl << std::flush;
