@@ -769,7 +769,7 @@ template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::QR() const {
 
 template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::SVD() const {
   if(this->cols() < this->rows()) {
-    auto res((* this) * this->transpose().SVD());
+    auto res(this->transpose() * this->transpose().SVD());
     vector<int> residue;
     residue.reserve(res.cols());
     for(int i = 0; i < res.cols(); i ++) {
@@ -780,8 +780,8 @@ template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::SVD() const {
         residue.emplace_back(i);
     }
     if(residue.size())
-      return res.transpose().fillP(residue).transpose();
-    return res;
+      return res.transpose().fillP(residue);
+    return res.transpose();
   }
   for(int i = 0; i < this->rows(); i ++)
     for(int j = 0; j < this->cols(); j ++)
@@ -872,25 +872,23 @@ template <typename T> inline pair<pair<SimpleMatrix<T>, SimpleMatrix<T> >, Simpl
     C.row(i + this->rows()) = src.row(i);
   const auto P(C.SVD());
   SimpleVector<T> d(this->cols());
-        auto Qt(P.transpose() * C);
+        auto Qt(P * C);
   for(int i = 0; i < d.size(); i ++)
     Qt.row(i) /= (d[i] = sqrt(Qt.row(i).dot(Qt.row(i))));
-  const auto D(P.transpose() * C * Qt.transpose());
+  const auto D(P * C * Qt.transpose());
   SimpleMatrix<T> P1(this->rows(), d.size());
   SimpleMatrix<T> P2(src.rows(), d.size());
   for(int i = 0; i < P1.rows(); i ++)
-    P1.row(i) = P.row(i);
+    P1.row(i) = P.col(i);
   for(int i = 0; i < P2.rows(); i ++)
-    P2.row(i) = P.row(i + P1.rows());
+    P2.row(i) = P.col(i + P1.rows());
   auto U1(P1.SVD());
-  auto Wt(U1.transpose() * P1);
+  auto Wt(U1 * P1);
   for(int i = 0; i < Wt.rows(); i ++)
     Wt.row(i) /= sqrt(Wt.row(i).dot(Wt.row(i)));
-  auto U2(P2 * Wt.transpose());
-  for(int i = 0; i < U2.cols(); i ++) {
-    const auto u2i(U2.col(i));
-    U2.setCol(u2i / sqrt(u2i.dot(u2i)));
-  }
+  auto U2(Wt * P2.transpose());
+  for(int i = 0; i < U2.rows(); i ++)
+    U2.row(i) /= sqrt(U2.row(i).dot(U2.row(i)));
   return make_pair(make_pair(move(U1), move(U2)), (Wt * D).transpose().QR() * Qt);
 }
 
