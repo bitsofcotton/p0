@@ -7,9 +7,8 @@
 #include <iomanip>
 #include <assert.h>
 
-#include "ifloat.hh"
+#include "lieonn.hh"
 typedef myfloat num_t;
-#include "simplelin.hh"
 #include "p0.hh"
 
 int main(int argc, const char* argv[]) {
@@ -28,6 +27,7 @@ int main(int argc, const char* argv[]) {
   auto  s0(d);
   auto  s1(d);
   auto  M(d);
+  int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
@@ -43,6 +43,7 @@ int main(int argc, const char* argv[]) {
       else M = (pn + num_t(1) / (var < 0 ? q1.next(num_t(1) / d)
                                          : p1.next(num_t(1) / d)) - d) / num_t(2);
       if(! isfinite(M) || isnan(M)) M = pn;
+      if(t ++ < abs(var)) M = num_t(0);
     }
     std::cout << M << "," << s0 << ", " << s1 << std::endl << std::flush;
   }
