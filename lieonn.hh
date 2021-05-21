@@ -2659,21 +2659,21 @@ template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::QR() const {
 
 template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::SVD() const {
   // N.B. S S^t == L Q Q^t L^t == L L^t.
-  //      eigen value on L is sqrt singular value on S.
+  //      eigen value on L is same on S, S is symmetric.
   const auto S(*this * transpose());
-  const auto St(S.transpose());
-  const auto L(S * St.QR().transpose());
-  SimpleVector<T> singular(min(L.rows(), L.cols()));
-  for(int i = 0; i < singular.size(); i ++)
-    singular[i] = sqrt(L(i, i));
-  auto Ut(SimpleMatrix<T>(S.rows(), S.cols()).O());
-  // get eigen vectors on singular with S.
+  const auto R(S.QR() * S);
+        auto Ut(SimpleMatrix<T>(S.rows(), S.cols()).O());
   vector<int> fill;
   fill.reserve(Ut.rows());
+  // XXX: we can boost this function with
+  //   S = counterI L counterI L compilicated form,
+  // in such case, we should repalce rows by reverse order first,
+  // then, some transpose is needed.
+  //  after all we get (L - lambda I) x == 0 whole.
   for(int i = 0; i < Ut.rows(); i ++) {
     // singular index is same as vanish index.
     auto SS(S);
-    SS = S - SS.I(singular[i]);
+    SS = S - SS.I(R(i, i));
     const auto work(SimpleMatrix<T>(Ut.cols() - 1, Ut.cols() - 1).O().setMatrix(0, 0, SS.subMatrix(0, 0, i, i)).setMatrix(i, 0, SS.subMatrix(i + 1, 0, SS.rows() - i - 1, i)).setMatrix(0, i, SS.subMatrix(0, i + 1, i, SS.cols() - i - 1)).setMatrix(i, i, SS.subMatrix(i + 1, i + 1, SS.rows() - i - 1, SS.cols() - i - 1)).solve(SimpleVector<T>(Ut.cols() - 1).O().setVector(0, SS.col(i).subVector(0, i)).setVector(i, SS.col(i).subVector(i + 1, SS.rows() - i - 1))));
     Ut.row(i).setVector(0, work.subVector(0, i)).setVector(i + 1, work.subVector(i, work.size() - i));
     const auto n2(Ut.row(i).dot(Ut.row(i)));
@@ -3132,6 +3132,59 @@ template <typename T> T revertProgramInvariant(const T& in, const bool& index = 
   return atan(in) / atan(T(1)) * T(4) - T(1);
 }
 
+template <typename T> class linearFeeder {
+public:
+  inline linearFeeder() { t = 0; full = false; }
+  inline linearFeeder(const int& size) {
+    res.resize(size);
+    for(int i = 0; i < res.size(); i ++)
+      res[i] = T(0);
+    t = 0;
+    full = false;
+  }
+  inline ~linearFeeder() { ; }
+  inline const SimpleVector<T>& next(const T& in) {
+    for(int i = 0; i < res.size() - 1; i ++)
+      res[i] = move(res[i + 1]);
+    res[res.size() - 1] = in;
+    if(res.size() < t ++) full = true;
+    return res;
+  }
+  SimpleVector<T> res;
+  bool full;
+private:
+  int t;
+};
+
+template <typename T> class arctanFeeder {
+public:
+  inline arctanFeeder() { t = 0; full = false; }
+  inline arctanFeeder(const int& size) {
+    res.resize(size);
+    buf.resize(int(ceil(T(1) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))));
+    for(int i = 0; i < buf.size(); i ++)
+      buf[i] = T(0);
+    for(int i = 0; i < res.size(); i ++)
+      res[i] = T(0);
+    t = 0;
+    full = false;
+  }
+  inline ~arctanFeeder() { ; }
+  inline const SimpleVector<T>& next(const T& in) {
+    for(int i = 0; i < buf.size() - 1; i ++)
+      buf[i] = move(buf[i + 1]);
+    buf[buf.size() - 1] = in;
+    if(buf.size() < t ++) full = true;
+    for(int i = 0; i < res.size(); i ++)
+      res[res.size() - i - 1] = buf[buf.size() - 1 - tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1))];
+    return res;
+  }
+  SimpleVector<T> res;
+  bool full;
+private:
+  SimpleVector<T> buf;
+  int t;
+};
 
 template <typename T> class SimpleSparseVector {
 public:
