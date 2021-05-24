@@ -32,6 +32,7 @@ int main(int argc, const char* argv[]) {
   num_t d(0);
   auto  s0(d);
   auto  s1(d);
+  auto  s2(d);
   auto  M(d);
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
@@ -41,7 +42,7 @@ int main(int argc, const char* argv[]) {
     if(d != bd) {
       if(bd != num_t(0) && M != num_t(0)) {
         s0 += (d - bd) - M;
-        s1 += (d - bd) * M;
+        s1 += (s2 = (d - bd) * M);
       }
       const auto pn((var < 0 ? (whole ? qw0.next(d) : qp0.next(d))
                              : (whole ? pw0.next(d) : pp0.next(d))) - d);
@@ -56,7 +57,7 @@ int main(int argc, const char* argv[]) {
       if(! isfinite(M) || isnan(M)) M = pn;
       if(t ++ < abs(var)) M = num_t(0);
     }
-    std::cout << M << "," << s0 << ", " << s1 << std::endl << std::flush;
+    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << std::endl << std::flush;
   }
   return 0;
 }
