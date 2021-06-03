@@ -3072,8 +3072,8 @@ template <typename T> inline SimpleVector<T> taylor(const int& size, const T& st
   SimpleVector<T> res(size);
   res.ek(step0);
   if(residue == T(0)) return res;
-  const auto& D(diff<T>(size));
-        auto  dt(D.col(step0) * residue);
+  const auto D(diff<T>(size));
+        auto dt(D.col(step0) * residue);
   // N.B.
   // if we deal with (D *= r, residue /= r), it is identical with (D, residue)
   // So ||D^n * residue^n|| / T(n!) < 1 case, this loop converges.
@@ -3178,14 +3178,14 @@ public:
     if(sumup)
       for(int i = 0; i < res.size(); i ++) {
         res[res.size() - i - 1] = T(0);
-        for(int j = int(tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)));
-                j < min(buf.size(), int(tan(T(i + 1) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1))));
+        for(int j = int(T(buf.size() - 1) * tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)));
+                j < min(buf.size(), int(T(buf.size() - 1) * tan(T(i + 1) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1))));
                 j ++)
           res[res.size() - i - 1] += buf[buf.size() - 1 - j];
       }
     else
       for(int i = 0; i < res.size(); i ++)
-        res[res.size() - i - 1] = buf[buf.size() - 1 - int(tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))];
+        res[res.size() - i - 1] = buf[buf.size() - 1 - int(T(buf.size() - 1) * tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))];
     return res;
   }
   SimpleVector<T> res;

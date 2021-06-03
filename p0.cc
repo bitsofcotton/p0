@@ -23,8 +23,8 @@ int main(int argc, const char* argv[]) {
   std::cerr << "continue with p0 " << var <<  " " << (const char*)(whole ? "whole" : "partial") << std::endl;
   P0<num_t, linearFeeder<num_t>, true>  pp0(abs(var));
   P0<num_t, linearFeeder<num_t>, false> qp0(abs(var));
-  P0<num_t, arctanFeeder<num_t>, true>  pw0(abs(var));
-  P0<num_t, arctanFeeder<num_t>, false> qw0(abs(var));
+  P0<num_t, arctanFeeder<num_t, true>, true>  pw0(abs(var));
+  P0<num_t, arctanFeeder<num_t, true>, false> qw0(abs(var));
   auto  pp1(pp0);
   auto  qp1(qp0);
   auto  pw1(pw0);
