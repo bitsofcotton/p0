@@ -48,6 +48,9 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 # Tips
 Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
+# Tips
+P0 calculates left differential by periodical one. To vanish right hand differential, walk option can be used to vanish with average both side on right side distribution (that caused by range start distribution).
+
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
