@@ -34,6 +34,7 @@ int main(int argc, const char* argv[]) {
   auto  s0(d);
   auto  s1(d);
   auto  s2(d);
+  auto  s3(d);
   auto  M(d);
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
@@ -41,23 +42,28 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     if(d != num_t(0)) {
       if(M != num_t(0)) {
-        s0 += d - M;
+        s0 += (s3 = d - M);
         s1 += (s2 = d * M);
       }
       const auto pn((var < 0 ? (whole ? qw0.next(d) : qp0.next(d))
                              : (whole ? pw0.next(d) : pp0.next(d))));
       // original function lower and higher frequency part, middle is ignored.
       if(d == num_t(0)) M = pn;
-      else if(whole)
-         M = (pn + num_t(1) / (var < 0 ? qw1.next(num_t(1) / d)
-                                      : pw1.next(num_t(1) / d))) / num_t(2);
-      else
-         M = (pn + num_t(1) / (var < 0 ? qp1.next(num_t(1) / d)
-                                      : pp1.next(num_t(1) / d))) / num_t(2);
+      else if(whole) {
+         const auto denom(var < 0 ? qw1.next(num_t(1) / d)
+                                  : pw1.next(num_t(1) / d));
+         M = denom == num_t(0) ? pn :
+           (pn + num_t(1) / denom) / num_t(2);
+      } else {
+         const auto denom(var < 0 ? qp1.next(num_t(1) / d)
+                                  : pp1.next(num_t(1) / d));
+         M = denom == num_t(0) ? pn :
+           (pn + num_t(1) / denom) / num_t(2);
+      }
       if(! isfinite(M) || isnan(M)) M = pn;
       if(t ++ < abs(var)) M = num_t(0);
     }
-    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << std::endl << std::flush;
+    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << std::endl << std::flush;
   }
   return 0;
 }
