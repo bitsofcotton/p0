@@ -36,10 +36,15 @@ int main(int argc, const char* argv[]) {
   auto  s2(d);
   auto  s3(d);
   auto  M(d);
+  auto  MM(d);
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+    if(MM < abs(d))
+      MM = abs(d) * num_t(2);
+    if(MM != num_t(0))
+      d /= MM;
     if(d != num_t(0)) {
       if(M != num_t(0)) {
         s0 += (s3 = d - M);
