@@ -41,10 +41,11 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+    const auto bMM(MM);
     if(MM < abs(d))
       MM = abs(d) * num_t(2);
-    if(MM != num_t(0))
-      d /= MM;
+    if(bMM != num_t(0))
+      d /= bMM;
     if(d != num_t(0)) {
       if(M != num_t(0)) {
         s0 += (s3 = d - M);
@@ -68,7 +69,7 @@ int main(int argc, const char* argv[]) {
       if(! isfinite(M) || isnan(M)) M = pn;
       if(t ++ < abs(var)) M = num_t(0);
     }
-    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << std::endl << std::flush;
+    std::cout << (MM != num_t(0) ? M / MM : M) << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << std::endl << std::flush;
   }
   return 0;
 }
