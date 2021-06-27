@@ -51,6 +51,9 @@ Frequency space prediction is equivalent to differential/integratial prediction 
 # Tips
 P0 calculates left differential by periodical one. To vanish right hand differential, walk option can be used to vanish with average both side on right side distribution (that caused by range start distribution).
 
+# Tips
+Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebeesgue integrate and so on. So after then, we can collect original predicted ones.
+
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
@@ -58,3 +61,4 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Refresh Archived
 This repository is close state without external libraries.
+

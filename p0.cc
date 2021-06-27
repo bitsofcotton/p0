@@ -37,13 +37,16 @@ int main(int argc, const char* argv[]) {
   auto  s3(d);
   auto  M(d);
   auto  MM(d);
+  auto  bd(d);
   int   t(0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+    const auto bdd(d);
     const auto bMM(MM);
     if(MM < abs(d))
       MM = abs(d) * num_t(2);
+    d -= bd;
     if(bMM != num_t(0))
       d /= bMM;
     if(d != num_t(0)) {
@@ -70,6 +73,7 @@ int main(int argc, const char* argv[]) {
       if(t ++ < abs(var)) M = num_t(0);
     }
     std::cout << (MM != num_t(0) ? M / MM : M) << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << std::endl << std::flush;
+    bd = bdd;
   }
   return 0;
 }
