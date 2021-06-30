@@ -3069,9 +3069,9 @@ template <typename T> const SimpleMatrix<T>& diff(const int& size0) {
       ddo.row(0) *= T(2);
       ddo.row(ddo.rows() - 1) *= T(2);
       iio.row(0) *= T(2);
-      iio.row(ddo.rows() - 1) *= T(2);
-      dd = (dd * T(2) + ddo) / T(size * 2);
-      ii = (ii * T(2) + ddo) / T(size * 2);
+      iio.row(iio.rows() - 1) *= T(2);
+      dd = (dd * T(2) + ddo) / T(size * 4);
+      ii = (ii * T(2) + ddo) / T(size * 4);
     }
   }
   return size0 < 0 ? ii : dd;
