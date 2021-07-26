@@ -3231,26 +3231,27 @@ template <typename T> SimpleVector<T> linearInvariant(const vector<SimpleVector<
 }
 
 // N.B. please refer bitsofcotton/randtools.
-template <typename T> SimpleVector<T> makeProgramInvariant(const SimpleVector<T>& in, const T& index = - T(1)) {
-  SimpleVector<T> res(in.size() + (T(0) <= index ? 2 : 1));
-#if defined(_OPENMP)
-#pragma omp simd
-#endif
-  for(int i = 0; i < in.size(); i ++) {
-    assert(- T(1) <= in[i] && in[i] <= T(1) && isfinite(in[i]));
-    res[i] = tan((in[i] + T(1)) / T(4) * atan(T(1)));
-  }
+template <typename T> inline pair<SimpleVector<T>, T> makeProgramInvariant(const SimpleVector<T>& in, const T& index = - T(1)) {
+  SimpleVector<T> res(in.size() + (T(0) <= index ? 3 : 2));
+  res.setVector(0, in);
   res[in.size()] = T(1);
   if(T(0) <= index)
-    res[in.size() + 1] = tan(index * atan(T(1)));
-  return res;
+    res[in.size() + 1] = T(index);
+  res[res.size() - 1] = T(0);
+  T   lsum(0);
+  for(int i = 0; i < res.size() - 1; i ++) {
+    assert(- T(1) <= res[i] && res[i] <= T(1));
+    res[i] += T(1);
+    if(res[i] != T(0)) lsum += log(res[i]);
+  }
+  T ratio(1);
+  if(lsum != T(0)) res /= ratio = exp(lsum);
+  res[res.size() - 1] = T(1);
+  return make_pair(res, ratio);
 }
 
-template <typename T> T revertProgramInvariant(const T& in, const bool& index = false) {
-  if(index)
-    return atan(in) / atan(T(1));
-  const static T Pi(atan(T(1)) * T(4));
-  return atan(atan(tan(in * Pi)) / Pi) / atan(T(1)) * T(4) - T(1);
+template <typename T> inline T revertProgramInvariant(const pair<T, T>& in) {
+  return in.first * in.second - T(1);
 }
 
 template <typename T> class linearFeeder {
@@ -3282,7 +3283,7 @@ public:
   inline arctanFeeder() { t = 0; full = false; }
   inline arctanFeeder(const int& size) {
     res.resize(size);
-    buf.resize(int(ceil(T(1) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))));
+    buf.resize(1 + int(ceil(T(1) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))));
     for(int i = 0; i < buf.size(); i ++)
       buf[i] = T(0);
     for(int i = 0; i < res.size(); i ++)

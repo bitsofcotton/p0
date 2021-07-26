@@ -15,8 +15,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # range < 0 for prediction on value.
-    # 0 < range for prediction on walk.
+    # range < 0 for arctan x-axis scale, 0 < range for linear scale.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
