@@ -3278,7 +3278,7 @@ private:
   int t;
 };
 
-template <typename T, bool sumup = false> class arctanFeeder {
+template <typename T> class arctanFeeder {
 public:
   inline arctanFeeder() { t = 0; full = false; }
   inline arctanFeeder(const int& size) {
@@ -3297,17 +3297,8 @@ public:
       buf[i] = move(buf[i + 1]);
     buf[buf.size() - 1] = in;
     if(buf.size() < t ++) full = true;
-    if(sumup)
-      for(int i = 0; i < res.size(); i ++) {
-        res[res.size() - i - 1] = T(0);
-        for(int j = int(T(buf.size() - 1) * tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)));
-                j < min(buf.size(), int(T(buf.size() - 1) * tan(T(i + 1) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1))));
-                j ++)
-          res[res.size() - i - 1] += buf[buf.size() - 1 - j];
-      }
-    else
-      for(int i = 0; i < res.size(); i ++)
-        res[res.size() - i - 1] = buf[buf.size() - 1 - int(T(buf.size() - 1) * tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))];
+    for(int i = 0; i < res.size(); i ++)
+      res[res.size() - i - 1] = buf[buf.size() - 1 - int(tan(T(i) * atan(T(1)) / T(res.size() - 1)) / tan(T(1) * atan(T(1)) / T(res.size() - 1)))];
     return res;
   }
   SimpleVector<T> res;
