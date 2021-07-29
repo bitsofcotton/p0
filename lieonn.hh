@@ -3245,7 +3245,9 @@ template <typename T> inline pair<SimpleVector<T>, T> makeProgramInvariant(const
     if(res[i] != T(0)) lsum += log(res[i]);
   }
   T ratio(1);
-  if(lsum != T(0)) res /= ratio = exp(lsum);
+  // N.B. x_1 ... x_n == 1.
+  // <=> x_1 / (x_1 ... x_n)^(1/n) ... == 1.
+  if(lsum != T(0)) res /= ratio = exp(lsum / T(res.size() - 1));
   res[res.size() - 1] = T(1);
   return make_pair(res, ratio);
 }
