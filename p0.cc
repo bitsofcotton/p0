@@ -40,6 +40,7 @@ int main(int argc, const char* argv[]) {
         s1 += (s2 = (d - bd) * (M - bd));
       }
       // original function lower and higher frequency part, middle is ignored.
+      // to make any sub differential be the same meaning, no inverse condition.
       M = var < 0 ? q.next(d) : p.next(d);
       if(t ++ < abs(var)) M = num_t(0);
     }
