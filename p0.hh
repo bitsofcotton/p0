@@ -77,7 +77,7 @@ template <typename T, typename feeder> inline P0<T, feeder>::~P0() {
 
 template <typename T, typename feeder> inline T P0<T, feeder>::next(const T& in) {
   const auto& ff(f.next(atan(in)));
-  return f.full ? tan(nextP0<T>(f.res.size()).dot(ff)) : T(0);
+  return f.full ? tan(nextP0<T>(ff.size()).dot(ff) * f.r) : T(0);
 }
 
 #define _P0_
