@@ -36,8 +36,8 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     if(d != bd) {
       if(M != num_t(0)) {
-        s0 += (s3 = (d - bd) - (M - d));
-        s1 += (s2 = (d - bd) * (M - d));
+        s0 += (s3 = (d - bd) - (M - bd));
+        s1 += (s2 = (d - bd) * (M - bd));
       }
       // original function lower and higher frequency part, middle is ignored.
       // to make any sub differential be the same meaning, no inverse condition.
