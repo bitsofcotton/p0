@@ -21,8 +21,8 @@ int main(int argc, const char* argv[]) {
     std::cerr << "p0 <var>?" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << "continue with p0 " << var <<  std::endl;
-  P0<num_t, continuousFeeder<num_t, continuousFeeder<num_t, linearFeeder<num_t> > > > p(abs(var));
-  P0<num_t, continuousFeeder<num_t, continuousFeeder<num_t, arctanFeeder<num_t> > > > q(abs(var));
+  P0<num_t, linearFeeder<num_t> > p(abs(var));
+  P0<num_t, arctanFeeder<num_t> > q(abs(var));
   num_t d(0);
   auto  s0(d);
   auto  s1(d);
@@ -36,15 +36,15 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     if(d != bd) {
       if(M != num_t(0)) {
-        s0 += (s3 = (d - bd) - (M - bd));
-        s1 += (s2 = (d - bd) * (M - bd));
+        s0 += (s3 = (d - bd) - M);
+        s1 += (s2 = (d - bd) * M);
       }
       // original function lower and higher frequency part, middle is ignored.
       // to make any sub differential be the same meaning, no inverse condition.
       M = var < 0 ? q.next(d) : p.next(d);
       if(t ++ < abs(var)) M = num_t(0);
     }
-    std::cout << M - d << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << std::endl << std::flush;
+    std::cout << M << "," << s0 << ", " << s1 << ", " << s2 << ", " << s3 << ", " << std::endl << std::flush;
   }
   return 0;
 }
