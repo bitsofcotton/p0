@@ -3306,7 +3306,7 @@ private:
 template <typename T> const T& sgn(const T& x) {
   static const T zero(0);
   static const T one(1);
-  static const T mone(- 1);
+  static const T mone(- T(1));
   return x != zero ? (zero < x ? one : mone) : zero;
 }
 
