@@ -7,7 +7,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    const auto& pred(nextP0<double, /* recursive */>(/* some size */));
+    const auto& pred(nextP0<double>(/* some size */));
     // Or we can use:
     P0<double> p(range);
     ...
@@ -15,7 +15,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range> < data.txt
-    # range < 0 for arctan x-axis scale, 0 < range for linear scale.
+    # range < 0 for only sign correction, 0 < range for cdot correction.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
