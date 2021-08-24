@@ -20,8 +20,9 @@ int main(int argc, const char* argv[]) {
   if(argc < 2)
     std::cerr << "p0 <var>?" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);
-  std::cerr << "continue with p0 " << var <<  std::endl;
+  std::cerr << "continue with p0 " << var << std::endl;
   P0<num_t, linearFeeder<num_t> > p(abs(var));
+  P0<num_t, arctanFeeder<num_t> > q(abs(var));
   num_t d(0);
   auto  M(d);
   auto  S(d);
@@ -29,12 +30,10 @@ int main(int argc, const char* argv[]) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    if(d != bd) {
-      S += (d - bd) * (var < 0 ? sgn(M) : M);
-      // to make any sub-sequences to be the same meaning, no inverse condition,
-      // this causes middle and high frequency parts to be ignored.
-      M  = p.next(d) - d;
-    }
+    S += (d - bd) * M;
+    // to make any sub-sequences to be the same meaning, no inverse condition,
+    // this causes middle and high frequency parts to be ignored.
+    M  = (var < 0 ? q.next(d) : p.next(d)) - d;
     std::cout << S << "," << M << std::endl << std::flush;
   }
   return 0;

@@ -9,13 +9,13 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use:
     const auto& pred(nextP0<double>(/* some size */));
     // Or we can use:
-    P0<double> p(range);
+    P0<double, /* feeder */> p(range);
     ...
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range> < data.txt
-    # range < 0 for only sign correction, 0 < range for cdot correction.
+    ./p0 <range>? < data.txt
+    # range < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
