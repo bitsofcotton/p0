@@ -3245,7 +3245,7 @@ template <typename T> inline pair<SimpleVector<T>, T> makeProgramInvariant(const
 }
 
 template <typename T> inline T revertProgramInvariant(const pair<T, T>& in) {
-  return in.first * in.second - T(1);
+  return max(- T(1), min(T(1), in.first * in.second - T(1)));
 }
 
 template <typename T> class linearFeeder {
