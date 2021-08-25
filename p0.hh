@@ -59,7 +59,7 @@ public:
   inline ~P0() { ; };
   inline T next(const T& in) {
     const auto& ff(f.next(in));
-    return f.full ? nextP0<T>(ff.size()).dot(ff) : in;
+    return f.full ? nextP0<T>(ff.size()).dot(ff) - ff[ff.size() - 1] : T(0);
   }
   feeder f;
 };
