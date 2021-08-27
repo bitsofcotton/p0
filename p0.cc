@@ -33,7 +33,7 @@ int main(int argc, const char* argv[]) {
     // to make any sub-sequences to be the same meaning, no inverse condition,
     // this causes middle and high frequency parts to be ignored.
     M = var < 0 ? q.next(d) : p.next(d);
-    std::cout << D << ", " << M << std::endl << std::flush;
+    std::cout << D << ", " << M << ", " << d << std::endl << std::flush;
   }
   return 0;
 }

@@ -14,8 +14,10 @@ typedef myfloat num_t;
 #include "p0.hh"
 
 int main(int argc, const char* argv[]) {
-  for(int i = 0; i < 80; i ++)
-    std::cout << nextP0<num_t>(80)[i] << ", " << diff<num_t>(80)(79, i) << std::endl;
+  assert(1 < argc);
+  const auto len(std::atoi(argv[1]));
+  for(int i = 0; i < len; i ++)
+    std::cout << nextP0<num_t>(len)[i] << ", " << diff<num_t>(len)(len - 1, i) << std::endl;
   return 0;
 }
 
