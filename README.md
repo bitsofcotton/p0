@@ -14,7 +14,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? <pow>? < data.txt
+    ./p0 <range>? <step>? < data.txt
     # range < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof
