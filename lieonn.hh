@@ -3266,23 +3266,19 @@ private:
   int  t;
 };
 
-template <typename T> class sumFeeder {
+template <typename T, typename feeder> class sumFeeder {
 public:
-  inline sumFeeder() { full = false; t = 0;}
+  inline sumFeeder() { full = false; }
   inline sumFeeder(const int& size) {
-    buf.resize(size);
+    f = feeder(size);
     res.resize(size);
-    buf.O();
     res.O();
     full = false;
-    t = 0;
   }
   inline ~sumFeeder() { ; }
   inline const SimpleVector<T>& next(const T& in) {
-    for(int i = 1; i < buf.size(); i ++)
-      buf[i - 1] = move(buf[i]);
-    buf[buf.size() - 1] = in;
-    if(buf.size() <= t ++) full = true;
+    const auto& buf(f.next(in));
+    full = f.full;
     res[0] = buf[0];
     for(int i = 1; i < res.size(); i ++)
       res[i] = res[i - 1] + buf[i];
@@ -3291,8 +3287,7 @@ public:
   SimpleVector<T> res;
   bool full;
 private:
-  SimpleVector<T> buf;
-  int  t;
+  feeder f;
 };
 
 template <typename T, typename feeder> class linearFeeder {
