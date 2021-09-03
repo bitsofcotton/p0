@@ -38,7 +38,7 @@ int main(int argc, const char* argv[]) {
     for(int i = 1; i < M.size(); i ++)
       M[i - 1] = M[i];
     M[M.size() - 1] = var < 0 ? q.next(d) : p.next(d);
-    std::cout << D << ", " << M[M.size() - 1] << ", " << d << std::endl << std::flush;
+    std::cout << D << ", " << M[M.size() - 1] << ", " << M[0] << ", " << d << std::endl << std::flush;
   }
   return 0;
 }
