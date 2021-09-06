@@ -16,13 +16,13 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   var(3);
+  int   var(64);
   if(argc < 2)
     std::cerr << "p0 <var>?" << std::endl;
   if(1 < argc) var  = std::atoi(argv[1]);
   std::cerr << "continue with p0 " << var << std::endl;
-  P0<num_t, linearFeeder<num_t, idFeeder<num_t> > > p(abs(var));
-  P0<num_t, arctanFeeder<num_t, idFeeder<num_t> > > q(abs(var));
+  P0<num_t, linearFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > p(abs(var));
+  P0<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > q(abs(var));
   num_t d(0);
   auto  D(d);
   auto  M(d);
