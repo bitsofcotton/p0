@@ -7,14 +7,13 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    const auto& pred(nextP0<double>(/* some size */));
-    // Or we can use:
     P0<double, /* feeder */> p(range);
+    // p.p for prediction vector.
     ...
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? <step>? < data.txt
+    ./p0 <range>? < data.txt
     # range < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof

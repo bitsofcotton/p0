@@ -16,8 +16,9 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   assert(1 < argc);
   const auto len(std::atoi(argv[1]));
+  P0<num_t, idFeeder<num_t> > p(len);
   for(int i = 0; i < len; i ++)
-    std::cout << nextP0<num_t>(len)[i] << ", " << diff<num_t>(len)(len - 1, i) << std::endl;
+    std::cout << p.p[i] << ", " << diff<num_t>(len)(len - 1, i) << std::endl;
   return 0;
 }
 
