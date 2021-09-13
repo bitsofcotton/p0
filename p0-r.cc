@@ -17,8 +17,9 @@ int main(int argc, const char* argv[]) {
   assert(1 < argc);
   const auto len(std::atoi(argv[1]));
   P0<num_t, idFeeder<num_t> > p(len);
+  const auto d(diff<num_t>(len).row(len - 1));
   for(int i = 0; i < len; i ++)
-    std::cout << p.p[i] << ", " << diff<num_t>(len)(len - 1, i) << std::endl;
+    std::cout << p.p[i] << ", " << d[i] << std::endl;
   return 0;
 }
 

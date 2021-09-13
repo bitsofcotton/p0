@@ -17,23 +17,35 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int   var(25);
+  int   step(1);
   if(argc < 2)
     std::cerr << "p0 <var>?" << std::endl;
   if(1 < argc) var  = std::atoi(argv[1]);
+  if(2 < argc) step = std::atoi(argv[2]);
   std::cerr << "continue with p0 " << var << std::endl;
-  P0<num_t, linearFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > p(abs(var));
-  P0<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > q(abs(var));
+  std::vector<P0<num_t, linearFeeder<num_t, idFeeder<num_t> > > > p;
+  std::vector<P0<num_t, arctanFeeder<num_t, idFeeder<num_t> > > > q;
+  p.resize(step, P0<num_t, linearFeeder<num_t, idFeeder<num_t> > >(abs(var)));
+  q.resize(step, P0<num_t, arctanFeeder<num_t, idFeeder<num_t> > >(abs(var)));
   num_t d(0);
   auto  D(d);
-  auto  M(d);
+  auto  S(d);
+  std::vector<num_t> M;
+  M.resize(step, num_t(0));
+  int   i(0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    D  = d * M;
+    num_t MM(M[0]);
+    for(int i = 1; i < M.size(); i ++)
+      MM += M[i];
+    D  = d * MM;
+    for(int i = 1; i < M.size(); i ++)
+      M[i - 1] = std::move(M[i]);
     // to make any sub-sequences to be the same meaning, no inverse condition,
     // this causes middle and high frequency parts to be ignored.
-    M = var < 0 ? q.next(d) : p.next(d);
-    std::cout << D << ", " << M << ", " << d << std::endl << std::flush;
+    M[M.size() - 1] = var < 0 ? q[(i ++) % q.size()].next(S += d) : p[(i ++) % p.size()].next(S += d);
+    std::cout << D << ", " << M[M.size() - 1] << ", " << d << std::endl << std::flush;
   }
   return 0;
 }
