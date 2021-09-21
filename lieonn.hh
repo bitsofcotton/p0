@@ -3339,6 +3339,34 @@ private:
   feeder f;
 };
 
+template <typename T, typename pred> class shrinkMatrix {
+public:
+  inline shrinkMatrix() { ; }
+  inline shrinkMatrix(pred&& p, const int& len) {
+    d.resize(len);
+    m.resize(len);
+    this->p = p;
+  }
+  inline ~shrinkMatrix() { ; }
+  inline T next(const T& in) {
+    T res(0);
+    for(int i = 1; i < d.size(); i ++) d[i - 1] = move(d[i]);
+    T D(d[d.size() - 1] = in);
+    if(t ++ < d.size()) return res;
+    for(int i = 0; i < d.size() - 1; i ++) D += d[i];
+    for(int i = 1; i < m.size(); i ++) m[i - 1] = move(m[i]);
+    m[m.size() - 1] = p.next(D /= T(d.size()));
+    if(t <= d.size() + m.size()) return res;
+    for(int i = 0; i < m.size(); i ++)
+      res += m[i] * T(i + 1);
+    return res;
+  }
+private:
+  int t;
+  vector<T> d;
+  vector<T> m;
+  pred p;
+};
 
 template <typename T> const T& sgn(const T& x) {
   static const T zero(0);
