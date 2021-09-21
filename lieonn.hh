@@ -3351,9 +3351,10 @@ public:
   inline T next(const T& in) {
     T res(0);
     for(int i = 1; i < d.size(); i ++) d[i - 1] = move(d[i]);
-    T D(d[d.size() - 1] = in);
+    d[d.size() - 1] = in;
     if(t ++ < d.size()) return res;
-    for(int i = 0; i < d.size() - 1; i ++) D += d[i];
+    auto D(d[0]);
+    for(int i = 1; i < d.size(); i ++) D += d[i] * T(i + 1);
     for(int i = 1; i < m.size(); i ++) m[i - 1] = move(m[i]);
     m[m.size() - 1] = p.next(D /= T(d.size()));
     if(t <= d.size() + m.size()) return res;
