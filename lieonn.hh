@@ -2591,6 +2591,7 @@ template <typename T> inline T SimpleMatrix<T>::determinant() const {
     swap(work.entity[i], work.entity[xchg]);
     const auto& ei(work.entity[i]);
     const auto& eii(ei[i]);
+    det *= eii;
     if(epsilon * ei.dot(ei) < eii * eii) {
 #if defined(_OPENMP)
 #pragma omp parallel for schedule(static, 1)
@@ -2600,7 +2601,6 @@ template <typename T> inline T SimpleMatrix<T>::determinant() const {
         work.entity[j] -= ei * ratio;
       }
     }
-    det *= eii;
   }
   return det;
 }
@@ -3191,6 +3191,59 @@ template <typename T> SimpleMatrix<T> diff(const int& size0) {
     //      it causes constant 0 vector.
     dd = (dft<T>(- size) * DD).template real<T>();
     ii = (dft<T>(- size) * II).template real<T>();
+    ofstream ocache(file.c_str());
+    ocache << dd;
+    ocache << ii;
+    ocache.close();
+    cerr << "." << flush;
+  }
+  return size0 < 0 ? ii : dd;
+}
+
+template <typename T> SimpleMatrix<T> diffRecur(const int& size0) {
+  const auto size(abs(size0));
+  if(! size) {
+    static const SimpleMatrix<T> m0;
+    return m0;
+  }
+  SimpleMatrix<T> dd;
+  SimpleMatrix<T> ii;
+  const auto file(std::string("./.cache/lieonn/diff-recur-") + std::to_string(size) +
+#if defined(_FLOAT_BITS_)
+    std::string("-") + std::to_string(_FLOAT_BITS_)
+#else
+    std::string("-ld")
+#endif
+  );
+  ifstream cache(file.c_str());
+  if(cache.is_open()) {
+    cache >> dd;
+    cache >> ii;
+    cache.close();
+  } else {
+    if(2 < size) {
+      const auto d0(diffRecur<T>(   size - 1 ) * T(size - 1));
+      const auto i0(diffRecur<T>(- (size - 1)) * T(size - 1));
+      dd = SimpleMatrix<T>(size, size).O().setMatrix(0, 0, d0);
+      ii = SimpleMatrix<T>(size, size).O().setMatrix(0, 0, i0);
+      dd.setMatrix(1, 1, dd.subMatrix(1, 1, size - 1, size - 1) + d0);
+      ii.setMatrix(1, 1, ii.subMatrix(1, 1, size - 1, size - 1) + i0);
+      dd.row(0) *= T(2);
+      ii.row(0) *= T(2);
+      dd.row(dd.rows() - 1) *= T(2);
+      ii.row(dd.rows() - 1) *= T(2);
+      dd /= T(2);
+      ii /= T(2);
+    } else {
+      dd = SimpleMatrix<T>(size, size).O();
+      ii = SimpleMatrix<T>(size, size).O();
+    }
+    dd += diff<T>(  size);
+    ii += diff<T>(- size);
+    if(2 < size) {
+      dd /= T(size);
+      ii /= T(size);
+    }
     ofstream ocache(file.c_str());
     ocache << dd;
     ocache << ii;
