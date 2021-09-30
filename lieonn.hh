@@ -3065,9 +3065,9 @@ template <typename T> std::istream& operator >> (std::istream& is, SimpleMatrix<
   return is;
 }
 
-template <typename T> static inline SimpleMatrix<T> log(const SimpleMatrix<T>& m, const int& cut = 200) {
+template <typename T> static inline SimpleMatrix<T> log(const SimpleMatrix<T>& m, const int& cut = 20) {
   SimpleMatrix<T> res(m.rows(), m.cols());
-  const auto c(m.determinant() * T(20));
+  const auto c(abs(m.determinant() * T(20)));
   const auto residue(SimpleMatrix<T>(m.rows(), m.cols()).I() - m / c);
         auto buf(residue);
   res.I(c);
@@ -3352,6 +3352,31 @@ private:
   feeder f;
 };
 
+template <typename T, typename feeder> class deltaFeeder {
+public:
+  inline deltaFeeder() { full = false; }
+  inline deltaFeeder(const int& size) {
+    f = feeder(size);
+    res.resize(size);
+    res.O();
+    full = false;
+  }
+  inline ~deltaFeeder() { ; }
+  inline const SimpleVector<T>& next(const T& in) {
+    const auto& buf(f.next(in));
+    assert(buf.size() == res.size());
+    full = f.full;
+    res[0] = T(int(0));
+    for(int i = 1; i < res.size(); i ++)
+      res[i] = buf[i] - buf[i - 1];
+    return res;
+  }
+  SimpleVector<T> res;
+  bool full;
+private:
+  feeder f;
+};
+
 template <typename T, typename feeder> class linearFeeder {
 public:
   inline linearFeeder() { full = false; }
@@ -3413,7 +3438,7 @@ public:
     if(t <= d.size() + m.size()) return res;
     for(int i = 0; i < m.size(); i ++)
       res += m[i] * T(i + 1);
-    return res;
+    return res /= T(m.size());
   }
 private:
   int t;

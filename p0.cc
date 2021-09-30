@@ -21,8 +21,8 @@ int main(int argc, const char* argv[]) {
     std::cerr << "p0 <len>?" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << "continue with p0 " << var << std::endl;
-  P0<num_t, linearFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > p(abs(var));
-  P0<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > q(abs(var));
+  P0<num_t, linearFeeder<num_t, idFeeder<num_t> > > p(abs(var));
+  P0<num_t, deltaFeeder<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > q(abs(var));
   num_t d(0);
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
