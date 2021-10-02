@@ -16,7 +16,7 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  auto var(7);
+  auto var(3);
   if(argc < 2)
     std::cerr << "p0 <len>?" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);

@@ -3438,7 +3438,7 @@ public:
     if(t <= d.size() + m.size()) return res;
     for(int i = 0; i < m.size(); i ++)
       res += m[i] * T(i + 1);
-    return res /= T(m.size());
+    return res /= (T(m.size()) * T(m.size()) * T(m.size() + 1) * T(m.size() + 1) / T(4));
   }
 private:
   int t;
