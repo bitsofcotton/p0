@@ -29,10 +29,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << D << ", " << (M = var < 0 ? q.next(d) : p.next(d)) << ", ";
-    ins.ignore(3);
-    ins >> d;
-    std::cout << d << std::endl << std::flush;
+    std::cout << D << ", " << (M = var < 0 ? q.next(d) : p.next(d)) << ", " << s.substr((int)ins.tellg() + 1) << std::endl << std::flush;
   }
   return 0;
 }
