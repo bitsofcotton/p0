@@ -26,10 +26,12 @@ int main(int argc, const char* argv[]) {
   num_t d(0);
   auto  bd(d);
   pair<num_t, num_t> M;
+  pair<num_t, num_t> MM;
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    const auto D((d - bd) * M.first);
+    const auto D((d - bd) * MM.first);
+    MM = M;
     std::cout << D << ", " << (M = var < 0 ? q.next(bd = d) : p.next(bd = d)).first << ", " << M.second << std::endl << std::flush;
   }
   return 0;
