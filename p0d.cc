@@ -17,12 +17,14 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   auto var(3);
-  if(argc < 2)
-    std::cerr << argv[0] << " <len>?" << std::endl;
+  auto rnd(1);
+  if(argc < 3)
+    std::cerr << argv[0] << " <len>? <rnd?>" << std::endl;
   if(1 < argc) var = std::atoi(argv[1]);
-  std::cerr << "continue with " << argv[0] << " " << var << std::endl;
-  P0Dsgn<num_t, P0<num_t, idFeeder<num_t> > > p(abs(var));
-  P0Dsgn<num_t, P0<num_t, deltaFeeder<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > > q(abs(var));
+  if(2 < argc) rnd = std::atoi(argv[2]);
+  std::cerr << "continue with " << argv[0] << " " << var << " " << rnd << std::endl;
+  P0Dsgn<num_t, P0<num_t, idFeeder<num_t> > > p(abs(var), 1, rnd);
+  P0Dsgn<num_t, P0<num_t, deltaFeeder<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > > q(abs(var), 1, rnd);
   num_t d(0);
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
