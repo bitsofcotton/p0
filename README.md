@@ -8,12 +8,15 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use:
     P0<double, /* feeder */> p(range, step);
+    P0D<double, P0<double, /* feeder */> > q(range, step, recur);
     // p.p for prediction vector.
     ...
-      xnext = p.next(x);
+      xnextp = p.next(x);
+      xnextq = q.next(x);
 
 # How to use (commandline):
-    ./p0 <step>? < data.txt
+    ./p0  <step>? < data.txt
+    ./p0d <step>? <recur>? < data.txt
     # step < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof
@@ -51,6 +54,9 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Tips
 Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebeesgue integrate and so on. So after then, we can collect original predicted ones.
+
+# Tips
+p0d shakes uncontinuous part on original data stream.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing

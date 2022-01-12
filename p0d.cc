@@ -23,8 +23,8 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var = std::atoi(argv[1]);
   if(2 < argc) rnd = std::atoi(argv[2]);
   std::cerr << "continue with " << argv[0] << " " << var << " " << rnd << std::endl;
-  P0Dsgn<num_t, P0<num_t, idFeeder<num_t> > > p(abs(var), 1, rnd);
-  P0Dsgn<num_t, P0<num_t, deltaFeeder<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > > q(abs(var), 1, rnd);
+  P0D<num_t, P0<num_t, idFeeder<num_t> > > p(abs(var), 1, rnd);
+  P0D<num_t, P0<num_t, deltaFeeder<num_t, arctanFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > > q(abs(var), 1, rnd);
   num_t d(0);
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
