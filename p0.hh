@@ -98,7 +98,7 @@ template <typename T, typename P> class P0D {
 public:
   typedef SimpleVector<T> Vec;
   inline P0D() { ; }
-  inline P0D(const int& size, const int& step = 1, const int& recur = 1) {
+  inline P0D(const int& size, const int& step = 1) {
     p = P(size, step);
     q = P(size, step);
   }

@@ -8,7 +8,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use:
     P0<double, /* feeder */> p(range, step);
-    P0D<double, P0<double, /* feeder */> > q(range, step, recur);
+    P0D<double, P0<double, /* feeder */> > q(range, step);
     // p.p for prediction vector.
     ...
       xnextp = p.next(x);
@@ -16,7 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0  <step>? < data.txt
-    ./p0d <step>? <recur>? < data.txt
+    ./p0d <step>? < data.txt
     # step < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof
