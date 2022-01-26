@@ -32,14 +32,15 @@ int main(int argc, const char* argv[]) {
   auto  d(M);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
-    ins >> d[t % d.size()];
-    auto D(d[t % d.size()] * M[t % M.size()]);
+    ins >> d[t];
+    auto D(d[t] * M[t]);
     if(0 < step)
-      for(int i = 1; i < M.size(); i ++)
-        D += d[(t + i) % d.size()] * M[t % M.size()];
+      for(int i = 1; i < d.size(); i ++)
+        D += d[(t + i) % d.size()] * M[t];
     const auto S0(S);
-    const auto t0((t ++) % d.size());
-    std::cout << D << ", " << (M[t % M.size()] = step < 0 ? (var < 0 ? q.next(d[t0]) : p.next(d[t0])) : (var < 0 ? q.next(S += d[t0]) - S0 : p.next(S += d[t0]) - S0)) << ", " << s.substr((int)ins.tellg() + 1) << std::endl << std::flush;
+    std::cout << D << ", " << (M[t] = step < 0 ? (var < 0 ? q.next(d[t]) : p.next(d[t])) : (var < 0 ? q.next(S += d[t]) - S0 : p.next(S += d[t]) - S0)) << ", " << s.substr((int)ins.tellg() + 1) << std::endl << std::flush;
+    assert(M.size() == d.size());
+    t = (++ t) % d.size();
   }
   return 0;
 }
