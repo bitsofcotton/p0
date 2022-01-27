@@ -15,8 +15,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnextq = q.next(x);
 
 # How to use (commandline):
-    ./p0  <range>? < data.txt
-    ./p02 <range>? < data.txt
+    ./p0 <range>? < data.txt
     # range < 0 for arctan x-axis scale, otherwise, linear scale.
 
 # Proof
@@ -56,7 +55,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebeesgue integrate and so on. So after then, we can collect original predicted ones.
 
 # Tips
-p0d shakes uncontinuous part on original data stream.
+If the prediction is not better, we can input inverse or arctan on original data stream in the meaning to summation or itself.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
