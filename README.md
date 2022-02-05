@@ -16,7 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <range>? < data.txt
-    # range < 0 for arctan x-axis scale, otherwise, linear scale.
+    # range < 0 for n-markov, otherwise, 3-markov with average range.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -39,6 +39,8 @@ N.B. DFT differential itself is ideal for trigometric function multiply sums. So
 
 With atan(input) then tan(predict) causes L2(R) condition to be vanished.
 
+The multiplication inverse exchanges between high frequency part and low frequency part, so simple inverse might be predictable in this.
+
 # Tips
 If we don't predict well, please refer p2.
 
@@ -53,9 +55,6 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Tips
 Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebeesgue integrate and so on. So after then, we can collect original predicted ones.
-
-# Tips
-If the prediction is not better, we can input inverse or arctan on original data stream in the meaning to summation or itself.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
