@@ -9,14 +9,18 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use:
     P0<double, /* feeder */> p(range, step);
     P0D<double, P0<double, /* feeder */> > q(range, step);
+    northPole<double, P0<double, /* feeder */> > r(P0<double, /* feeder */>(range, step), step);
     // p.p for prediction vector.
     ...
       xnextp = p.next(x);
       xnextq = q.next(x);
+      xnextr = r.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? < data.txt
+    ./p0  <range>? < data.txt
+    ./p0n <range>? < data.txt
     # range < 0 for n-markov, otherwise, 3-markov with average range.
+    # p0n is p0 with essential point hack.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -37,9 +41,7 @@ And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x)
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
-With atan(input) then tan(predict) causes L2(R) condition to be vanished.
-
-The multiplication inverse exchanges between high frequency part and low frequency part, so simple inverse might be predictable in this.
+If there's essential point near the defined region, we use northPole class to hack essential points.
 
 # Tips
 If we don't predict well, please refer p2.
@@ -51,16 +53,15 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
 # Tips
-P0 calculates left differential by periodical one. To vanish right hand differential, walk option can be used to vanish with average both side on right side distribution (that caused by range start distribution).
+P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution.
 
 # Tips
-Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebeesgue integrate and so on. So after then, we can collect original predicted ones.
+Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebesgue integrate and so on. So after then, we can collect original predicted ones. p0n is formal laurent series essential point hack, if not both side is essential, multiply inverse condition works well, otherwise, the essential point hack enforces them into north pole near defined region.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
 * https://ja.osdn.net/users/bitsofcotton/
 
-# Refresh Archived
-This repository is close state without external libraries.
+# Archived.
 
