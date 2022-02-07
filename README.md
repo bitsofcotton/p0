@@ -1,5 +1,6 @@
 # bitsofcotton/p0
-Generic predictor that not depends on data itself but doesn't win good randoms.  
+Generic predictor that not depends on data itself but doesn't win statistical illegal values.
+
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
 And, if we make DFT and IDFT on them, there exists differential on them in DFT meaning.
@@ -7,20 +8,14 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0<double, /* feeder */> p(range, step);
-    P0D<double, P0<double, /* feeder */> > q(range, step);
-    northPole<double, P0<double, /* feeder */> > r(P0<double, /* feeder */>(range, step), step);
-    // p.p for prediction vector.
+    northPole<double, P0D<double, P0<double, /* feeder */> > > p(P0D<double, P0<double, /* feeder */> >(range, step));
+    // pnext<T>(range, step) for prediction vector.
     ...
-      xnextp = p.next(x);
-      xnextq = q.next(x);
-      xnextr = r.next(x);
+      xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0  <range>? < data.txt
-    ./p0n <range>? < data.txt
-    # range < 0 for n-markov, otherwise, 3-markov with average range.
-    # p0n is p0 with essential point hack.
+    ./p0 <range>? < data.txt
+    # range < 0 for range-markov, otherwise, 3-markov with average range.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -37,14 +32,11 @@ exp(Sum log(z-|z|cis(&pi;/4+t_k)))\*(Sum((f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&pi;
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
-And, if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e..  
+N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e..  
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
-If there's essential point near the defined region, we use northPole class to hack essential points.
-
-# Tips
-If we don't predict well, please refer p2.
+N.B. p0 uses northPole class to hack essential point whether or not if near the defined region.
 
 # Tips
 This p0 uses weak differential, so integrate(diff) != id because of complex part is omitted (but Re diff(diff) is no matter if we calculate in R or C).
@@ -56,7 +48,7 @@ Frequency space prediction is equivalent to differential/integratial prediction 
 P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution.
 
 # Tips
-Even this suppose only some statistical condition, we need input to pseudo continuous one that to be made by lebesgue integrate and so on. So after then, we can collect original predicted ones. p0n is formal laurent series essential point hack, if not both side is essential, multiply inverse condition works well, otherwise, the essential point hack enforces them into north pole near defined region.
+northPole class is formal laurent series essential point hack, if not both side is essential, P0D works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
