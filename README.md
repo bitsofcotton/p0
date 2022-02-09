@@ -8,7 +8,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    northPole<double, P0D<double, P0<double, /* feeder */> > > p(P0D<double, P0<double, /* feeder */> >(range, step));
+    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step));
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);
@@ -48,7 +48,7 @@ Frequency space prediction is equivalent to differential/integratial prediction 
 P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution.
 
 # Tips
-northPole class is formal laurent series essential point hack, if not both side is essential, P0D works well, otherwise, the essential point hack enforces them into north pole near the defined region.
+northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
