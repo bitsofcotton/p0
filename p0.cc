@@ -23,15 +23,30 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var  = std::atoi(argv[1]);
   std::cerr << "continue with " << argv[0] << " " << var << std::endl;
   northPole<num_t, northPole<num_t, p0_t> > p(northPole<num_t, p0_t>(p0_t(P0<num_t, idFeeder<num_t> >(var < 0 ? - var : 3), var < 0 ? 1 : var)));
-  num_t d(0);
+  int   t;
+  num_t d(t ^= t);
   auto  M(d);
   auto  S(d);
+  auto  Snote(d);
+  vector<num_t> h;
+  h.resize(abs(var) * 2 + 3, num_t(int(0)));
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
     const auto S0(S);
-    std::cout << D << ", " << (M = p.next(S += d) - S0) << std::endl << std::flush;
+    Snote += d;
+    if(d != num_t(int(0))) {
+      h[(t ++) % h.size()] = d;
+      if(! (t % h.size())) {
+        S = num_t(int(0));
+        for(int i = 0; i < h.size() - 1; i ++)
+          (void)p.next(S += h[i] - Snote / num_t(int(t)));
+      }
+      auto pn(p.next(S += d - Snote / num_t(int(t))));
+      std::cout << D << ", " << (pn == num_t(int(0)) ? M : M = pn - S0 + Snote / num_t(int(t))) << std::endl << std::flush;
+    } else
+      std::cout << D << ", " << M << std::endl << std::flush;
   }
   return 0;
 }
