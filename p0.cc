@@ -41,9 +41,11 @@ int main(int argc, const char* argv[]) {
       for(int i = 0; i < h.size(); i ++)
         A += h[i];
       A /= num_t(int(h.size()));
-      for(int j = 0; j < 2; j ++)
+      for(int j = 0; j < 2; j ++) {
         for(int i = 0; i < h.size(); i ++)
           (void)p.next(S += h[i] - A);
+        S = num_t(int(0));
+      }
       for(int i = 0; i < h.size() - 1; i ++)
         (void)p.next(S += h[i] - A);
       t ^= t;
