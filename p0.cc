@@ -34,7 +34,6 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    const auto S0(S);
     Snote += d;
     if(d != num_t(int(0))) {
       h[(t ++) % h.size()] = d;
@@ -43,6 +42,7 @@ int main(int argc, const char* argv[]) {
         for(int i = 0; i < h.size() - 1; i ++)
           (void)p.next(S += h[i] - Snote / num_t(int(t)));
       }
+      const auto S0(S);
       auto pn(p.next(S += d - Snote / num_t(int(t))));
       std::cout << D << ", " << (pn == num_t(int(0)) ? M : M = pn - S0 + Snote / num_t(int(t))) << std::endl << std::flush;
     } else
