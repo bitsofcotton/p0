@@ -12,6 +12,12 @@
 #include "lieonn.hh"
 typedef myfloat num_t;
 #include "p0.hh"
+typedef P0<num_t, idFeeder<num_t> > p0_0t;
+typedef northPole<num_t, p0_0t> p0_1t;
+typedef northPole<num_t, p0_1t> p0_2t;
+typedef shrinkMatrix<num_t, p0_2t> p0_3t;
+typedef northPole<num_t, p0_3t> p0_4t;
+typedef northPole<num_t, p0_4t> p0_t;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -21,7 +27,7 @@ int main(int argc, const char* argv[]) {
     std::cerr << argv[0] << " <len>?" << std::endl;
   if(1 < argc) var  = std::atoi(argv[1]);
   std::cerr << "continue with " << argv[0] << " " << var << std::endl;
-  northPole<num_t, shrinkMatrix<num_t, northPole<num_t, P0<num_t, idFeeder<num_t> > > > > p0(shrinkMatrix<num_t, northPole<num_t, P0<num_t, idFeeder<num_t> > > >(northPole<num_t, P0<num_t, idFeeder<num_t> > >(P0<num_t, idFeeder<num_t> >(var < 0 ? - var : 3)), var < 0 ? 1 : var));
+  p0_t p0(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var < 0 ? - var : 3))), var < 0 ? 1 : var)));
   int   t;
   num_t zero(t ^= t);
   auto  d(zero);
