@@ -16,6 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use (commandline):
     ./p0 <range>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
+    # N.B. we try to move average into origin point, so no sharp edge gained.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -49,6 +50,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
+We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing

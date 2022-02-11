@@ -114,7 +114,7 @@ public:
     if(s  == zero || M1 == zero) return in;
     const auto pn(max(- atan(r), min(atan(r), p.next(atan(s * r / M1)))));
     if(pn == zero) return in;
-    auto res(tan(one / (tan(pn) * (M1 / r))) * M0 / r);
+    auto res(tan(max(- atan(r), min(atan(r), one / (tan(pn) * (M1 / r))))) * M0 / r);
     if(isfinite(res)) return res;
     return in;
   }
