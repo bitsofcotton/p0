@@ -107,13 +107,15 @@ public:
   inline T next(const T& in) {
     static const T zero(int(0));
     static const T one(int(1));
+    if(! isfinite(in)) return in;
     if(M0 < abs(in)) M0 = abs(in) * T(int(2));
     if(in == zero || M0 == zero) return in;
     auto s(one / atan(in * r / M0));
+    if(! isfinite(s)) return in;
     if(M1 < abs(s)) M1 = abs(s) * T(int(2));
     if(s  == zero || M1 == zero) return in;
     const auto pn(max(- atan(r), min(atan(r), p.next(atan(s * r / M1)))));
-    if(pn == zero) return in;
+    if(pn == zero || ! isfinite(pn)) return in;
     auto res(tan(max(- atan(r), min(atan(r), one / (tan(pn) * (M1 / r))))) * M0 / r);
     if(isfinite(res)) return res;
     return in;
