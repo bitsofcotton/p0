@@ -15,7 +15,7 @@ typedef myfloat num_t;
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 typedef northPole<num_t, p0_0t> p0_1t;
 typedef northPole<num_t, p0_1t> p0_2t;
-typedef shrinkMatrix<num_t, p0_2t> p0_3t;
+typedef shrinkMatrix<num_t, p0_2t, true> p0_3t;
 typedef northPole<num_t, p0_3t> p0_4t;
 typedef northPole<num_t, p0_4t> p0_t;
 
