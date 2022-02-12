@@ -49,13 +49,13 @@ int main(int argc, const char* argv[]) {
     const auto D(d * M);
           auto S0(S);
     A += d; t ++;
-          auto SS(S += d - A / num_t(t));
+          auto dd(d - A / num_t(t));
     for(int i = 0; i < abs(le); i ++)
-      SS = le < 0 ? logscale<num_t>(SS) : expscale<num_t>(SS);
-    M = p.next(SS);
+      dd = le < 0 ? logscale<num_t>(dd) : expscale<num_t>(dd);
+    M = p.next(S += dd) - S0;
     for(int i = 0; i < abs(le); i ++)
-      M  = le < 0 ? expscale<num_t>(M) : logscale<num_t>(M);
-    std::cout << D << ", " << (M += - S0 + A / num_t(t)) << std::endl << std::flush;
+      M = le < 0 ? expscale<num_t>(M) : logscale<num_t>(M);
+    std::cout << D << ", " << (M += A / num_t(t)) << std::endl << std::flush;
   }
   return 0;
 }
