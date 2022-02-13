@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor that not depends on data itself but doesn't win statistical illegal values.
+Generic predictor that not depends on data itself.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -16,10 +16,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use (commandline):
     ./p0 <range>? <logexp>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
-    # N.B. we try to move average into origin point, so no sharp edge gained.
     # logexp < 0 for log^logexp-prediction, otherwise, exp^logexp-prediction.
     #   This is needed because we cannot determine arctan range to fight with
     #   statistical illegal values.
+    # N.B. we try to move average into origin point, so no sharp edge gained.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
