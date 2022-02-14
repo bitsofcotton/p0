@@ -14,11 +14,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? <logexp>? < data.txt
+    ./p0 <range>? <Marctan>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
-    # logexp < 0 for log^logexp-prediction, otherwise, exp^logexp-prediction.
-    #   This is needed because we cannot determine arctan range to fight with
-    #   statistical illegal values.
+    # Marctan specifies the ratio on input that to be arctangented.
     # N.B. we try to move average into origin point, so no sharp edge gained.
 
 # Proof
