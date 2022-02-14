@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor that not depends on data itself.
+Generic predictor that does not depends on data itself.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -8,7 +8,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step));
+    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step), /* Marctan */);
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);
@@ -51,7 +51,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
-We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0. (But in practical, if we don't need extreme value prediction, northPole once is better to use with small accuracy.)
+We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
