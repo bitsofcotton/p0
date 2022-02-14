@@ -53,7 +53,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
-We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0.
+We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0. (But in practical, if we don't need extreme value prediction, northPole once is better to use with small accuracy.)
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
