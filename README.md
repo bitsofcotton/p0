@@ -8,7 +8,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step), /* Marctan */);
+    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step));
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);

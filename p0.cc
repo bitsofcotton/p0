@@ -37,7 +37,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << D << ", " << (M = p.next(d * r)) << std::endl << std::flush;
+    std::cout << D << ", " << (M = p.next(d * r) / r) << std::endl << std::flush;
   }
   return 0;
 }
