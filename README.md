@@ -51,7 +51,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
-Because of this, we can handle any function which we can lebesgue integrable can be predicted a.e. .
+Because of this, we can handle any function a.e. which we can lebesgue integrable.
 
 # Tips
 When we northPole twice, we can apply them into delta itself, then, summation of which one. With this form, we should shrinkMatrix on some range because the definition applies: f(x+delta)-f(x) series, then, Sum(g(f(x+delta)-f(x))) series, they needs sectional measurement to make meaning reasonable, but to do so, we need shrinkMatrix.
