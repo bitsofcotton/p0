@@ -14,7 +14,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? <Marctan>? < data.txt
+    ./p0 <range>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
     # range == 0 for 3-markov without northPole transform.
 
@@ -46,11 +46,15 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
 # Tips
-P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution.
+P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution. But with some of sub sequence meaning, if we have some sub sequence average as 0 value, we can use them bared prediction.
 
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
+Because of this, we can handle any function which we can lebesgue integrable can be predicted a.e. .
+
+# Tips
+When we northPole twice, we can apply them into delta itself, then, summation of which one. With this form, we should shrinkMatrix on some range because the definition applies: f(x+delta)-f(x) series, then, Sum(g(f(x+delta)-f(x))) series, they needs sectional measurement to make meaning reasonable, but to do so, we need shrinkMatrix.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
