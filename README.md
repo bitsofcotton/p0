@@ -16,8 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use (commandline):
     ./p0 <range>? <Marctan>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
-    # Marctan specifies the ratio on input that to be arctangented.
-    # N.B. we try to move average into origin point, so no sharp edge gained.
+    # range == 0 for 3-markov without northPole transform.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
