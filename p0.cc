@@ -33,7 +33,7 @@ int main(int argc, const char* argv[]) {
   P0<num_t, idFeeder<num_t> > q(3);
   num_t d(int(0));
   auto  M(d);
-  const auto r(pow(num_t(int(2)), num_t(mabs2)) * num_t(max(1, abs(var))));
+  const auto r(pow(num_t(int(2)), num_t(mabs2)) * num_t(max(1, abs(var * 4))));
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;

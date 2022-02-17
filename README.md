@@ -17,6 +17,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0 <range>? <Mabs in 2^x>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
     # |range| also specifies the range on probability.
+    # N.B. We need n < |range| for n-markov input,
+    #      Jamming is able to any of algorithms, so if this algorithm is jammed,
+    #      please change the range.
+    # N.B. if the input series doesn't show all of the status information,
+    #      we need to get |range| large enough.
     # range == 0 for 3-markov without northPole, shrinkMatrix transform.
     # Mabs specifies abs max value on input stream.
 
