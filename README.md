@@ -14,9 +14,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? < data.txt
+    ./p0 <range>? <Mabs in 2^x>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
-    # range == 0 for 3-markov without northPole transform.
+    # |range| also specifies the range on probability.
+    # range == 0 for 3-markov without northPole, shrinkMatrix transform.
+    # Mabs specifies abs max value on input stream.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

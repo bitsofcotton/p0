@@ -3291,13 +3291,12 @@ public:
   }
   inline ~shrinkMatrix() { ; }
   inline T next(const T& in) {
-    const static T zero(int(0));
     d[(t ++) % d.size()] = in;
     auto D(d[0]);
     for(int i = 1; i < d.size(); i ++) D += d[i];
     m[t % m.size()] = (p[t % p.size()].next(D) - D) / T(int(d.size())) + in;
-    auto res(zero);
-    for(int i = 0; i < m.size(); i ++) res += m[i];
+    auto res(m[0]);
+    for(int i = 1; i < m.size(); i ++) res += m[i];
     return res /= T(int(m.size()));
   }
 private:
