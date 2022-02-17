@@ -34,7 +34,7 @@ int main(int argc, const char* argv[]) {
   num_t d(int(0));
   auto  M(d);
   // N.B. we need 3 bit for each arctan function.
-  const auto r(pow(num_t(int(2)), - num_t(mabs2) - num_t(int(12))));
+  const auto r(pow(num_t(int(2)), - num_t(mabs2) - num_t(int(12))) / num_t(max(1, abs(var))));
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
