@@ -14,7 +14,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? <Mabs in 2^x>? < data.txt
+    ./p0 <range>? < data.txt
     # range < 0 for range-markov, otherwise, 3-markov with average range.
     # |range| also specifies the range on probability.
     # N.B. We need n < |range| for n-markov input,
@@ -23,7 +23,6 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # N.B. if the input series doesn't show all of the status information,
     #      we need to get |range| large enough.
     # range == 0 for 3-markov without northPole, shrinkMatrix transform.
-    # Mabs specifies abs max value on input stream.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
