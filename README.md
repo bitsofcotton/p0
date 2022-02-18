@@ -23,6 +23,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # N.B. if the input series doesn't show all of the status information,
     #      we need to get |range| large enough.
     # range == 0 for 3-markov without northPole, shrinkMatrix transform.
+    # N.B. we move average into origin point, so no sharp edge will be gained
+    #      on initialization steps.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
