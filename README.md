@@ -14,17 +14,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <range>? < data.txt
-    # range < 0 for range-markov, otherwise, 3-markov with average range.
-    # |range| also specifies the range on probability.
-    # N.B. We need n < |range| for n-markov input,
-    #      Jamming is able to any of algorithms, so if this algorithm is jammed,
-    #      please change the range.
-    # N.B. if the input series doesn't show all of the status information,
-    #      we need to get |range| large enough.
-    # range == 0 for 3-markov without northPole, shrinkMatrix transform.
-    # N.B. we move average into origin point, so no sharp edge will be gained
-    #      on initialization steps.
+    ./p0 < data.txt
+    # N.B. we need first some initial unstable prediction point depends on
+    #      n on n-markov and status blocks shown in data stream.
+    # N.B. we need large and large accuracy to continue long and long range.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
