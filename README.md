@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor that does not depends on data itself.
+Generic predictor long range correct but needs accuracy depends on range length.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -18,6 +18,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # N.B. we need first some initial unstable prediction point depends on
     #      n on n-markov and status blocks shown in data stream.
     # N.B. we need large and large accuracy to continue long and long range.
+    # N.B. we predict twice to remove periodical result.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
