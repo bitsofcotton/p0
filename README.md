@@ -17,8 +17,16 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0 < data.txt
     # N.B. we need first some initial unstable prediction point depends on
     #      n on n-markov and status blocks shown in data stream.
+    # N.B. if we predict large step, we make hypothesis on probability on the
+    #      range is continuous and sectional measurement to be small error on
+    #      the series.
+    # N.B. if the average on the input is unstable enough, this predictor fails.
+    #      normally, we don't meet this condition with large enough step.
     # N.B. we need large and large accuracy to continue long and long range.
     # N.B. we predict twice to remove periodical result.
+    # N.B. if original stream is contradicted to th. liouville and has some
+    #      finite range, we sometimes can predict them with
+    #      (d\_(k+1) - l.u.b.) / (d\_k - l.u.b.) - 1 series.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -35,7 +43,7 @@ exp(Sum log(z-|z|cis(&pi;/4+t_k)))\*(Sum((f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&pi;
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
-N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e..  
+N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e. if the range is long enough.  
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
@@ -53,7 +61,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
-Because of this, we can handle any function a.e. which we can lebesgue integrable.
+Because of this, we can handle any function a.e. which we can lebesgue integrable if range is large enough.
 
 # Tips
 When we northPole twice, we can apply them into delta itself, then, summation of which one. With this form, we should shrinkMatrix on some range because the definition applies: f(x+delta)-f(x) series, then, Sum(g(f(x+delta)-f(x))) series, they needs sectional measurement to make meaning reasonable, but to do so, we need shrinkMatrix.
