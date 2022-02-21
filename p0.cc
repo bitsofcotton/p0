@@ -36,7 +36,7 @@ int main(int argc, const char* argv[]) {
     const auto DD(D * MM);
     M = p.next(d);
     if(4 < t) MM = q.next(D);
-    if(t ++ < 8)
+    if(t ++ <= 8)
       std::cout << num_t(int(0)) << ", " << num_t(int(0)) << std::endl << std::flush;
     else {
       std::cout << DD << ", " << M * MM << std::endl << std::flush;

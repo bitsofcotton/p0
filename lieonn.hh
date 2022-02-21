@@ -3316,8 +3316,8 @@ public:
     auto D(d[0]);
     for(int i = 1; i < d.size(); i ++) D += d[i];
     m[int(t) % m.size()] = noend
-      ?  p.next(D / dsize) * dsize - D
-      : (p.next(D / dsize) * dsize - D) / dsize + in;
+      ?  p.next(D / dsize) * (dsize + T(int(1))) - D
+      : (p.next(D / dsize) *  dsize - D) / dsize + in;
     auto res(m[0]);
     for(int i = 1; i < m.size(); i ++) res += m[i];
     return res /= T(int(m.size()));
