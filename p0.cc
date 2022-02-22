@@ -29,13 +29,19 @@ int main(int argc, const char* argv[]) {
   num_t d(t ^= t);
   auto  M( d);
   auto  MM(d);
+  auto  Mx(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D( d * M);
     const auto DD(D * MM);
-    M = p.next(d);
-    if(4 < t) MM = q.next(D);
+    if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
+    M = max(- Mx, min(Mx, p.next(d)));
+    if(4 < t) {
+      MM = q.next(D);
+      if(Mx != num_t(int(0))) MM /= Mx;
+      MM = max(- Mx, min(Mx, MM));
+    }
     if(t ++ <= 8)
       std::cout << num_t(int(0)) << ", " << num_t(int(0)) << std::endl << std::flush;
     else {
