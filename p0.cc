@@ -27,27 +27,30 @@ int main(int argc, const char* argv[]) {
   std::vector<p0_t> p;
   auto  q(p);
   num_t d(int(0));
-  auto  M( d);
-  auto  MM(d);
+  auto  Mp(d);
+  auto  Mq(d);
   auto  Mx(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    const auto D( d * M);
-    const auto DD(D * MM);
-    if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
+    const auto Dp(d  * Mp);
+    const auto Dq(Dp * Mq);
+    if(Mx < abs(d) * num_t(int(2))) Mx = abs(d) * num_t(int(2));
     if(Mx == num_t(int(0))) {
-      std::cout << DD << ", " << num_t(int(0)) << std::endl << std::endl;
+      std::cout << Dq << ", " << Mp * Mq << std::endl << std::endl;
       continue;
     }
     p.emplace_back(p0);
     q.emplace_back(p0);
-    M = MM = num_t(int(0));
-    for(int i = 0; i < p.size(); i ++) M  += max(- Mx, min(Mx, p[i].next(d)));
-    for(int i = 0; i < q.size(); i ++) MM += max(- Mx, min(Mx, q[i].next(D)));
-    M  /= num_t(int(p.size())) * Mx;
-    MM /= num_t(int(q.size())) * Mx;
-    std::cout << DD << ", " << M * MM << std::endl << std::flush;
+    Mp = Mq = num_t(int(0));
+    // N.B. vanish first period.
+    for(int i = 0; i < p.size(); i ++) Mp += max(- Mx, min(Mx, p[i].next(d )));
+    // N.B. vanish double period causes no period on the stream.
+    //      this results the right hand will no return in probability 1 ideally.
+    for(int i = 0; i < q.size(); i ++) Mq += max(- Mx, min(Mx, q[i].next(Dp)));
+    Mp /= num_t(int(p.size())) * Mx;
+    Mq /= num_t(int(q.size())) * Mx;
+    std::cout << Dq << ", " << Mp * Mq << std::endl << std::flush;
   }
   return 0;
 }
