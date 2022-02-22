@@ -20,6 +20,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # N.B. if we predict large step, we make hypothesis on probability on the
     #      range is continuous and sectional measurement to be small error on
     #      the series.
+    # N.B. we take the large and large memory, heavy and heavy load on
+    #      continueing prediction long and long, there's no limit on the
+    #      upper bound of resource of them, so only finite input is accepted.
     # N.B. if the average on the input is unstable enough, this predictor fails.
     #      normally, we don't meet this condition with large enough step.
     # N.B. we need large and large accuracy to continue long and long range.

@@ -23,10 +23,10 @@ typedef sumChain< num_t, p0_5t, true> p0_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  p0_t  p(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3)) ))) ));
+  p0_t  p0(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3)) ))) ));
+  std::vector<p0_t> p;
   auto  q(p);
-  int   t;
-  num_t d(t ^= t);
+  num_t d(int(0));
   auto  M( d);
   auto  MM(d);
   auto  Mx(d);
@@ -36,18 +36,18 @@ int main(int argc, const char* argv[]) {
     const auto D( d * M);
     const auto DD(D * MM);
     if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
-    M = max(- Mx, min(Mx, p.next(d)));
-    if(4 < t) {
-      MM = q.next(D);
-      if(Mx != num_t(int(0))) MM /= Mx;
-      MM = max(- Mx, min(Mx, MM));
+    if(Mx == num_t(int(0))) {
+      std::cout << DD << ", " << num_t(int(0)) << std::endl << std::endl;
+      continue;
     }
-    if(t ++ <= 8)
-      std::cout << num_t(int(0)) << ", " << num_t(int(0)) << std::endl << std::flush;
-    else {
-      std::cout << DD << ", " << M * MM << std::endl << std::flush;
-      -- t;
-    }
+    p.emplace_back(p0);
+    q.emplace_back(p0);
+    M = MM = num_t(int(0));
+    for(int i = 0; i < p.size(); i ++) M  += max(- Mx, min(Mx, p[i].next(d)));
+    for(int i = 0; i < q.size(); i ++) MM += max(- Mx, min(Mx, q[i].next(D)));
+    M  /= num_t(int(p.size())) * Mx;
+    MM /= num_t(int(q.size())) * Mx;
+    std::cout << DD << ", " << M * MM << std::endl << std::flush;
   }
   return 0;
 }
