@@ -14,7 +14,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 < data.txt
+    ./p0 <n>? < data.txt
     # N.B. we need first some initial unstable prediction point depends on
     #      n on n-markov and status blocks shown in data stream.
     # N.B. if we predict large step, we make hypothesis on probability on the
@@ -67,7 +67,7 @@ We need to northPole twice because only once sometimes doesn't converges bothsid
 Because of this, we can handle any function a.e. which we can lebesgue integrable if range is large enough.
 
 # Tips
-When we northPole twice, we can apply them into delta itself, then, summation of which one. With this form, we should shrinkMatrix on some range because the definition applies: f(x+delta)-f(x) series, then, Sum(g(f(x+delta)-f(x))) series, they needs sectional measurement to make meaning reasonable, but to do so, we need shrinkMatrix.
+When we northPole twice, we should shrinkMatrix on some range because the definition applies: df(x) series but they needs sectional measurement to make meaning reasonable, so we need shrinkMatrix.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
