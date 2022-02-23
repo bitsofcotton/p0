@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor long range correct but needs accuracy depends on range length.
+Generic predictor long range correct but cannot predict long enough range.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
