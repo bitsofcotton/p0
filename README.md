@@ -14,9 +14,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 < data.txt
-    # N.B. we need to input 1~3-markov data.
-    # N.B. we need the large and large accuracy on long and long predict.
+    ./p0 < 1to3-markov-stream.txt
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -33,7 +31,7 @@ exp(Sum log(z-|z|cis(&pi;/4+t_k)))\*(Sum((f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&pi;
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
-N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid a.e. if the range is long enough.  
+N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid if original stream some sub sequence can be riemann integrable.
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
@@ -51,10 +49,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
-Because of this, we can handle any function a.e. which we can lebesgue integrable if range is large enough.
-
-# Tips
-When we northPole twice, we should shrinkMatrix on some range because the definition applies: df(x) series but they needs sectional measurement to make meaning reasonable, so we need shrinkMatrix.
+Because of this, we can handle any function which we can riemann integrable on some subsequence.
 
 # Another Download Sites
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
