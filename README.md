@@ -15,20 +15,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 < data.txt
-    # N.B. we need first some initial unstable prediction point depends on
-    #      n on n-markov and status blocks shown in data stream.
-    # N.B. if we predict large step, we make hypothesis on probability on the
-    #      range is continuous and sectional measurement to be small error on
-    #      the series.
-    # N.B. we take the large and large memory and accuracy,
-    #      heavy and heavy load on continueing prediction long and long,
-    #      there's no limit on the upper bound of the resources of them.
-    # N.B. if the average on the input is unstable enough, this predictor fails.
-    #      normally, we don't meet this condition with large enough step.
-    # N.B. we predict twice to remove periodical result.
-    # N.B. if original stream is contradicted to th. liouville and has some
-    #      finite range, we sometimes can predict them with
-    #      (d\_(k+1) - l.u.b.) / (d\_k - l.u.b.) - 1 series.
+    # N.B. we need to input 1~3-markov data.
+    # N.B. we need the large and large accuracy on long and long predict.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
