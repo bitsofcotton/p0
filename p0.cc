@@ -24,11 +24,16 @@ typedef sumChain< num_t, p0_2t, true> p0_3t;
 typedef sumChain< num_t, p0_3t> p0_4t;
 typedef northPole<num_t, p0_4t> p0_5t;
 typedef sumChain< num_t, p0_5t, true> p0_t;
+// N.B. if the last line is jammed, use this for 0-markov's constant pred.
+typedef sumChain< num_t, p0_t> p0_7t;
+typedef northPole<num_t, p0_7t> p0_8t;
+typedef sumChain< num_t, p0_8t, true> p0_jt;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   p0_t   p(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3) )) ))) );
+  p0_jt  q(p0_8t(p0_7t(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3) )) ))) ))) );
   num_t  d(int(0));
   auto   M(d);
   auto   Mx(d);
@@ -37,9 +42,8 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
-          auto pn(p.next(d));
-    if(isfinite(pn) && - Mx / sqrt(sqrt(SimpleMatrix<num_t>().epsilon)) < pn
-                 && pn < Mx / sqrt(sqrt(SimpleMatrix<num_t>().epsilon)) )
+          auto pn((p.next(d) + q.next(d)) / num_t(int(2)));
+    if(isfinite(pn) && - Mx < pn && pn < Mx)
       M = max(- Mx, min(Mx, move(pn)));
     else M = num_t(int(0));
     std::cout << D << ", " << (M /= Mx != num_t(int(0)) ? Mx : num_t(int(1))) << std::endl << std::flush;
