@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor long range correct but cannot predict long enough range.
+{1,2,3}-markov generic predictor.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
