@@ -41,8 +41,9 @@ typedef sumChain< num_t, p0_8t, true> p0_jt;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   middle(8);
-  int   step(4);
+  int   middle(3);
+  int   step(1);
+  if(argc <= 1) std::cerr << argv[0] << " <size> <step> : continue with ";
   if(1 < argc) middle = abs(std::atoi(argv[1]));
   if(2 < argc) step   = abs(std::atoi(argv[2]));
   std::cerr << argv[0] << " " << middle << " " << step << std::endl;
