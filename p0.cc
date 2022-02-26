@@ -39,13 +39,13 @@ typedef shrinkMatrix<num_t, p0_t> p0_jt;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   middle(3);
-  int   step(1);
-  if(argc <= 1) std::cerr << argv[0] << " <size> <step> : continue with ";
-  if(1 < argc) middle = abs(std::atoi(argv[1]));
-  if(2 < argc) step   = abs(std::atoi(argv[2]));
-  std::cerr << argv[0] << " " << middle << " " << step << std::endl;
-  p0_jt p(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(middle, step))))))), step);
+  int   var(3);
+  if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
+  if(1 < argc) var = abs(std::atoi(argv[1]));
+  std::cerr << argv[0] << " " << var << std::endl;
+  const auto step(int(sqrt(num_t(var))) & 1 ?
+    int(sqrt(num_t(var))) : int(sqrt(num_t(var))) - 1);
+  p0_jt p(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, step))))))), step);
   auto  q(p);
   num_t d(int(0));
   auto  M(d);
