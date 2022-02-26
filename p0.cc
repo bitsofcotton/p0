@@ -34,9 +34,7 @@ typedef sumChain< num_t, p0_5t, true> p0_t;
 //      if original function is lebesgue integrable and if the result is
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
-typedef sumChain< num_t, p0_t> p0_7t;
-typedef northPole<num_t, p0_7t> p0_8t;
-typedef sumChain< num_t, p0_8t, true> p0_jt;
+typedef shrinkMatrix<num_t, p0_t> p0_jt;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -47,7 +45,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) middle = abs(std::atoi(argv[1]));
   if(2 < argc) step   = abs(std::atoi(argv[2]));
   std::cerr << argv[0] << " " << middle << " " << step << std::endl;
-  shrinkMatrix<num_t, p0_jt> p(p0_jt(p0_8t(p0_7t(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(middle, step) )) ))) ))) ), step);
+  p0_jt p(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(middle, step))))))), step);
   auto  q(p);
   num_t d(int(0));
   auto  M(d);
