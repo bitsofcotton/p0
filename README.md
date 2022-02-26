@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic {1,2,3}-markov predictor when the sampling is fast enough.
+Generic predictor.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -14,7 +14,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 < 1to3-markov-stream.txt
+    ./p0 <size> <step> < stream-next-sign-unknown.txt
+    # 0 < size : taylor matrix size, should large enough with step.
+    # 0 < step : shrinkMatrix step size, we need this for middle frequency.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
