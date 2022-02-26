@@ -15,6 +15,11 @@ typedef myfloat num_t;
 // N.B. on existing taylor series.
 //      if we make hypothesis markov, >1-markov is needed because
 //      if the status is null, only constant is accepted.
+// N.B. if the sampling frequency is not enough, middle range of the original
+//      function frequency (enough large bands) will effect prediction fail.
+//      this is because we only observes highest and lowest frequency on
+//      sampling points, so omitted part exists.
+//      even if the parameter on P0 is large, situation unchange.
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. on any of R to R with sectional measurement.
 //      on the other hand, hypothesis 1~3-markov predict with 3-markov.
@@ -35,10 +40,11 @@ typedef sumChain< num_t, p0_8t, true> p0_jt;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  p0_jt  p(p0_8t(p0_7t(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3) )) ))) ))) );
-  num_t  d(int(0));
-  auto   M(d);
-  auto   Mx(d);
+  p0_jt p(p0_8t(p0_7t(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(3) )) ))) ))) );
+  auto  q(p);
+  num_t d(int(0));
+  auto  M(d);
+  auto  Mx(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;

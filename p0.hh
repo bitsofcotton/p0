@@ -79,19 +79,27 @@ template <typename T> SimpleVector<T> pnext(const int& size, const int& step = 1
 template <typename T, typename feeder> class P0 {
 public:
   typedef SimpleVector<T> Vec;
+  typedef SimpleMatrix<T> Mat;
   inline P0() { ; }
   inline P0(const int& size, const int& step = 1) {
     f = feeder(size);
+    g = feeder(size);
     p = pnext<T>(size, step);
+    auto lpf(dft<T>(size));
+    for(int i = lpf.rows() / 2; i < lpf.rows(); i ++)
+      lpf.row(i) *= complex<T>(T(int(0)));
+    LPF = (dft<T>(- size) * lpf).template real<T>();
   }
   inline ~P0() { ; };
   inline T next(const T& in) {
-    const auto& ff(f.next(in));
-    static const T zero(int(0));
-    return f.full ? p.dot(ff) : zero;
+    const auto ff(LPF * f.next(in));
+    const auto gg(LPF * g.next(num_t(int(1)) / in));
+    return f.full ? (p.dot(ff) + num_t(int(1)) / p.dot(gg)) / num_t(int(2)) : T(int(0));
   }
   Vec p;
+  Mat LPF;
   feeder f;
+  feeder g;
 };
 
 template <typename T, typename P> class northPole {

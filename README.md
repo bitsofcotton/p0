@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-{1,2,3}-markov generic predictor.
+Generic {1,2,3}-markov predictor when the sampling is fast enough.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -15,11 +15,6 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 < 1to3-markov-stream.txt
-    # N.B. if original function has upper and lower bound and it resists ratio,
-    #      they are able to be contradicted to th. liouville.
-    #      in such case, we can use (d_(k+1) - l.u.b.) / (d_k - l.u.b.) - 1
-    #      series for input.
-    #      this is able to be used to unknown nonlinear ratio input stream.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
