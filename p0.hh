@@ -124,7 +124,7 @@ public:
   inline ~sumChain() { ; }
   inline T next(const T& in) {
     if(avg) { auto A((S += in) / T(++ t)); return p.next(in - A) + A; }
-    auto res(- S); return res += p.next(S += in);
+    auto res(- (S += in)); return res += p.next(S);
   }
   myuint t;
   T S;
