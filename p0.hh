@@ -63,13 +63,15 @@ template <typename T> SimpleVector<T> pnext(const int& size, const int& step = 1
     } else {
       p = taylor(size, T(size + step - 1));
       cerr << "." << flush;
-      const auto pp(pnext<T>(size - 1, step));
-      for(int j = 0; j < pp.size(); j ++)
-        p[j - pp.size() + p.size()] += pp[j] * T(size - 1);
-      p /= T(size);
-      ofstream ocache(file.c_str());
-      ocache << p << endl;
-      ocache.close();
+      if(step * 2 < size) {
+        const auto pp(pnext<T>(size - 1, step));
+        for(int j = 0; j < pp.size(); j ++)
+          p[j - pp.size() + p.size()] += pp[j] * T(size - 1);
+        p /= T(size);
+        ofstream ocache(file.c_str());
+        ocache << p << endl;
+        ocache.close();
+      }
     }
   }
   assert(p.size() == size);

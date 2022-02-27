@@ -43,8 +43,8 @@ int main(int argc, const char* argv[]) {
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = abs(std::atoi(argv[1]));
   std::cerr << argv[0] << " " << var << std::endl;
-  const auto step(int(sqrt(num_t(var))) & 1 ?
-    int(sqrt(num_t(var))) : int(sqrt(num_t(var))) - 1);
+  // XXX: 
+  const auto step(int(exp(sqrt(log(num_t(var))))));
   p0_jt p(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, step))))))), step);
   auto  q(p);
   num_t d(int(0));
