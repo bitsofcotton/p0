@@ -24,29 +24,28 @@ typedef myfloat num_t;
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. on any of R to R with sectional measurement.
 //      on the other hand, hypothesis 1~3-markov predict with 3-markov.
-typedef sumChain< num_t, p0_0t> p0_1t;
+typedef shrinkMatrix<num_t, p0_0t> p0_1t;
 typedef northPole<num_t, p0_1t> p0_2t;
-typedef sumChain< num_t, p0_2t, true> p0_3t;
-typedef sumChain< num_t, p0_3t> p0_4t;
-typedef northPole<num_t, p0_4t> p0_5t;
-typedef sumChain< num_t, p0_5t, true> p0_t;
+typedef sumChain< num_t, p0_2t> p0_3t;
+typedef northPole<num_t, p0_3t> p0_4t;
 // N.B. we apply them into probability.
 //      if original function is lebesgue integrable and if the result is
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
-typedef shrinkMatrix<num_t, p0_t> p0_jt;
+typedef shrinkMatrix<num_t, p0_4t> p0_5t;
+typedef sumChain< num_t, p0_5t, true> p0_t;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   var(3);
+  int   var(4);
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = abs(std::atoi(argv[1]));
   std::cerr << argv[0] << " " << var << std::endl;
   // XXX: 
   const auto step(int(exp(sqrt(log(num_t(var))))));
-  p0_jt p(p0_t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, step))))))), step);
-  auto  q(p);
+  p0_t  p(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, step), step / 2)))), (step / 2) + (step & 1)));
+  p0_t  q(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, (step - 1)), (step - 1) / 2)))), ((step - 1) / 2) + ((step - 1) & 1)));
   num_t d(int(0));
   auto  M(d);
   auto  Mx(d);
@@ -55,7 +54,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
-          auto pn(p.next(d));
+          auto pn((p.next(d) + q.next(d)) / num_t(int(2)));
     if(isfinite(pn) && - Mx < pn && pn < Mx)
       M = max(- Mx, min(Mx, move(pn)));
     else M = num_t(int(0));
