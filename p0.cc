@@ -26,14 +26,13 @@ typedef P0<num_t, idFeeder<num_t> > p0_0t;
 //      on the other hand, hypothesis 1~3-markov predict with 3-markov.
 typedef shrinkMatrix<num_t, p0_0t> p0_1t;
 typedef northPole<num_t, p0_1t> p0_2t;
-typedef sumChain< num_t, p0_2t> p0_3t;
-typedef northPole<num_t, p0_3t> p0_4t;
+typedef northPole<num_t, p0_2t> p0_3t;
 // N.B. we apply them into probability.
 //      if original function is lebesgue integrable and if the result is
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
-typedef shrinkMatrix<num_t, p0_4t> p0_5t;
-typedef sumChain< num_t, p0_5t, true> p0_t;
+typedef shrinkMatrix<num_t, p0_3t> p0_t;
+typedef avgOrigin<num_t, p0_t>    p0_avgo_t;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -42,10 +41,11 @@ int main(int argc, const char* argv[]) {
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = abs(std::atoi(argv[1]));
   std::cerr << argv[0] << " " << var << std::endl;
-  // XXX: 
+  // N.B. this is not optimal but we use this:
   const auto step(int(exp(sqrt(log(num_t(var))))));
-  p0_t  p(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, step), step / 2)))), (step / 2) + (step & 1)));
-  p0_t  q(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(var, (step - 1)), (step - 1) / 2)))), ((step - 1) / 2) + ((step - 1) & 1)));
+  // N.B. We need both p, q because of pnext step result s.t. pextend:
+  p0_avgo_t  p(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(var, step), step / 2))), (step / 2) + (step & 1)));
+  p0_avgo_t  q(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(var, (step - 1)), (step - 1) / 2))), ((step - 1) / 2) + ((step - 1) & 1)));
   num_t d(int(0));
   auto  M(d);
   auto  Mx(d);

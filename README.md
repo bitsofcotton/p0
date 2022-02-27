@@ -53,10 +53,8 @@ northPole class is formal laurent series essential point hack, if not both side 
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
 Because of this, we can handle any function which we can riemann integrable on some subsequence.
 
-# Another Download Sites
+# Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
 * https://ja.osdn.net/users/bitsofcotton/
-
-# Archived.
 
