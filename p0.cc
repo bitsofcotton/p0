@@ -37,18 +37,16 @@ typedef avgOrigin<num_t, p0_t> p0_at;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int   var(4);
+  int   var(2);
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   // N.B. this is not optimal but we use this:
-  int   step(sqrt(exp(sqrt(log(num_t(abs(var)))))));
-  // N.B. We need both p, q because of pnext step result s.t. pextend:
-  p0_t  p(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step);
-  p0_at pp(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step));
-  step --;
-  p0_t  q(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step);
-  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step));
+  const int step(exp(log(num_t(abs(2 * var))) + log(num_t(abs(2 * var)))));
+  p0_t  p(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var));
+  p0_t  pp(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 + 1), abs(var)))), abs(var));
+  p0_at q(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)));
+  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 + 1), abs(var)))), abs(var)));
   myuint t;
   num_t d(t ^= t);
   auto  M(d);
@@ -58,7 +56,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
-    std::cout << D << ", " << (M = (var < 0 ? p.next(d) + q.next(d) : pp.next(d) + qq.next(d)) / (Mx != num_t(int(0)) ? Mx * num_t(int(2)) : num_t(int(2)))) << std::endl << std::flush;
+    std::cout << D << ", " << (M = max(- num_t(int(1)), min(num_t(int(1)), (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / (Mx != num_t(int(0)) ? Mx * num_t(int(2)) : num_t(int(2)))) )) << std::endl << std::flush;
   }
   return 0;
 }
