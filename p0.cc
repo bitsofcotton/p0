@@ -32,7 +32,7 @@ typedef northPole<num_t, p0_2t> p0_3t;
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
 typedef shrinkMatrix<num_t, p0_3t> p0_t;
-typedef avgOrigin<num_t, p0_t>    p0_avgo_t;
+typedef avgOrigin<num_t, p0_t> p0_at;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -42,13 +42,15 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   // N.B. this is not optimal but we use this:
-  const auto step(int(exp(sqrt(log(num_t(abs(var)))))));
+  int   step(num_t(int(2)) * sqrt(exp(sqrt(log(num_t(abs(var)))))));
   // N.B. We need both p, q because of pnext step result s.t. pextend:
-  p0_avgo_t  p(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step), step / 2))), (step / 2) + (step & 1)));
-  p0_avgo_t  q(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), (step - 1)), (step - 1) / 2))), ((step - 1) / 2) + ((step - 1) & 1)));
-  p0_t       pp(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step), step / 2))), (step / 2) + (step & 1));
-  p0_t       qq(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), (step - 1)), (step - 1) / 2))), ((step - 1) / 2) + ((step - 1) & 1));
-  num_t d(int(0));
+  p0_t  p(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step);
+  p0_at pp(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step));
+  step --;
+  p0_t  q(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step);
+  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step));
+  myuint t;
+  num_t d(t ^= t);
   auto  M(d);
   auto  Mx(d);
   while(std::getline(std::cin, s, '\n')) {
@@ -56,12 +58,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     if(Mx < abs(d)) Mx = abs(d) * num_t(int(2));
-          auto pn((var < 0 ? pp.next(d) + qq.next(d)
-                           :  p.next(d) +  q.next(d)) / num_t(int(2)));
-    if(isfinite(pn) && - Mx < pn && pn < Mx)
-      M = max(- Mx, min(Mx, move(pn)));
-    else M = num_t(int(0));
-    std::cout << D << ", " << (M /= Mx != num_t(int(0)) ? Mx : num_t(int(1))) << std::endl << std::flush;
+    std::cout << D << ", " << (M = (var < 0 ? p.next(d) + q.next(d) : pp.next(d) + qq.next(d)) / (Mx != num_t(int(0)) ? Mx * num_t(int(2)) : num_t(int(2)))) << std::endl << std::flush;
   }
   return 0;
 }
