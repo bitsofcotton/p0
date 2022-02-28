@@ -23,7 +23,6 @@ typedef myfloat num_t;
 //      so we should use shrinkMatrix for them.
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. on any of R to R with sectional measurement.
-//      on the other hand, hypothesis 1~3-markov predict with 3-markov.
 typedef shrinkMatrix<num_t, p0_0t> p0_1t;
 typedef northPole<num_t, p0_1t> p0_2t;
 typedef northPole<num_t, p0_2t> p0_3t;
@@ -53,11 +52,8 @@ int main(int argc, const char* argv[]) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    // N.B. instead of original, this series is better to avoid jamming.
-    //      if it is not jammed, both original and this is better.
-    const auto dd(sgn<num_t>(d) * abs(d - bd));
-    const auto D(/* make dd */ d / abs(M) * abs(M - bd) * /* p */ M);
-    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M = (var < 0 ? q.next(dd) + qq.next(dd) : p.next(dd) + pp.next(dd)) / num_t(int(2))) << std::endl << std::flush;
+    const auto D(d * M);
+    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M = (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / num_t(int(2))) << std::endl << std::flush;
   }
   return 0;
 }
