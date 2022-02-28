@@ -42,7 +42,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   // N.B. this is not optimal but we use this:
-  int   step(num_t(int(2)) * sqrt(exp(sqrt(log(num_t(abs(var)))))));
+  int   step(sqrt(exp(sqrt(log(num_t(abs(var)))))));
   // N.B. We need both p, q because of pnext step result s.t. pextend:
   p0_t  p(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step);
   p0_at pp(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(abs(var), step * step), step))), step));
