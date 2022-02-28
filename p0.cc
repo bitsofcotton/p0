@@ -50,10 +50,14 @@ int main(int argc, const char* argv[]) {
   num_t d(int(0));
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
+    const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    const auto D(d * M);
-    std::cout << D << ", " << (M = (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / num_t(int(2))) << std::endl << std::flush;
+    // N.B. instead of original, this series is better to avoid jamming.
+    //      if it is not jammed, both original and this is better.
+    const auto dd(sgn<num_t>(d) * abs(d - bd));
+    const auto D(/* make dd */ d / abs(M) * abs(M - bd) * /* p */ M);
+    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M = (var < 0 ? q.next(dd) + qq.next(dd) : p.next(dd) + pp.next(dd)) / num_t(int(2))) << std::endl << std::flush;
   }
   return 0;
 }
