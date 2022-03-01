@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor when hidden continuous function exists.
+Generic predictor when the stream is the sample of real C0 function or its delta.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
