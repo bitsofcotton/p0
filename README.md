@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor.
+Generic predictor when hidden continuous function exists.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -14,9 +14,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <step> < stream-next-sign-unknown.txt
-    # step < 0 for average origin, otherwise, 0 origin.
-    # step specifies 2 \* n-step after this point.
+    ./p0 <avg> < stream-next-sign-unknown.txt
+    # avg < 0 for average origin, otherwise, 0 origin.
+    # abs(avg) specified middle frequency band size.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
