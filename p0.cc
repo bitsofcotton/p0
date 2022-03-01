@@ -41,19 +41,22 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(abs(2 * var))) * log(num_t(abs(2 * var))))));
-  p0_t  p( p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var));
-  p0_t  pp(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var));
-  p0_at q( p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)));
-  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var)));
+  const int step(max(num_t(3), exp(log(num_t(abs(var) * 4)) * log(num_t(abs(var) * 4)))));
+  p0_t  p( p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 4), abs(var)))), abs(var));
+  p0_t  pp(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 4 - 1), abs(var)))), abs(var));
+  p0_at q( p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 4), abs(var)))), abs(var)));
+  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 4 - 1), abs(var)))), abs(var)));
   num_t d(int(0));
-  auto  M(d);
+  std::vector<num_t> M;
+  M.resize(abs(var) * 2, d);
   while(std::getline(std::cin, s, '\n')) {
     const auto bd(d);
     std::stringstream ins(s);
     ins >> d;
-    const auto D(d * M);
-    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M = (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / num_t(int(2))) << std::endl << std::flush;
+    const auto D(d * M[0]);
+    for(int i = 1; i < M.size(); i ++)
+      M[i - 1] = std::move(M[i]);
+    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M[M.size() - 1] = (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / num_t(int(2))) << std::endl << std::flush;
   }
   return 0;
 }
