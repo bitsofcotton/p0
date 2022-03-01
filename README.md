@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor when the stream is the sample of real C0 function or its delta.
+Generic predictor when the stream is the sample of real C0 function or its delta in probability.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).

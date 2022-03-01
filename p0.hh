@@ -85,7 +85,6 @@ public:
   inline P0() { ; }
   inline P0(const int& size, const int& step = 1) {
     f = feeder(size);
-    g = feeder(size);
     p = pnext<T>(size, step);
   }
   inline ~P0() { ; };
@@ -95,7 +94,6 @@ public:
   }
   Vec p;
   feeder f;
-  feeder g;
 };
 
 template <typename T, typename P> class northPole {
