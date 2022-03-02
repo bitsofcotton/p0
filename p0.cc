@@ -13,9 +13,7 @@
 typedef myfloat num_t;
 #include "p0.hh"
 // N.B. on existing taylor series.
-//      if we make hypothesis markov, >1-markov is needed because
-//      if the status is null, only constant is accepted.
-// N.B. if the sampling frequency is not enough, middle range of the original
+//      if the sampling frequency is not enough, middle range of the original
 //      function frequency (enough large bands) will effect prediction fail.
 //      this is because we only observes highest and lowest frequency on
 //      sampling points, so omitted part exists.
@@ -42,6 +40,7 @@ int main(int argc, const char* argv[]) {
   std::cerr << argv[0] << " " << var << std::endl;
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var) * 2)) * log(num_t(abs(var) * 2)))));
+  // N.B. we average odd/even on prediction because of the prediction vector.
   p0_t  p( p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var));
   p0_t  pp(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var));
   p0_at q( p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)));

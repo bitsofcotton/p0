@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor when the stream is the sample of real C0 function or its delta in probability.
+Generic predictor when the original stream is C0 in probability and the sample is sequence of difference or sequence of summation of the one.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -33,7 +33,7 @@ exp(Sum log(z-|z|cis(&pi;/4+t_k)))\*(Sum((f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&pi;
 
 And, we can weaken this condition with cauchy's integrate theorem on ja.wikipedia.org link (doi:10.1090/S0002-9947-1900-1500519-7), C1 condition to C0 condition (uses epsilon delta on multiple of different differential value with limit needs smaller than continuous condition).  
 
-N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid if original stream some sub sequence can be riemann integrable.
+N.B. if there's no C0 condition, with the condition x_next:=integrate^x_now(f(x) - some &alpha;), the prediction is valid because each of them are structure of the sum between first point and each of them. So if we can define integrate(original f) (and if it's continuous enough), the prediction is valid if original stream probability can be riemann integrable (and it's continuous enough).
 
 N.B. DFT differential itself is ideal for trigometric function multiply sums. So applying tilt itself returns curved result, but this is reasonable one on the range with IDFT * DFT condition.
 
@@ -46,12 +46,12 @@ This p0 uses weak differential, so integrate(diff) != id because of complex part
 Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
 # Tips
-P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution. But with some of sub sequence meaning, if we have some sub sequence average as 0 value, we can use them bared prediction.
+P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution. But with some of differential sequence meaning, if we have some differential sequence average as 0 value, we can use them bared prediction.
 
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
-Because of this, we can handle any function which we can riemann integrable on some subsequence.
+Because of this, we can handle any function which we can riemann integrable on some differential sequence.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
