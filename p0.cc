@@ -28,8 +28,9 @@ typedef northPole<num_t, p0_2t> p0_3t;
 //      if original function is lebesgue integrable and if the result is
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
-typedef shrinkMatrix<num_t, p0_3t> p0_t;
-typedef avgOrigin<num_t, p0_t> p0_at;
+typedef shrinkMatrix<num_t, p0_3t>  p0_4t;
+typedef sumChain<num_t, p0_4t>      p0_t;
+typedef sumChain<num_t, p0_t, true> p0_at;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -41,17 +42,20 @@ int main(int argc, const char* argv[]) {
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var) * 2)) * log(num_t(abs(var) * 2)))));
   // N.B. we average odd/even on prediction because of the prediction vector.
-  p0_t  p( p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var));
-  p0_t  pp(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var));
-  p0_at q( p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)));
-  p0_at qq(p0_t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var)));
+  p0_t  p( p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)));
+  p0_t  pp(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var)));
+  p0_at q( p0_t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var))));
+  p0_at qq(p0_t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var))));
   num_t d(int(0));
   auto  M(d);
+  auto  Mx(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << (isfinite(D) ? D : num_t(int(0))) << ", " << (M = (var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d)) / num_t(int(2))) << std::endl << std::flush;
+    Mx = max(Mx, abs(d) * num_t(int(abs(var) * 2)));
+    d /= num_t(int(2));
+    std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) + qq.next(d) : p.next(d) + pp.next(d) )) ) << std::endl << std::flush;
   }
   return 0;
 }

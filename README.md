@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor when the original stream is C0 in probability and the sample is sequence of difference or sequence of summation of the one.
+Generic predictor when this algorithm isn't jammed.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -16,7 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use (commandline):
     ./p0 <avg> < stream-next-sign-unknown.txt
     # avg < 0 for average origin, otherwise, 0 origin.
-    # abs(avg) specified middle frequency band size.
+    # abs(avg) specifies middle frequency band size.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -51,7 +51,7 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 # Tips
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
-Because of this, we can handle any function which we can riemann integrable on some differential sequence.
+Because of this, we can handle any function which we can riemann integrable. Since we take probability, so if lebesgue integrate on original function is in C0, we can handle any function.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
