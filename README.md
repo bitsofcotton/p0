@@ -1,5 +1,7 @@
 # bitsofcotton/p0
-Generic predictor when this algorithm isn't jammed.
+Generic 1-variable predictor.
+There's a plenty of a space to extend this algorithm with &uparoow;, &downarrow; definition (they concludes exp(exp(...)) in C, inverse function is defined in randtools meaning inverse limit, so it's also in C if the matrix isn't singular.), they causes 3-variable function causes all of (x, f(x), status) handled on the series. With them, we can handle n-variable on reasonable function (because (n-1)-status block causes only the (x, f(x), status) triplet with extreme accuracy.).
+But with this 1-variable predictor : (x, f(x)) any correspondence, if the parameter is large enough to input stream (as all of the status is on the taylor size), it's equivalent to the one.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
