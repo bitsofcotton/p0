@@ -17,7 +17,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <avg> < stream-next-sign-unknown.txt
-    # avg < 0 for average origin, otherwise, 0 origin.
+    # avg < 0 for average origin on pred range, otherwise, 0 origin.
     # abs(avg) specifies middle frequency band size.
 
 # Proof
