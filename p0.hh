@@ -96,6 +96,20 @@ public:
   feeder f;
 };
 
+template <typename T> const SimpleMatrix<complex<T> >& dftcache(const int& size) {
+  assert(size);
+  vector<SimpleMatrix<complex<T> > > cdft;
+  vector<SimpleMatrix<complex<T> > > cidft;
+  if(0 < size) {
+    if(cdft.size() <= size) cdft.resize(size + 1, SimpleMatrix<complex<T> >());
+    if(cdft[size].rows()) return cdft[size];
+    return cdft[size] = dft<T>(size);
+  }
+  if(cidft.size() <= abs(size)) cidft.resize(abs(size) + 1, SimpleMatrix<complex<T> >());
+  if(cidft[abs(size)].rows()) return cidft[abs(size)];
+  return cidft[abs(size)] = dft<T>(size);
+}
+
 template <typename T, typename P, typename feeder> class P0DFT {
 public:
   typedef SimpleVector<T> Vec;
@@ -108,11 +122,11 @@ public:
   }
   inline ~P0DFT() { ; };
   inline T next(const T& in) {
-    auto ff(dft<T>(p.size()) * f.next(in).template cast<complex<T> >());
+    auto ff(dftcache<T>(p.size()) * f.next(in).template cast<complex<T> >());
     if(! f.full) return T(int(0));
     for(int i = 0; i < p.size(); i ++)
       ff[i] = complex<T>(p[i].next(ff[i].real()), q[i].next(ff[i].imag()));
-    return (dft<T>(- p.size()) * ff)[ff.size() - 1].real();
+    return (dftcache<T>(- p.size()) * ff)[ff.size() - 1].real();
   }
   vector<P> p;
   vector<P> q;
