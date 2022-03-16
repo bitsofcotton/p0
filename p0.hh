@@ -107,9 +107,9 @@ public:
     static const T M(atan(one / sqrt(SimpleMatrix<T>().epsilon)));
     if(! isfinite(in) || in == zero) return in;
     auto ain(atan(in));
-    assert(- M < ain && ain < M);
+    //assert(- M < ain && ain < M);
     auto bin(atan(one / move(ain)));
-    assert(- M < bin && bin < M);
+    //assert(- M < bin && bin < M);
     auto pn(p.next(move(bin)));
     if(! isfinite(pn) || pn == zero) return in;
     auto res(tan(max(- M, min(M, one / tan(max(- M, min(M, move(pn))))))));
