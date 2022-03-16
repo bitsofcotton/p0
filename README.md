@@ -1,7 +1,5 @@
 # bitsofcotton/p0
 Generic 1-variable predictor.
-There's a plenty of a space to extend this algorithm with &uparrow;, &downarrow; definition (they concludes exp(exp(...)) in C, inverse function is defined in randtools meaning inverse limit, but it's also in H if second operand is in C\\R.), they causes 3-variable function causes all of (x, f(x), status) handled on the series. With them, we can handle n-variable on reasonable function (because (n-1)-status block causes only the (x, f(x), status) triplet with extreme accuracy.).
-But with this 1-variable predictor : (x, f(x)) any correspondence, if the parameter is large enough to input stream (as all of the status is on the taylor size), it's equivalent to the one.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
@@ -54,6 +52,12 @@ P0 calculates left differential by periodical one. To vanish right hand differen
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
 Because of this, we can handle any function which we can riemann integrable. Since we take probability, so if lebesgue integrate on original function is in C0, we can handle any function.
+
+# Tips
+There's a plenty of a space to extend this algorithm with &uparrow;, &downarrow; definition (they concludes exp(exp(...)) in C, inverse function is defined in randtools meaning inverse limit, but it's also in H if second operand is in C\\R.), they causes 3-variable function causes all of (x, f(x), status) handled on the series. With them, we can handle n-variable on reasonable function (because (n-1)-status block causes only the (x, f(x), status) triplet with extreme accuracy.).
+But with this 1-variable predictor : (x, f(x)) any correspondence, if the parameter is large enough to input stream (as all of the status is on the taylor size), it's equivalent to the one.
+
+-&gt; Knuth tower symbol seems to make some symmetric result on some of imaginary axises. This causes only the symmetric series on some of taylor series on H (with original series as j axis plotted). So this causes as the almost same prediction result via quarternion discrete fourier transform on symtax meaning, and they causes only the frequency-phase phase shifted results on the transformation. So we can define the differential on them on 2 of axises, but they seems to non information-rich one. And on information-rich meaning, we can apply this p0 to frequency series on complex space, they shall be equivalent to the one.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
