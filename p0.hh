@@ -96,6 +96,29 @@ public:
   feeder f;
 };
 
+template <typename T, typename P, typename feeder> class P0DFT {
+public:
+  typedef SimpleVector<T> Vec;
+  typedef SimpleMatrix<T> Mat;
+  inline P0DFT() { ; }
+  inline P0DFT(P&& p, const int& size) {
+    f = feeder(size);
+    (this->p).resize(size, p);
+    q = this->p;
+  }
+  inline ~P0DFT() { ; };
+  inline T next(const T& in) {
+    auto ff(dft<T>(p.size()) * f.next(in).template cast<complex<T> >());
+    if(! f.full) return T(int(0));
+    for(int i = 0; i < p.size(); i ++)
+      ff[i] = complex<T>(p[i].next(ff[i].real()), q[i].next(ff[i].imag()));
+    return (dft<T>(- p.size()) * ff)[ff.size() - 1].real();
+  }
+  vector<P> p;
+  vector<P> q;
+  feeder f;
+};
+
 template <typename T, typename P> class northPole {
 public:
   inline northPole() { ; }
