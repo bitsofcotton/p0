@@ -20,19 +20,19 @@ typedef myfloat num_t;
 //      even if the parameter on P0 is large, situation unchange.
 //      so we should use shrinkMatrix for them.
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
+// N.B. make information-rich not to commutative.
+typedef P0DFT<num_t, p0_0t, idFeeder<num_t> > p0_1t;
+// N.B. make information-rich not to associative.
+typedef P0DFT<num_t, p0_1t, idFeeder<num_t> > p0_2t;
 // N.B. on any of R to R with sectional measurement.
-typedef shrinkMatrix<num_t, p0_0t> p0_1t;
-typedef northPole<num_t, p0_1t> p0_2t;
-typedef northPole<num_t, p0_2t> p0_3t;
+typedef shrinkMatrix<num_t, p0_2t> p0_3t;
+typedef northPole<num_t, p0_3t> p0_4t;
+typedef northPole<num_t, p0_4t> p0_5t;
 // N.B. we apply them into probability.
 //      if original function is lebesgue integrable and if the result is
 //      continuous enough (without gulf), it's riemann integrable in probability.
 //      on the other hand, for 0-markov's constant pred.
-typedef shrinkMatrix<num_t, p0_3t>  p0_4t;
-// N.B. make information-rich not to commutative.
-typedef P0DFT<num_t, p0_4t, idFeeder<num_t> > p0_5t;
-// N.B. make information-rich not to associative.
-typedef P0DFT<num_t, p0_5t, idFeeder<num_t> > p0_6t;
+typedef shrinkMatrix<num_t, p0_5t>  p0_6t;
 typedef sumChain<num_t, p0_6t>      p0_t;
 typedef sumChain<num_t, p0_t, true> p0_at;
 
@@ -46,10 +46,10 @@ int main(int argc, const char* argv[]) {
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var) * 2)) * log(num_t(abs(var) * 2)))));
   // N.B. we average odd/even on prediction because of the prediction vector.
-  p0_t  p( p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)), abs(step)), abs(step)));
-  p0_t  pp(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var)), abs(step)), abs(step)));
-  p0_at q( p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(var)))), abs(var)), abs(step)), abs(step))));
-  p0_at qq(p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(var)))), abs(var)), abs(step)), abs(step))));
+  p0_t  p( p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(var)))), abs(var)) );
+  p0_t  pp(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(step)), abs(step)), abs(var)))), abs(var)) );
+  p0_at q( p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(var)))), abs(var)) ), abs(step));
+  p0_at qq(p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2 - 1), abs(step)), abs(step)), abs(var)))), abs(var)) ), abs(step));
   num_t d(int(0));
   auto  M(d);
   auto  Mx(d);
