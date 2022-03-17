@@ -170,22 +170,17 @@ public:
 template <typename T, typename P, bool avg = false> class sumChain {
 public:
   inline sumChain() { ; }
-  inline sumChain(P&& p, const int& avglen = 2) { this->p = p; q = P(p); b.resize(avglen, T(int(0))); }
+  inline sumChain(P&& p) { this->p = p; S = T(t ^= t); }
   inline ~sumChain() { ; }
   inline T next(const T& in) {
-    if(avg) {
-      for(int i = 0; i < b.size() - 1; i ++) b[i] = move(b[i + 1]);
-      b[b.size() - 1] = in;
-      auto A(b[0]);
-      for(int i = 1; i < b.size(); i ++) A += b[i];
-      A /= T(int(b.size()));
-      return p.next(in - A) + q.next(A);
-    }
-    b[0] += in; return p.next(b[0]) - b[0];
+    S += in;
+    if(! avg) return p.next(S) - S;
+    const auto A(S / T(++ t));
+    return p.next(in - A) + A;
   }
-  vector<T> b;
+  T S;
   P p;
-  P q;
+  myuint t;
 };
 
 #define _P0_
