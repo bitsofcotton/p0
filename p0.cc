@@ -37,7 +37,7 @@ typedef sumChain<num_t, p0_t, true> p0_at;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(2);
+  int var(- 2);
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
