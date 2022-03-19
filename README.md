@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor.
+Generic 1-variable predictor when input values are ordered same as the order in R.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
