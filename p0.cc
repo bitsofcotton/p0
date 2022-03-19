@@ -61,7 +61,7 @@ int main(int argc, const char* argv[]) {
     }
     Mx = max(Mx, abs(d) * num_t(int(abs(var) * 2)));
     // N.B. some of relax the order, but not the whole relaxed.
-    std::cout << D << ", " << (M = (max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) ) ) + max(- Mx, min(Mx, num_t(int(1)) / (var < 0 ? qq.next(num_t(int(1)) / d) : pp.next(num_t(int(1)) / d) )))) / num_t(2) ) << std::endl << std::flush;
+    std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) ) ) ) << std::endl << std::flush;
   }
   return 0;
 }
