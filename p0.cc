@@ -21,29 +21,20 @@ typedef myfloat num_t;
 //      so we should use shrinkMatrix for them.
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. make information-rich not to associative/commutative.
+//      and 2 dimension semi-order causes (x, status) from input as sedenion.
 typedef P0DFT<num_t, p0_0t, idFeeder<num_t> > p0_1t;
 typedef P0DFT<num_t, p0_1t, idFeeder<num_t> > p0_2t;
+typedef P0DFT<num_t, p0_2t, idFeeder<num_t> > p0_3t;
 // N.B. on any of R to R with sectional measurement.
-typedef shrinkMatrix<num_t, p0_2t> p0_3t;
-typedef northPole<num_t, p0_3t> p0_4t;
+typedef shrinkMatrix<num_t, p0_3t> p0_4t;
 typedef northPole<num_t, p0_4t> p0_5t;
+typedef northPole<num_t, p0_5t> p0_6t;
 // N.B. we apply them into probability.
 //    if original function is lebesgue integrable and if the result is
 //    continuous enough (without gulf), it's riemann integrable in probability.
-typedef shrinkMatrix<num_t, p0_5t>  p0_6t;
-typedef sumChain<num_t, p0_6t>      p0_t;
+typedef shrinkMatrix<num_t, p0_6t>  p0_7t;
+typedef sumChain<num_t, p0_7t>      p0_t;
 typedef sumChain<num_t, p0_t, true> p0_at;
-
-// N.B. lg(7) < 3, zero divisor with var == 2 sectional.
-//      the topology of f^-1's zero divisor is ok.
-typedef P0DFT<num_t, p0_2t, idFeeder<num_t> > p0_b3t;
-typedef P0DFT<num_t, p0_b3t, idFeeder<num_t> > p0_b4t;
-typedef shrinkMatrix<num_t, p0_b4t> p0_b5t;
-typedef northPole<num_t, p0_b5t> p0_b6t;
-typedef northPole<num_t, p0_b6t> p0_b7t;
-typedef shrinkMatrix<num_t, p0_b7t>  p0_b8t;
-typedef sumChain<num_t, p0_b8t>  p0_b9t;
-typedef sumChain<num_t, p0_b9t, true>  p0_bt;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -56,14 +47,10 @@ int main(int argc, const char* argv[]) {
   const int step(var ? max(num_t(3), exp(log(num_t(abs(var) * 2)) * log(num_t(abs(var) * 2)))) : num_t(6));
   p0_t  p;
   p0_at q;
-  p0_bt r;
-  if(var) {
-    if(var < 0)
-      q = p0_at(p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), step), step), abs(var)))), abs(var)) ));
-    else
-      p = p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), step), step), abs(var)))), abs(var)) );
-  } else
-    r = p0_bt(p0_b9t(p0_b8t(p0_b7t(p0_b6t(p0_b5t(p0_b4t(p0_b3t(p0_2t(p0_1t(p0_0t(step, 2 * 2), step), step), step), step), 2))), 2) ));
+  if(var < 0)
+    q = p0_at(p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), step), step), step), abs(var)))), abs(var)) ));
+  else
+    p = p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), step), step), step), abs(var)))), abs(var)) );
   num_t d(int(0));
   auto  M(d);
   auto  Mx(d);
@@ -72,7 +59,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     Mx = max(Mx, abs(d) * num_t(int(abs(var ? var : 2) * 2)));
-    std::cout << D << ", " << (M = max(- Mx, min(Mx, var ? (var < 0 ? q.next(d) : p.next(d)) : r.next(d) ) ) ) << std::endl << std::flush;
+    std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) )) ) << std::endl << std::flush;
   }
   return 0;
 }
