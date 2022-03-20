@@ -40,9 +40,9 @@ typedef sumChain<num_t, p0_t, true> p0_at;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  const int var(2);
-  // N.B. this is not optimal but we use this:
-  const int step(7);
+  const auto var(2);
+  // N.B. up to 7-markov.
+  const auto step(7);
   // N.B. we average odd/even on prediction because of the prediction vector.
   p0_t  p(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(step)), abs(step)), abs(var)))), abs(var)) );
   p0_at q(p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(step)), abs(step)), abs(var)))), abs(var)) ));
@@ -53,10 +53,6 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    if(d == num_t(int(0))) {
-     std::cout << D << ", " << M << std::endl << std::flush;;
-     continue;
-    }
     Mx = max(Mx, abs(d) * num_t(int(abs(var) * 2)));
     std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) ) ) ) << std::endl << std::flush;
   }
