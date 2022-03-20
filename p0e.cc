@@ -43,7 +43,6 @@ int main(int argc, const char* argv[]) {
   const auto var(2);
   // N.B. up to 7-markov.
   const auto step(7);
-  // N.B. we average odd/even on prediction because of the prediction vector.
   p0_t  p(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(step)), abs(step)), abs(var)))), abs(var)) );
   p0_at q(p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) * 2), abs(step)), abs(step)), abs(step)), abs(step)), abs(var)))), abs(var)) ));
   num_t d(int(0));

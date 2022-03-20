@@ -19,7 +19,7 @@ int main(int argc, const char* argv[]) {
   P0<num_t, idFeeder<num_t> > p(len);
   const auto d(diff<num_t>(len).row(len - 1));
   for(int i = 0; i < len; i ++)
-    std::cout << p.p[i] << ", " << d[i] << std::endl;
+    std::cout << pnext<num_t>(len)[i] << ", " << d[i] << std::endl;
   return 0;
 }
 

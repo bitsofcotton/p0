@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor when each of input values has the order same as the order in R.
+Generic 1-variable predictor when each of input values has the order same as the order in R, or upto 7-markov.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -16,7 +16,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <avg> < stream-next-sign-unknown.txt
+    ./p0 <avg> < stream.txt
+    ./p0e < stream.txt
     # avg < 0 for average origin on pred range, otherwise, 0 origin.
     # abs(avg) specifies middle frequency band size.
 
@@ -62,7 +63,7 @@ But with this 1-variable predictor : (x, f(x)) any correspondence, if the parame
 -&gt; Knuth tower symbol seems to make some symmetric result on some of imaginary axises. This causes only the symmetric series on some of taylor series on H (with original series as j axis plotted). So this causes as the almost same prediction result via quarternion discrete fourier transform on syntax meaning, and they causes only the frequency-phase phase shifted results on the transformation. So we can define the differential on them on 2 of axises, but they seems to non information-rich one. And on information-rich meaning, we can apply this p0 to frequency series on complex space, they shall be equivalent to the one.
 
 # Tips
-With referring wikipedia article: https://ja.wikipedia.org/wiki/%E5%AE%9F%E9%96%89%E4%BD%93 (2022/03/19), every weakly o-minimal structure is real closed field causes dim A = 1, 2, 4, 8 (https://ja.wikipedia.org/wiki/%E5%A4%9A%E5%85%83%E4%BD%93 (2022/03/19)), so if we can define {f(x) \| x in R} as semi-ordered one, octanion is enough dimension to calculate. If f has a zero divisor other than zero, the prediction fails in this.
+With referring wikipedia article: https://ja.wikipedia.org/wiki/%E5%AE%9F%E9%96%89%E4%BD%93 (2022/03/19), every weakly o-minimal structure is real closed field causes dim A = 1, 2, 4, 8 (https://ja.wikipedia.org/wiki/%E5%A4%9A%E5%85%83%E4%BD%93 (2022/03/19)), so if we can define {f(x) \| x in R} as semi-ordered one, octanion is enough dimension to calculate. If f has a zero divisor other than zero, the prediction fails in this. p0e resolves this but they are up to 7-markov.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
