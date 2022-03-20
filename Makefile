@@ -11,20 +11,14 @@ LDFLAGS+=	-lc++
 #CXXFLAGS+=	-D_FLOAT_BITS_=32
 
 clean:
-	@rm -rf p0 p0-32 p0e p0e-32 p0-r p0-r-32
-all:	p0 p0-32 p0e p0e-32 p0-r p0-r-32
+	@rm -rf p0 p0-32 p0-r p0-r-32
+all:	p0 p0-32 p0-r p0-r-32
 p0:
 	${CXX} ${CXXFLAGS} -static -o p0 p0.cc
 p0-32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0-32 p0.cc
 p0-64:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -o p0-64 p0.cc
-p0e:
-	${CXX} ${CXXFLAGS} -static -o p0e p0e.cc
-p0e-32:
-	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0e-32 p0e.cc
-p0e-64:
-	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -o p0e-64 p0e.cc
 p0-128:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=128 -o p0-128 p0.cc
 p0-256:
