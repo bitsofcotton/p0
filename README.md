@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor when each of input values has the order same as the order in R, or upto 6-markov.
+Generic 1-variable predictor when the original function is enough continuous in probability and the sample is such of them, input their delta.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
