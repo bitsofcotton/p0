@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor when the original function probability transition has the constant structure.
+Generic 1-variable predictor when the original function probability and upto 1-dimensioned its status variable is ordered as R manner. So if there's 3 or more dimension subgroups on the original function, this fails, and some sample of the case is s.t. large markov with some block diagonal matrix generated series.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -70,7 +70,7 @@ We calculate next step in sedenion, so with this, we can treat 2 dimension of se
 In advance and plenty of the space, there's a little possibility with this condition as to be fast and small space with operators on sedenion.
 
 # Tips
-P0DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination.
+The real part and imginary part simple DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
