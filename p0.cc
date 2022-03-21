@@ -27,11 +27,12 @@ typedef shrinkMatrix<num_t, p0_0t> p0_1t;
 typedef P0DFT<num_t, p0_1t, idFeeder<num_t> > p0_2t;
 typedef P0DFT<num_t, p0_2t, idFeeder<num_t> > p0_3t;
 typedef P0DFT<num_t, p0_3t, idFeeder<num_t> > p0_4t;
+typedef P0DFT<num_t, p0_4t, idFeeder<num_t> > p0_5t;
 // N.B. on any R to R into reasonable taylor.
-typedef northPole<num_t, p0_4t> p0_5t;
 typedef northPole<num_t, p0_5t> p0_6t;
+typedef northPole<num_t, p0_6t> p0_7t;
 // N.B. we make the prediction on (moved origin point) delta summation.
-typedef sumChain<num_t, p0_6t>      p0_t;
+typedef sumChain<num_t, p0_7t>      p0_t;
 typedef sumChain<num_t, p0_t, true> p0_at;
 
 int main(int argc, const char* argv[]) {
@@ -46,9 +47,9 @@ int main(int argc, const char* argv[]) {
   p0_t  p;
   p0_at q;
   if(var < 0)
-    q = p0_at(p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), step), step), step) ))) );
+    q = p0_at(p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), step), step), step), step) ))) );
   else
-    p = p0_t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), step), step), step) )));
+    p = p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), step), step), step), step) )));
   num_t d(int(0));
   auto  M(d);
   auto  Mx(d);
