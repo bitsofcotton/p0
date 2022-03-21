@@ -38,7 +38,7 @@ typedef sumChain<num_t, p0_t, true> p0_at;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(- 2);
+  int var(1);
   if(argc <= 1) std::cerr << argv[0] << " <size> : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
@@ -57,7 +57,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    Mx = max(Mx, abs(d) * num_t(int(abs(var) * 2)));
+    Mx = max(Mx, abs(d) * num_t(int(2)));
     std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) )) ) << std::endl << std::flush;
   }
   return 0;
