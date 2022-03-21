@@ -67,8 +67,10 @@ With referring wikipedia article: https://ja.wikipedia.org/wiki/%E5%AE%9F%E9%96%
 # Tips
 We calculate next step in sedenion, so with this, we can treat 2 dimension of semi-order as pseudo (x, status)-pair on input.
 
-In advance and plenty of the space, there's a little possibility with this condition as to be fast and small space with
-operators on sedenion.
+In advance and plenty of the space, there's a little possibility with this condition as to be fast and small space with operators on sedenion.
+
+# Tips
+P0DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
