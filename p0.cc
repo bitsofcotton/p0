@@ -22,7 +22,6 @@ typedef myfloat num_t;
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. sectional measurement, also with probability.
 typedef shrinkMatrix<num_t, p0_0t> p0_1t;
-// XXX: these are equivalent to transparent plain prediction.
 // N.B. make information-rich not to associative/commutative.
 //      2 dimension semi-order causes (x, status) from input as sedenion.
 typedef P0DFT<num_t, p0_1t, idFeeder<num_t> > p0_2t;

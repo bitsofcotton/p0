@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor when the original function is enough continuous in probability and the sample is such of them, input their delta.
+Generic 1-variable predictor when the original function probability transition has the constant structure.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
