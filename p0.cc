@@ -35,35 +35,50 @@ typedef northPole<num_t, p0_6t> p0_7t;
 typedef sumChain<num_t, p0_7t>      p0_t;
 typedef sumChain<num_t, p0_t, true> p0_at;
 
+typedef northPole<num_t, p0_1t> p0_s2t;
+typedef northPole<num_t, p0_s2t> p0_s3t;
+// N.B. we make the prediction on (moved origin point) delta summation.
+typedef sumChain<num_t, p0_s3t>      p0_st;
+typedef sumChain<num_t, p0_st, true> p0_ast;
+
+
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int var(1);
   int look(1);
-  if(argc <= 1) std::cerr << argv[0] << " <size> <look> : continue with ";
+  if(argc <= 1) std::cerr << argv[0] << " <size>/ <look>? : continue with ";
   if(1 < argc) var  = std::atoi(argv[1]);
   if(2 < argc) look = std::atoi(argv[2]);
   std::cerr << argv[0] << " " << var << " " << look << std::endl;
-  assert(0 < look);
   // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(abs(var) + look - 1)) * log(num_t(abs(var) + look - 1)))));
-  p0_t  p;
-  p0_at q;
-  if(var < 0)
-    q = p0_at(p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + look - 1), abs(var)), step), step), step), step) ))) );
-  else
-    p = p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var) + look - 1), step), step), step), step) )));
+  const int step(max(num_t(3), exp(log(num_t(abs(var) + abs(look) - 1)) * log(num_t(abs(var) + abs(look) - 1)))));
+  p0_t   p;
+  p0_at  q;
+  p0_st  pp;
+  p0_ast qq;
+  if(look < 0) {
+    if(var < 0)
+      qq = p0_ast(p0_st(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) ))));
+    else
+      pp = p0_st(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) )));
+  } else {
+    if(var < 0)
+      q = p0_at(p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) ))) );
+    else
+      p = p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )));
+  }
   num_t d(int(0));
   auto  Mx(d);
   std::vector<num_t> M;
-  M.resize(look, d);
+  M.resize(abs(look), d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M[0]);
     for(int i = 0; i < M.size() - 1; i ++) M[i] = std::move(M[i + 1]);
     Mx = max(Mx, abs(d) * num_t(int(2)));
-    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) )) ) << std::endl << std::flush;
+    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(d) : pp.next(d)) : (var < 0 ? q.next(d) : p.next(d)) )) ) << std::endl << std::flush;
   }
   return 0;
 }
