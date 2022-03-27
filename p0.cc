@@ -47,7 +47,7 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int var(1);
   int look(1);
-  if(argc <= 1) std::cerr << argv[0] << " <size>/ <look>? : continue with ";
+  if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? : continue with ";
   if(1 < argc) var  = std::atoi(argv[1]);
   if(2 < argc) look = std::atoi(argv[2]);
   std::cerr << argv[0] << " " << var << " " << look << std::endl;
