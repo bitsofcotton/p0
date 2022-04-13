@@ -50,10 +50,13 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int var(1);
   int look(1);
-  if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? : continue with ";
-  if(1 < argc) var  = std::atoi(argv[1]);
-  if(2 < argc) look = std::atoi(argv[2]);
-  std::cerr << argv[0] << " " << var << " " << look << std::endl;
+  int recur(1);
+  if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? <recur>? : continue with ";
+  if(1 < argc) var   = std::atoi(argv[1]);
+  if(2 < argc) look  = std::atoi(argv[2]);
+  if(3 < argc) recur = std::atoi(argv[3]);
+  std::cerr << argv[0] << " " << var << " " << look << " " << recur << std::endl;
+  assert(0 < recur);
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
   p0_t   p;
@@ -72,16 +75,31 @@ int main(int argc, const char* argv[]) {
       p = p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )) ), abs(var));
   }
   num_t d(int(0));
+  auto  dd(d);
   auto  Mx(d);
   std::vector<num_t> M;
   M.resize(abs(look), d);
+  std::vector<num_t> d0;
+  d0.resize(recur, d);
+  auto d1(d0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M[0]);
     for(int i = 0; i < M.size() - 1; i ++) M[i] = std::move(M[i + 1]);
-    Mx = max(Mx, abs(d) * num_t(int(2)));
-    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(d) : pp.next(d)) : (var < 0 ? q.next(d) : p.next(d)) )) ) << std::endl << std::flush;
+    d0[0] = d;
+    for(int i = 1; i < d0.size(); i ++) {
+      if(d1[i - 1] == num_t(int(0))) break;
+      if(i == d0.size() - 1)
+        d0[i] += (dd = d0[i - 1] / d1[i - 1] - num_t(int(1)));
+      else
+        d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
+    }
+    Mx = max(Mx, abs(dd) * num_t(int(2)));
+    if(dd != num_t(int(0))) M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)) ));
+    std::cout << D << ", " << M[M.size() - 1] << std::endl << std::flush;
+    d1 = d0;
+    for(int i = 0; i < d1.size() - 1; i ++) dd *= d1[i];
   }
   return 0;
 }
