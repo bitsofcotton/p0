@@ -90,16 +90,16 @@ int main(int argc, const char* argv[]) {
     d0[0] += d;
     for(int i = 1; i < d0.size(); i ++) {
       if(d1[i - 1] == num_t(int(0))) break;
-      if(i == d0.size() - 1)
-        d0[i] += (dd = d0[i - 1] / d1[i - 1] - num_t(int(1)));
-      else
-        d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
+      d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
     }
+    if(d1[d1.size() - 1] != num_t(int(0)))
+      dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1));
     Mx = max(Mx, abs(dd) * num_t(int(2)));
     if(dd != num_t(int(0))) M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)) ));
-    std::cout << D << ", " << M[M.size() - 1] << std::endl << std::flush;
     d1 = d0;
-    for(int i = 0; i < d1.size() - 1; i ++) dd *= d1[i];
+    for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d1[i];
+    std::cout << D << ", " << M[M.size() - 1] << std::endl << std::flush;
+    dd = num_t(int(0));
   }
   return 0;
 }
