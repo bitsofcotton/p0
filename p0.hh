@@ -84,7 +84,7 @@ template <typename T> const SimpleVector<T>& pnextcache(const int& size, const i
   if(cp.size() <= size) cp.resize(size + 1, vector<SimpleVector<T> >());
   if(cp[size].size() <= step) cp[size].resize(step + 1, SimpleVector<T>());
   if(cp[size][step].size()) return cp[size][step];
-  return cp[size][step] = pnext<T>(size, step);
+  return cp[size][step] = (pnext<T>(size, step) + pnext<T>(size, step + 1)) / T(int(2));
 }
 
 template <typename T, typename feeder> class P0 {
@@ -99,9 +99,7 @@ public:
   inline ~P0() { ; };
   inline T next(const T& in) {
     const auto ff(f.next(in));
-    return f.full ? (pnextcache<T>(ff.size(), step) +
-                     pnextcache<T>(ff.size(), step - 1)).dot(ff) / T(int(2))
-                  : T(int(0));
+    return f.full ? pnextcache<T>(ff.size(), step).dot(ff) : T(int(0));
   }
   int step;
   feeder f;
