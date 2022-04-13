@@ -20,7 +20,7 @@ typedef myfloat num_t;
 //      even if the parameter on P0 is large, situation unchange.
 //      so we should use shrinkMatrix for them.
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
-// N.B. sectional measurement, also with probability.
+// N.B. sectional measurement.
 typedef shrinkMatrix<num_t, p0_0t> p0_1t;
 // N.B. make information-rich not to associative/commutative.
 //      2 dimension semi-order causes (x, status) from input as sedenion.
@@ -32,13 +32,16 @@ typedef P0DFT<num_t, p0_4t, idFeeder<num_t> > p0_5t;
 typedef northPole<num_t, p0_5t> p0_6t;
 typedef northPole<num_t, p0_6t> p0_7t;
 // N.B. we make the prediction on (moved origin point) delta summation.
-typedef sumChain<num_t, p0_7t>      p0_t;
+typedef sumChain<num_t, p0_7t>      p0_8t;
+// N.B. we take probability on whole:
+typedef shrinkMatrix<num_t, p0_8t> p0_t;
 typedef sumChain<num_t, p0_t, true> p0_at;
 
+// N.B. plain complex form.
 typedef northPole<num_t, p0_1t> p0_s2t;
 typedef northPole<num_t, p0_s2t> p0_s3t;
-// N.B. we make the prediction on (moved origin point) delta summation.
-typedef sumChain<num_t, p0_s3t>      p0_st;
+typedef sumChain<num_t, p0_s3t>      p0_s4t;
+typedef shrinkMatrix<num_t, p0_s4t> p0_st;
 typedef sumChain<num_t, p0_st, true> p0_ast;
 
 
@@ -52,21 +55,21 @@ int main(int argc, const char* argv[]) {
   if(2 < argc) look = std::atoi(argv[2]);
   std::cerr << argv[0] << " " << var << " " << look << std::endl;
   // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(abs(var) + abs(look) - 1)) * log(num_t(abs(var) + abs(look) - 1)))));
+  const int step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
   p0_t   p;
   p0_at  q;
   p0_st  pp;
   p0_ast qq;
   if(look < 0) {
     if(var < 0)
-      qq = p0_ast(p0_st(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) ))));
+      qq = p0_ast(p0_st(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) )) ), abs(var)));
     else
-      pp = p0_st(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) )));
+      pp = p0_st(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) )) ), abs(var));
   } else {
     if(var < 0)
-      q = p0_at(p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) ))) );
+      q = p0_at(p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )) ), abs(var)) );
     else
-      p = p0_t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )));
+      p = p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )) ), abs(var));
   }
   num_t d(int(0));
   auto  Mx(d);
