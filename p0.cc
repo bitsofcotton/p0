@@ -87,7 +87,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M[0]);
     for(int i = 0; i < M.size() - 1; i ++) M[i] = std::move(M[i + 1]);
-    d0[0] = d;
+    d0[0] += d;
     for(int i = 1; i < d0.size(); i ++) {
       if(d1[i - 1] == num_t(int(0))) break;
       if(i == d0.size() - 1)
