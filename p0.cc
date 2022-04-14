@@ -50,15 +50,14 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int var(1);
   int look(1);
-  int recur(0);
-  if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? <recur>? : continue with ";
+  if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? : continue with ";
   if(1 < argc) var   = std::atoi(argv[1]);
   if(2 < argc) look  = std::atoi(argv[2]);
-  if(3 < argc) recur = std::atoi(argv[3]);
-  std::cerr << argv[0] << " " << var << " " << look << " " << recur << std::endl;
-  assert(0 <= recur);
+  std::cerr << argv[0] << " " << var << " " << look << std::endl;
   // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
+  const int  step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
+  // N.B. make periodical into complex plain arg periodical, not aligned.
+  const auto recur(2);
   p0_t   p;
   p0_at  q;
   p0_st  pp;
@@ -86,6 +85,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M[0]);
+    Mx = max(Mx, abs(d) * num_t(int(16)));
     for(int i = 0; i < M.size() - 1; i ++) M[i] = std::move(M[i + 1]);
     if(recur) {
       d0[0] += d;
@@ -100,13 +100,12 @@ int main(int argc, const char* argv[]) {
           dd = num_t(int(0));
       }
     } else dd = d;
-    Mx = max(Mx, abs(dd) * num_t(int(2)));
-    if(dd != num_t(int(0))) M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)) ));
+    if(dd != num_t(int(0))) M[M.size() - 1] = look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd));
     if(recur) {
       d1 = d0;
       for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d1[i];
     }
-    std::cout << D << ", " << M[M.size() - 1] << std::endl << std::flush;
+    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, M[M.size() - 1])) )<< std::endl << std::flush;
     dd = num_t(int(0));
   }
   return 0;
