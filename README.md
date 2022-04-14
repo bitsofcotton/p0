@@ -75,7 +75,7 @@ In advance and plenty of the space, there's a little possibility with this condi
 The real part and imginary part simple DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination.
 
 # Tips
-We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/4, twice or more goes arg(z) depend causes the period but not aligned ones.
+We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/2, with applying some ratio twice or more goes arg(z) depend causes the period but not aligned ones on -1 origin point.
 
 In this meaning, random permutation of sin(x) series is a difficult one, but with some small range permutation series applied by this method causes ok. Otherwise, the range we specify is small enough, so this fails.
 

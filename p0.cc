@@ -44,7 +44,6 @@ typedef sumChain<num_t, p0_s3t>      p0_s4t;
 typedef shrinkMatrix<num_t, p0_s4t> p0_st;
 typedef sumChain<num_t, p0_st, true> p0_ast;
 
-
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
@@ -80,7 +79,7 @@ int main(int argc, const char* argv[]) {
   M.resize(abs(look), d);
   std::vector<num_t> d0;
   d0.resize(recur, d);
-  auto d1(d0);
+  auto  d1(d0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
@@ -95,18 +94,15 @@ int main(int argc, const char* argv[]) {
         if(isfinite(work)) d0[i] += work;
         else break;
       }
-      if(d1[d1.size() - 1] != num_t(int(0))) {
-        if(! isfinite(dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1))))
-          dd = num_t(int(0));
-      }
+      if(d1[d1.size() - 1] != num_t(int(0)) &&
+         ! isfinite(dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1))))
+        dd = num_t(int(0));
     } else dd = d;
     if(dd != num_t(int(0))) M[M.size() - 1] = look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd));
-    if(recur) {
-      d1 = d0;
-      for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d1[i];
-    }
-    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, M[M.size() - 1])) )<< std::endl << std::flush;
+    if(recur) for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d0[i];
+    std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, M[M.size() - 1])) ) << std::endl << std::flush;
     dd = num_t(int(0));
+    d1 = d0;
   }
   return 0;
 }
