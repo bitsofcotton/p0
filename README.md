@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor when the original function probability and upto 1-dimensioned its status variable is ordered as R manner. So if there's 3 or more dimension subgroups on the original function, this fails, and some sample of the case is s.t. large markov with some block diagonal matrix generated series.
+Generic 1-variable predictor on expected value.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -21,7 +21,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # abs(size) specifies middle frequency band size.
     # look <  0 for complex plain space, otherwise, sedenion space.
     # abs(look) specifies n-step after prediction.
-    # 0 < recur for pseudo-imitate subgroup dimension to be looked as ordered.
+    # 0 <= recur for pseudo-imitate subgroup dimension to be handled.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -77,6 +77,8 @@ The real part and imginary part simple DFT is equivalent to plain prediction in 
 
 # Tips
 We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/4, twice or more goes arg(z) depend causes the period but not aligned ones.
+
+In this meaning, random permutation of sin(x) series is a difficult one, but with some small range permutation series applied by this method causes ok. Otherwise, the range we specify is small enough, so this fails.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing

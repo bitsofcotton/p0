@@ -50,13 +50,13 @@ int main(int argc, const char* argv[]) {
   std::string s;
   int var(1);
   int look(1);
-  int recur(1);
+  int recur(0);
   if(argc <= 1) std::cerr << argv[0] << " <size>? <look>? <recur>? : continue with ";
   if(1 < argc) var   = std::atoi(argv[1]);
   if(2 < argc) look  = std::atoi(argv[2]);
   if(3 < argc) recur = std::atoi(argv[3]);
   std::cerr << argv[0] << " " << var << " " << look << " " << recur << std::endl;
-  assert(0 < recur);
+  assert(0 <= recur);
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
   p0_t   p;
@@ -87,21 +87,25 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M[0]);
     for(int i = 0; i < M.size() - 1; i ++) M[i] = std::move(M[i + 1]);
-    d0[0] += d;
-    for(int i = 1; i < d0.size(); i ++) {
-      if(d1[i - 1] == num_t(int(0))) break;
-      const auto work(d0[i - 1] / d1[i - 1] - num_t(int(1)));
-      if(isfinite(work)) d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
-      else break;
-    }
-    if(d1[d1.size() - 1] != num_t(int(0))) {
-      if(! isfinite(dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1))))
-        dd = num_t(int(0));
-    }
+    if(recur) {
+      d0[0] += d;
+      for(int i = 1; i < d0.size(); i ++) {
+        if(d1[i - 1] == num_t(int(0))) break;
+        const auto work(d0[i - 1] / d1[i - 1] - num_t(int(1)));
+        if(isfinite(work)) d0[i] += work;
+        else break;
+      }
+      if(d1[d1.size() - 1] != num_t(int(0))) {
+        if(! isfinite(dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1))))
+          dd = num_t(int(0));
+      }
+    } else dd = d;
     Mx = max(Mx, abs(dd) * num_t(int(2)));
     if(dd != num_t(int(0))) M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)) ));
-    d1 = d0;
-    for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d1[i];
+    if(recur) {
+      d1 = d0;
+      for(int i = 0; i < d1.size(); i ++) M[M.size() - 1] *= d1[i];
+    }
     std::cout << D << ", " << M[M.size() - 1] << std::endl << std::flush;
     dd = num_t(int(0));
   }
