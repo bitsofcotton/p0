@@ -90,10 +90,14 @@ int main(int argc, const char* argv[]) {
     d0[0] += d;
     for(int i = 1; i < d0.size(); i ++) {
       if(d1[i - 1] == num_t(int(0))) break;
-      d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
+      const auto work(d0[i - 1] / d1[i - 1] - num_t(int(1)));
+      if(isfinite(work)) d0[i] += d0[i - 1] / d1[i - 1] - num_t(int(1));
+      else break;
     }
-    if(d1[d1.size() - 1] != num_t(int(0)))
-      dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1));
+    if(d1[d1.size() - 1] != num_t(int(0))) {
+      if(! isfinite(dd = d0[d0.size() - 1] / d1[d1.size() - 1] - num_t(int(1))))
+        dd = num_t(int(0));
+    }
     Mx = max(Mx, abs(dd) * num_t(int(2)));
     if(dd != num_t(int(0))) M[M.size() - 1] = max(- Mx, min(Mx, look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)) ));
     d1 = d0;
