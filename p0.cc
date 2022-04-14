@@ -74,22 +74,22 @@ int main(int argc, const char* argv[]) {
     else
       p = p0_t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)), step), step), step), step) )) ), abs(var));
   }
-  num_t d(int(0));
-  auto  Mx(d);
+  num_t din(int(0));
+  auto  Mx(din);
   std::vector<num_t> M;
-  M.resize(abs(look), d);
+  M.resize(abs(look), din);
   std::vector<num_t> d0;
-  d0.resize(recur, d);
+  d0.resize(recur, din);
   auto  d1(d0);
   while(std::getline(std::cin, s, '\n')) {
-    const auto bd(d);
+    const auto bd(din);
     std::stringstream ins(s);
-    ins >> d;
-    const auto din(d);
+    ins >> din;
+    num_t D(int(0));
     for(int i = 0; i < 2; i ++) {
-      d = i ? din + din : din + bd;
+      const auto  d(i ? din + din : din + bd);
             num_t dd(int(0));
-      const auto  D(d * M[0]);
+      D += d * M[0];
       Mx = max(Mx, abs(d) * num_t(int(2)));
       if(recur) {
         d0[0] += d;
@@ -108,10 +108,10 @@ int main(int argc, const char* argv[]) {
         M[M.size() - 1] = (look < 0 ? (var < 0 ? qq.next(dd) : pp.next(dd)) : (var < 0 ? q.next(dd) : p.next(dd)));
       else M[M.size() - 1] = num_t(int(0));
       if(recur) for(int i = 0; i < d0.size(); i ++) M[M.size() - 1] *= d0[i];
-      std::cout << D << ", " << (M[M.size() - 1] = max(- Mx, min(Mx, M[M.size() - 1])) ) << std::endl << std::flush;
+      M[M.size() - 1] = max(- Mx, min(Mx, M[M.size() - 1]));
       d1 = d0;
     }
-    d = din;
+    std::cout << D << ", " << M[M.size() - 1] << ", " << M[M.size() - 2] << std::endl << std::flush;
   }
   return 0;
 }
