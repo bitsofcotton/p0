@@ -16,11 +16,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <size>? <look>? < stream.txt
-    # size <  0 for average origin, otherwise, 0 origin.
+    ./p0 <size>? < stream.txt
+    # size <  0 for complex plain prediction, otherwise, prediction on sedenion.
     # abs(size) specifies middle frequency band size.
-    # look <  0 for complex plain space, otherwise, sedenion space.
-    # abs(look) specifies n-step after prediction.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

@@ -184,6 +184,24 @@ public:
   myuint t;
 };
 
+template <typename T, typename P> class logChain {
+public:
+  inline logChain() { ; }
+  inline logChain(P&& p) { this->p = p; S = T(int(0)); }
+  inline ~logChain() { ; }
+  inline T next(const T& in) {
+    static const T zero(int(0));
+    static const T one(int(1));
+    const auto bS(S);
+    const auto dd((S += in) / bS - one);
+    if(! isfinite(dd)) return zero;
+          auto res(p.next(dd));
+    return res *= S;
+  }
+  T S;
+  P p;
+};
+
 template <typename T, typename P> class P0ContRand {
 public:
   inline P0ContRand() { ; }
