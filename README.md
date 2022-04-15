@@ -18,7 +18,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use (commandline):
     ./p0 <size>? < stream.txt
     # size <  0 for complex plain prediction, otherwise, prediction on sedenion.
-    # abs(size) specifies middle frequency band size.
+    # abs(size) specifies middle frequency band size, abs(size) also specifies
+    #           average input range, this also effects middle frequency band.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

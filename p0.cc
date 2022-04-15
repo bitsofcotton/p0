@@ -62,15 +62,28 @@ int main(int argc, const char* argv[]) {
     q = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var)), abs(var)) )) ) )) );
   else
     p = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), abs(var)), abs(var)), abs(var)), abs(var)) )) ) )) );
-  num_t d(int(0));
+  int   t;
+  num_t d(t ^= t);
+  auto  dd(d);
   auto  Mx(d);
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    Mx = max(Mx, abs(d) * num_t(int(32)));
-    std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(d) : p.next(d) )) ) << std::endl << std::flush;;
+    dd += d;
+    // N.B. if original sample lebesgue integrate is not enough continuous,
+    //      imitate original function by some of sample points,
+    //      but move origin point to average one, so a little better
+    //      original function estimation.
+    // XXX: don't know whether abs(var) is optimal or not.
+    if(t ++ < abs(var)) {
+      std::cout << D << ", " << M << std::endl << std::flush;
+      continue;
+    }
+    Mx = max(Mx, abs(dd) * num_t(int(32)));
+    std::cout << D << ", " << (M = max(- Mx, min(Mx, var < 0 ? q.next(dd) : p.next(dd) )) ) << std::endl << std::flush;;
+    dd = num_t(t ^= t);
   }
   return 0;
 }
