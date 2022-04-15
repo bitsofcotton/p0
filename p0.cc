@@ -53,16 +53,16 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var   = std::atoi(argv[1]);
   if(2 < argc) look  = std::atoi(argv[2]);
   std::cerr << argv[0] << " " << var << " " << look << std::endl;
+  look += look + (look < 0 ? - 1 : 1);
+  assert(look);
   // N.B. this is not optimal but we use this:
-  const int  step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look * 2) - 1)) * log(num_t(abs(var * 2) + abs(look * 2) - 1)))));
+  const int  step(max(num_t(3), exp(log(num_t(abs(var * 2) + abs(look) - 1)) * log(num_t(abs(var * 2) + abs(look) - 1)))));
   // N.B. make periodical into complex plain arg periodical, not aligned.
   const auto recur(2);
   p0_t   p;
   p0_at  q;
   p0_st  pp;
   p0_ast qq;
-  look += look;
-  assert(look);
   if(look < 0) {
     if(var < 0)
       qq = p0_ast(p0_st(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var) + abs(look) - 1), abs(var)) )) ), abs(var)));
