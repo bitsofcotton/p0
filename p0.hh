@@ -193,10 +193,10 @@ public:
     static const T zero(int(0));
     static const T one(int(1));
     const auto bS(S);
+    if(bS == zero) return zero;
     const auto dd((S += in) / bS - one);
     if(! isfinite(dd)) return zero;
-          auto res(p.next(dd));
-    return res *= S;
+    return p.next(dd) * S;
   }
   T S;
   P p;
