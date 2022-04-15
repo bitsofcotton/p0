@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic 1-variable predictor on expected value.
+Generic serialized data predictor on expected value.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -77,6 +77,9 @@ The real part and imginary part simple DFT is equivalent to plain prediction in 
 We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/2, with applying some ratio twice or more goes arg(z) depend causes the period but not aligned ones on -1 origin point.
 
 In this meaning, random permutation of sin(x) series is a difficult one, but with some small range permutation series applied by this method causes ok. Otherwise, the range we specify is small enough, so this fails.
+
+# Tips
+We gain sectional measurement expected prediction value by plain predictor, but if so, we should average some of input and skip them because of middle part of the frequency to be interpreted uncontinuous condition on original function lebesgue integrate.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
