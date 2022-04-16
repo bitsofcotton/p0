@@ -3,6 +3,7 @@ CXX=	clang++
 # compiler flags.
 CXXFLAGS+=	-std=c++11
 #CXXFLAGS+=	-fopenmp -L/usr/local/lib -lomp
+#CXXFLAGS+=	-pg
 CXXFLAGS+=	-Ofast -mtune=native -gfull
 #CXXFLAGS+=	-O0 -mtune=native -gfull
 #CXXFLAGS+=	-Oz -mtune=native -gfull

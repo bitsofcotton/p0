@@ -98,7 +98,7 @@ public:
   }
   inline ~P0() { ; };
   inline T next(const T& in) {
-    const auto ff(f.next(in));
+    const auto& ff(f.next(in));
     return f.full ? pnextcache<T>(ff.size(), step).dot(ff) : T(int(0));
   }
   int step;
@@ -128,12 +128,13 @@ public:
     f = feeder(size);
     (this->p).resize(size, p);
     q = this->p;
+    ff = SimpleVector<complex<T> >(size);
   }
   inline ~P0DFT() { ; };
   inline T next(const T& in) {
     const auto& fn(f.next(in));
     if(! f.full) return T(int(0));
-    auto ff(dftcache<T>(fn.size()) * fn.template cast<complex<T> >());
+    ff = dftcache<T>(fn.size()) * fn.template cast<complex<T> >();
     assert(ff.size() == p.size() && p.size() == q.size());
     for(int i = 0; i < ff.size(); i ++)
       if(! (ff[i].real() == T(int(0)) && ff[i].imag() == T(int(0)) ) )
@@ -142,6 +143,7 @@ public:
   }
   vector<P> p;
   vector<P> q;
+  SimpleVector<complex<T> > ff;
   feeder f;
 };
 
