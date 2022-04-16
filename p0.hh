@@ -193,8 +193,9 @@ public:
     static const T zero(int(0));
     static const T one(int(1));
     const auto bS(S);
+    S += in;
     if(bS == zero) return zero;
-    const auto dd((S += in) / bS - one);
+    const auto dd(S / bS - one);
     if(! isfinite(dd)) return zero;
     return p.next(dd) * S;
   }

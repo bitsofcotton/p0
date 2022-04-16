@@ -4,11 +4,10 @@ CXX=	clang++
 CXXFLAGS+=	-std=c++11
 #CXXFLAGS+=	-fopenmp -L/usr/local/lib -lomp
 CXXFLAGS+=	-Ofast -mtune=native -gfull
+#CXXFLAGS+=	-O0 -mtune=native -gfull
 #CXXFLAGS+=	-Oz -mtune=native -gfull
 #CXXFLAGS+=	-Oz -mno-sse2 -mno-sse -mno-3dnow -mno-mmx -msoft-float -gfull
 LDFLAGS+=	-lc++
-
-#CXXFLAGS+=	-D_FLOAT_BITS_=32
 
 clean:
 	@rm -rf p0 p0-32 p0-r p0-r-32
