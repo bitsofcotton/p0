@@ -82,6 +82,9 @@ In this meaning, random permutation of sin(x) series is a difficult one, but wit
 # Tips
 We gain sectional measurement expected prediction value by plain predictor, but if so, we should average some of input and skip them because of middle part of the frequency to be interpreted uncontinuous condition on original function lebesgue integrate.
 
+# Tips
+There exists non lebesgue mesuarable set if axiom of choice with the set of greater or equal to aleph_1. This can be described in computer with covering a piece of paper completely with writing, even in algorithm meaning. But if so, the algorithm will be non-deterministic nor only the small finite series we can get. Otherwise, I have no idea the functions described in upto aleph_0 with constitutive method which is on non lebesgue mesuarable set. So it would be greately appreciated if you know such set especially described in projection of infinite group combinations.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU

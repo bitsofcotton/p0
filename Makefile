@@ -11,8 +11,8 @@ CXXFLAGS+=	-Ofast -mtune=native -gfull
 LDFLAGS+=	-lc++
 
 clean:
-	@rm -rf p0 p0-32 p0-r p0-r-32
-all:	p0 p0-32 p0-r p0-r-32
+	@rm -rf p0 p0-32 p0r p0r32
+all:	p0 p0-32 p0r p0r32
 p0:
 	${CXX} ${CXXFLAGS} -static -o p0 p0.cc
 p0-32:
@@ -27,8 +27,8 @@ p0-512:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=512 -o p0-512 p0.cc
 p0-1024:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=1024 -o p0-1024 p0.cc
-p0-r:
-	${CXX} ${CXXFLAGS} -static -o p0-r p0-r.cc
-p0-r-32:
-	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0-r-32 p0-r.cc
+p0r:
+	${CXX} ${CXXFLAGS} -static -o p0r p0r.cc
+p0r32:
+	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0r32 p0r.cc
 
