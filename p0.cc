@@ -80,8 +80,8 @@ int main(int argc, const char* argv[]) {
     //      imitate original function by some of sample points,
     //      but move origin point to average one, so a little better
     //      original function estimation.
-    // XXX: don't know whether 4 * var * var is optimal or not.
-    if(++ t < 4 * var * var) {
+    // N.B. frequency space *= 2 causes nyquist frequency ok.
+    if(++ t < step) {
       std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
       continue;
     }
