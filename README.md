@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expected value when original function has some invariant structure with short ranges.
+Generic predictor on expected value when original function has some invariant structure no longer with input argument.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -87,6 +87,9 @@ There exists non lebesgue mesuarable set if axiom of choice with the set of grea
 
 # Tips
 If original function is some n-markov or just continuous, they have invariant structure on short ranges.
+
+# Tips
+A longer invariants includes shorter invariant in trivial, but if the structure changes frequently worse fast than longer range, this fails. So to avoid this, we predict with each invariants shorter than input argument.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing

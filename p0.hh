@@ -205,6 +205,32 @@ public:
   P p;
 };
 
+template <typename T, typename P> class P0Expect {
+public:
+  inline P0Expect() { ; }
+  inline P0Expect(P&& p, const int& nyquist = 1) {
+    Mx = M = d = T(t ^= t);
+    tM = nyquist;
+    assert(0 < tM);
+    this->p = p;
+  }
+  inline ~P0Expect() { ; }
+  inline const T& next(const T& in) {
+    d += in;
+    if(++ t < tM) return M;
+    Mx = max(Mx, abs(d) * T(int(32)));
+    M  = max(- Mx, min(Mx, p.next(d / T(tM))));
+    d  = T(t ^= t);
+    return M;
+  }
+  int t;
+  int tM;
+  T d;
+  T M;
+  T Mx;
+  P p;
+};
+
 template <typename T, typename P> class P0ContRand {
 public:
   inline P0ContRand() { ; }
