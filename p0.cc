@@ -59,19 +59,23 @@ int main(int argc, const char* argv[]) {
   p0_t  p;
   p0_st q;
   p0_0t r;
-  if(var < 0)
-    q = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var)), abs(var)) )) ) )) );
-  else if(0 < var)
-    p = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), abs(var)), abs(var)), abs(var)), abs(var)) )) ) )) );
-  else
-    r = p0_0t(3);
   int   t;
   num_t d(t ^= t);
   auto  dd(d);
   auto  Mx(d);
   auto  M(d);
   auto  S(d);
+  bool  need_init(true);
   while(std::getline(std::cin, s, '\n')) {
+    if(need_init) {
+      if(var < 0)
+        q = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, abs(var)), abs(var)) )) ) )) );
+      else if(0 < var)
+        p = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, abs(var)), abs(var)), abs(var)), abs(var)), abs(var)), abs(var)) )) ) )) );
+      else
+        r = p0_0t(3);
+      need_init = false;
+    }
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
