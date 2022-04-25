@@ -88,7 +88,7 @@ There exists non lebesgue mesuarable set if axiom of choice with the set of grea
 # Tips
 The tips below some lines are depends on one function recursion data series, but they're described with appending status block each points and only right multiply counter with x\+ := x \*\_(some group) status \*\_(some another group) counter and some f, ... f(x) ... f(x\+) ... data series.
 To invert this method, we should take invariant on f with some appliable dimension.
-Some of the result shows non special differential equation with proper boundary condition into one dimension projection can be rewrited into some stable approximation block invariant with small error.
+Some of the result shows non special differential equation with proper boundary condition into one dimension projection can be rewrited into some stable approximation block invariant with small error but distant points accumulate large error.
 So original function is just continuous or one-function recursion, they have a invariant structure on some short ranges.
 
 # Tips
