@@ -92,7 +92,7 @@ If original function is some n-markov or just continuous, they have invariant st
 A longer invariants includes shorter invariant in trivial, but if the structure changes frequently worse fast than longer range, this fails. So to avoid this, we predict with each invariants shorter than input argument.
 
 # Tips
-If input accuracy is rough enough, \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically.
+If input accuracy is rough enough, \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically. And with extending such input doesn't causes prediction structure change in this.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
