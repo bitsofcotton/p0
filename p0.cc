@@ -60,9 +60,11 @@ int main(int argc, const char* argv[]) {
   int var(2);
   if(argc <= 1) std::cerr << argv[0] << " <markov>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
-  std::vector<p0_t>  p;
-  std::vector<p0_st> q;
-  std::vector<p0_0t> r;
+  // N.B. this is not optimal but we use this:
+  const int step(max(num_t(3), exp(log(num_t(abs(var))) * log(num_t(abs(var))))));
+  p0_t  p;
+  p0_st q;
+  p0_0t r;
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
@@ -70,31 +72,18 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     if(need_init) {
       std::cerr << argv[0] << " " << var << std::endl;
-      if(var < 0) {
-        q.reserve(- var);
-        for(int i = 1; i <= - var; i ++) {
-          // N.B. this is not optimal but we use this:
-          const int step(max(num_t(3), exp(log(num_t(i)) * log(num_t(i)))));
-          q.emplace_back(p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, i), i) )) ) )) ), i));
-        }
-      } else if(0 < var) {
-        p.reserve(var);
-        for(int i = 1; i <= var; i ++) {
-          // N.B. this is not optimal but we use this:
-          const int step(max(num_t(3), exp(log(num_t(i)) * log(num_t(i)))));
-          p.emplace_back(p0_t(p0_11t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, i), i), i), i), i), i) )) ) )) ), i));
-        }
-      } else
-        r.resize(1, p0_0t(3));
+      if(var < 0)
+        q = p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, - var), - var) )) ) )) ), - var);
+      else if(0 < var)
+        p = p0_t(p0_11t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) ), var);
+      else
+        r = p0_0t(3);
       need_init = false;
     }
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    M = num_t(int(0));
-    for(int i = 0; i < (var ? (var < 0 ? q.size() : p.size()) : r.size()); i ++)
-      M += var ? (var < 0 ? q[i].next(d) : p[i].next(d)) : r[i].next(d);
-    std::cout << D << ", " << (M /= num_t(var ? (var < 0 ? q.size() : p.size()) : r.size() )) << ", " << (S += D) << std::endl << std::flush;;
+    std::cout << D << ", " << (M = num_t(var ? (var < 0 ? q.next(d) : p.next(d)) : r.next(d)) ) << ", " << (S += D) << std::endl << std::flush;;
   }
   return 0;
 }
