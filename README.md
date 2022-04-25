@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expected value when original function has some invariant structure no longer with input argument.
+Generic predictor on expected value when original function has some invariant structure no longer with input argument or original function is Lebesgue integrated and riemann integrable one when we make input average to be origin point.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -86,14 +86,17 @@ We gain sectional measurement expected prediction value by plain predictor, but 
 There exists non lebesgue mesuarable set if axiom of choice with the set of greater or equal to aleph_1. This can be described in computer with covering a piece of paper completely with writing, even in algorithm meaning. But if so, the algorithm will be non-deterministic nor only the small finite series we can get. Otherwise, I have no idea the functions described in upto aleph_0 with constitutive method which is on non lebesgue mesuarable set. So it would be greately appreciated if you know such set especially described in projection of infinite group combinations.
 
 # Tips
-If original function is some n-markov or just continuous, they have invariant structure on short ranges.
+The tips below some lines are depends on one function recursion data series, but they're described with appending status block each points and only right multiply counter with x\+ := x \*\_(some group) status \*\_(some another group) counter and some f, ... f(x) ... f(x\+) ... data series.
+To invert this method, we should take invariant on f with some appliable dimension.
+So original function is just continuous or one-function recursion, they have a invariant structure on some short ranges.
+But we need the condition f with only Lebesgue measurable, they causes original function condition only with Lebesgue integrated ones.
 
 # Tips
 A longer invariants includes shorter invariant in trivial.
 The invariant dimension size we need on original global function depends on the categorization of the structure of them.
 
 # Tips
-If input accuracy is rough enough in fixed point float, \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically. And with extending such input accuracy doesn't causes prediction structure change in this.
+If input accuracy is rough enough in fixed point float and recursively apply p0 with smaller arguments, they causes \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically if Th. Condorcet's jury is being applied, but the theorem can be used with blending PRNG into original stream. And with extending such input accuracy doesn't causes prediction structure change in this.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
