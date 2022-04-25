@@ -218,8 +218,8 @@ public:
   inline const T& next(const T& in) {
     d += in;
     if(++ t < tM) return M;
-    Mx = max(Mx, abs(d) * T(int(32)));
-    M  = max(- Mx, min(Mx, p.next(d / T(tM))));
+    Mx = max(Mx, abs(d /= T(tM)) * T(int(32)));
+    M  = max(- Mx, min(Mx, p.next(d)));
     d  = T(t ^= t);
     return M;
   }
