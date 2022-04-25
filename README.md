@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expected value when original function has some invariant structure no longer with input argument or original function is Lebesgue integrated and riemann integrable one when we make input average to be origin point.
+Generic predictor on expected value when original function has some Lebesgue measurable invariant structure no higher dimension with input argument.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -89,7 +89,6 @@ There exists non lebesgue mesuarable set if axiom of choice with the set of grea
 The tips below some lines are depends on one function recursion data series, but they're described with appending status block each points and only right multiply counter with x\+ := x \*\_(some group) status \*\_(some another group) counter and some f, ... f(x) ... f(x\+) ... data series.
 To invert this method, we should take invariant on f with some appliable dimension.
 So original function is just continuous or one-function recursion, they have a invariant structure on some short ranges.
-But we need the condition f with only Lebesgue measurable, they causes original function condition only with Lebesgue integrated ones.
 
 # Tips
 A longer invariants includes shorter invariant in trivial.
