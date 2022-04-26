@@ -208,17 +208,18 @@ public:
 template <typename T, typename P> class P0Expect {
 public:
   inline P0Expect() { ; }
-  inline P0Expect(P&& p, const int& nyquist = 1) {
+  inline P0Expect(P&& p, const int& nyquist = 2, const int& offset = 0) {
     Mx = M = d = T(t ^= t);
+    t -= offset;
     tM = nyquist;
     assert(0 < tM);
     this->p = p;
   }
   inline ~P0Expect() { ; }
   inline const T& next(const T& in) {
-    d += in;
+    if(0 <= t) d += in;
     if(++ t < tM) return M;
-    Mx = max(Mx, abs(d /= T(tM)) * T(int(32)));
+    Mx = max(Mx, abs(d /= T(tM * tM)) * T(int(2)));
     M  = max(- Mx, min(Mx, p.next(d)));
     d  = T(t ^= t);
     return M;
