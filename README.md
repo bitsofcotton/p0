@@ -83,12 +83,12 @@ In this meaning, random permutation of sin(x) series is a difficult one, but wit
 We gain sectional measurement expected prediction value by plain predictor, but if so, we should average some of input and skip them because of middle part of the frequency to be interpreted uncontinuous condition on original function lebesgue integrate.
 
 # Tips
-There exists non lebesgue mesuarable set if axiom of choice with the set of greater or equal to aleph_1. This can be described in computer with covering a piece of paper completely with writing, even in algorithm meaning. But if so, the algorithm will be non-deterministic nor only the small finite series we can get. Otherwise, I have no idea the functions described in upto aleph_0 with constitutive method which is on non lebesgue mesuarable set. So it would be greately appreciated if you know such set especially described in projection of infinite group combinations.
+There exists non lebesgue measuarable set if axiom of choice with the set of greater or equal to aleph_1. This can be described in computer with covering a piece of paper completely with writing, even in algorithm meaning. But if so, the algorithm will be non-deterministic nor only the small finite series we can get. Otherwise, I have no idea the functions described in upto aleph_0 with constitutive method which is on non lebesgue measuarable set. So it would be greately appreciated if you know such set especially described in projection of infinite group combinations.
 
 # Tips
 The tips below some lines are depends on one function recursion data series, but they're described with appending status block each points and only right multiply counter with x\+ := x \*\_(some group) status \*\_(some another group) counter and some f, ... f(x) ... f(x\+) ... data series.
 To invert this method, we should take invariant on f with some appliable dimension.
-Some of the result shows non special differential equation with proper boundary condition into one dimension projection can be rewrited into some stable approximation block invariant with small error but distant points accumulate large error. This can be described with taylor matrix recursion causes unstable each elements, but with long enough before range with small next step condition, this is reduced. And any of the x^k is described with some range vector in this. (so arctan twice before to apply???)
+Some of the preceding result on some fields shows non special differential equation with proper boundary condition into one dimension projection can be rewrited into some stable approximation block invariant with small error but distant points accumulate large error. This can be described with taylor matrix recursion causes unstable each elements, but with long enough before range with small next step condition, this is reduced. And any of the x^k is described with some range vector in this. (so arctan twice before to apply???)
 So original function is just continuous or one-function recursion, they have a invariant structure on some short ranges.
 
 # Tips
@@ -96,7 +96,7 @@ A longer invariants includes shorter invariant in trivial.
 The invariant dimension size we need on original global function depends on the categorization of the structure of them.
 
 # Tips
-But with randtools meaning, we always have invariants with some of categorized ones in also small dimension. This causes linear summation combination on prediction of each invariants. Therefore, we sometimes have better results in smaller invariant dimensions. But if the combination coefficient slowly moves in general, so no stable result be gained in smaller dimensions in general.
+But with randtools meaning, we always have invariants with some of categorized ones in also small dimension. This causes linear summation combination on prediction of each invariants. Therefore, we sometimes have better results even in smaller invariant dimensions. But if the combination coefficient slowly moves in general, so no stable result be gained in smaller dimensions in general.
 A recursive apply on this causes apply them into large number of clustered invariant categorization. So if there's a invariant combination largely changes point, we get gulf on the result. Otherwise, we get better result and usually, the global invariant unchange, so the condition satisfies this.
 
 # Tips
