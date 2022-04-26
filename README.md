@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expected value when original function has some Lebesgue measurable invariant structure no higher dimension with input argument.
+Predictor on expected value when original function is Lebesgue measurable and no statistical illegal values on input.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
