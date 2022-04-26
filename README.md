@@ -97,6 +97,7 @@ The invariant dimension size we need on original global function depends on the 
 
 # Tips
 But with randtools meaning, we always have invariants with some of categorized ones in also small dimension. This causes linear summation combination on prediction of each invariants. Therefore, we sometimes have better results in smaller invariant dimensions. But if the combination coefficient slowly moves in general, so no stable result be gained in smaller dimensions in general.
+A recursive apply on this causes apply them into large number of clustered invariant categorization. So if there's a invariant combination largely changes point, we get gulf on the result. Otherwise, we get better result and usually, the global invariant unchange, so the condition satisfies this.
 
 # Tips
 If input accuracy is rough enough in fixed point float and recursively apply p0 with smaller arguments, they causes \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically if Th. Condorcet's jury is being applied, but the theorem can be used with blending PRNG into original stream. And with extending such input accuracy doesn't causes prediction structure change in this.
