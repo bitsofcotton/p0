@@ -93,12 +93,13 @@ int main(int argc, const char* argv[]) {
       Mstore(3, Mstore.cols() - 1) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS) - dS;
     } else
       Mstore(2, Mstore.cols() - 1) = Mstore(3, Mstore.cols() - 1) = num_t(int(0));
-    const auto svd(Mstore.SVD() * Mstore);
+    const auto lsvd(Mstore.SVD());
+    const auto svd(lsvd * Mstore);
     int rank(0);
     M = num_t(int(0));
     for(int i = 0; i < svd.rows(); i ++)
       if(svd.row(i).dot(svd.row(i)) != num_t(int(0))) {
-        M += svd(i, svd.cols() - 1) / sqrt(svd.row(i).dot(svd.row(i)));
+        M += svd(i, svd.cols() - 1) / sqrt(svd.row(i).dot(svd.row(i))) * sgn<num_t>(lsvd(i, i));
         rank ++;
       }
     if(! isfinite(M)) M = num_t(int(0));
