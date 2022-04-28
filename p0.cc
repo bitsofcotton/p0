@@ -82,7 +82,7 @@ int main(int argc, const char* argv[]) {
     if(var) {
       // N.B. compete with dimension the original function might have.
       //      (x, f(x), status, const.) is eliminated in this method,
-      //      but not stable in practical ones.
+      // XXX: but not stable in practical ones.
       const auto bdS(dS);
       dS += d;
       for(int i = 0; i < Mstore.rows() - 1; i ++)
@@ -91,8 +91,8 @@ int main(int argc, const char* argv[]) {
       Mstore(Mstore.rows() - 1, 1) = q0.next(d);
       if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
         const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
-        Mstore(Mstore.rows() - 1, 2) = num_t(int(1)) / (p1.next(ddS) + num_t(int(1)) / dS);
-        Mstore(Mstore.rows() - 1, 3) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS);
+        Mstore(Mstore.rows() - 1, 2) = num_t(int(1)) / (p1.next(ddS) + num_t(int(1)) / dS) - dS;
+        Mstore(Mstore.rows() - 1, 3) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS) - dS;
       } else
         Mstore(Mstore.rows() - 1, 2) = Mstore(Mstore.rows() - 1, 3) = num_t(int(0));
       const auto MM(Mstore.QR().col(Mstore.rows() - 1));
