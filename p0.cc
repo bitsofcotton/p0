@@ -105,8 +105,11 @@ int main(int argc, const char* argv[]) {
     auto sstat(stat);
     std::sort(sstat.begin(), sstat.end());
     for(int i = 0; i < svd.rows(); i ++)
-      if(sstat[sstat.size() - 1] * SimpleMatrix<num_t>().epsilon < stat[i]) {
-        M += svd(i, svd.cols() - 1) / stat[i] * sgn<num_t>(lsvd(i, i));
+      if(sstat[sstat.size() - 1] * sqrt(SimpleMatrix<num_t>().epsilon) < stat[i]) {
+        auto sum(lsvd(i, 0));
+        for(int j = 1; j < lsvd.cols(); j ++)
+          sum += lsvd(i, j);
+        M += svd(i, svd.cols() - 1) / stat[i] * sgn<num_t>(sum);
         rank ++;
       }
     if(! isfinite(M)) M = num_t(int(0));
