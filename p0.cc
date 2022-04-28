@@ -61,6 +61,7 @@ int main(int argc, const char* argv[]) {
   int var(4);
   if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
+  std::cerr << argv[0] << " " << var << std::endl;
   assert(4 <= var);
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var))) * log(num_t(abs(var))))));
@@ -95,15 +96,21 @@ int main(int argc, const char* argv[]) {
       Mstore(2, Mstore.cols() - 1) = Mstore(3, Mstore.cols() - 1) = num_t(int(0));
     const auto lsvd(Mstore.SVD());
     const auto svd(lsvd * Mstore);
-    int rank(0);
-    M = num_t(int(0));
+    std::vector<num_t> stat;
+    stat.reserve(4);
+    int rank;
+    M = num_t(rank ^= rank);
     for(int i = 0; i < svd.rows(); i ++)
-      if(svd.row(i).dot(svd.row(i)) != num_t(int(0))) {
-        M += svd(i, svd.cols() - 1) / sqrt(svd.row(i).dot(svd.row(i))) * sgn<num_t>(lsvd(i, i));
+      stat.emplace_back(sqrt(svd.row(i).dot(svd.row(i))));
+    auto sstat(stat);
+    std::sort(sstat.begin(), sstat.end());
+    for(int i = 0; i < svd.rows(); i ++)
+      if(sstat[sstat.size() - 1] * SimpleMatrix<num_t>().epsilon < stat[i]) {
+        M += svd(i, svd.cols() - 1) / stat[i] * sgn<num_t>(lsvd(i, i));
         rank ++;
       }
     if(! isfinite(M)) M = num_t(int(0));
-    std::cout << D << ", " << (M /= num_t(svd.rows() ? svd.rows() : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << ", " << sstat[0] / sstat[sstat.size() - 1] << std::endl << std::flush;
   }
   return 0;
 }
