@@ -58,48 +58,51 @@ typedef sumChain<num_t, p0_s6t, true> p0_st;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(2);
-  if(argc <= 1) std::cerr << argv[0] << " <npred>? : continue with ";
+  int var(4);
+  if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
-  assert(0 <= var);
+  assert(4 <= var);
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(abs(var))) * log(num_t(abs(var))))));
   p0_t  p0(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
   auto  p1(p0);
   p0_st q0(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
   auto  q1(q0);
-  p0_0t r(3);
   num_t d(int(0));
   auto  dS(d);
   auto  M(d);
   auto  S(d);
-  SimpleMatrix<num_t> Mstore(step, 4);
+  SimpleMatrix<num_t> Mstore(4, max(4, step));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    if(var) {
-      // N.B. compete with dimension the original function might have.
-      //      (x, f(x), status, const.) is eliminated in this method,
-      // XXX: but not stable in practical ones.
-      const auto bdS(dS);
-      dS += d;
-      for(int i = 0; i < Mstore.rows() - 1; i ++)
-        Mstore.row(i) = Mstore.row(i + 1);
-      Mstore(Mstore.rows() - 1, 0) = p0.next(d);
-      Mstore(Mstore.rows() - 1, 1) = q0.next(d);
-      if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
-        const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
-        Mstore(Mstore.rows() - 1, 2) = num_t(int(1)) / (p1.next(ddS) + num_t(int(1)) / dS) - dS;
-        Mstore(Mstore.rows() - 1, 3) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS) - dS;
-      } else
-        Mstore(Mstore.rows() - 1, 2) = Mstore(Mstore.rows() - 1, 3) = num_t(int(0));
-      const auto MM(Mstore.QR().col(Mstore.rows() - 1));
-      M = MM[0] + MM[1] + MM[2] + MM[3];
+    // N.B. compete with dimension the original function might have.
+    //      (x, f(x), status, const.) is eliminated in this method,
+    // XXX: but not stable in practical ones.
+    const auto bdS(dS);
+    dS += d;
+    for(int i = 0; i < Mstore.cols() - 1; i ++)
+      Mstore.setCol(i, Mstore.col(i + 1));
+    Mstore(0, Mstore.cols() - 1) = p0.next(d);
+    Mstore(1, Mstore.cols() - 1) = q0.next(d);
+    if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
+      const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
+      Mstore(2, Mstore.cols() - 1) = num_t(int(1)) / (p1.next(ddS) + num_t(int(1)) / dS) - dS;
+      Mstore(3, Mstore.cols() - 1) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS) - dS;
     } else
-      M = r.next(d);
-    std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
+      Mstore(2, Mstore.cols() - 1) = Mstore(3, Mstore.cols() - 1) = num_t(int(0));
+    const auto svd(Mstore.SVD() * Mstore);
+    int rank(0);
+    M = num_t(int(0));
+    for(int i = 0; i < svd.rows(); i ++)
+      if(svd.row(i).dot(svd.row(i)) != num_t(int(0))) {
+        M += svd(i, svd.cols() - 1) / sqrt(svd.row(i).dot(svd.row(i)));
+        rank ++;
+      }
+    if(! isfinite(M)) M = num_t(int(0));
+    std::cout << D << ", " << (M /= num_t(svd.rows() ? svd.rows() : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
