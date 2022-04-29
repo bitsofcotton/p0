@@ -37,7 +37,7 @@ typedef sumChain<num_t, p0_7t>  p0_8t;
 typedef logChain<num_t, p0_8t>  p0_9t;
 typedef logChain<num_t, p0_9t>  p0_10t;
 // N.B. we take average as origin of input.
-typedef sumChain<num_t, p0_10t, true> p0_t;
+typedef sumChain<num_t, p0_10t, true> p0_11t;
 // N.B. if original sample lebesgue integrate is not enough continuous,
 //      imitate original function by some of sample points,
 //      but move origin point to average one, so a little better
@@ -45,7 +45,7 @@ typedef sumChain<num_t, p0_10t, true> p0_t;
 // N.B. frequency space *= 2 causes nyquist frequency ok.
 // N.B. but this is equivalent from jammer on PRNG, and probe on some
 //      measurable phenomenon.
-//typedef P0Expect<num_t, p0_11t> p0_t;
+typedef P0Expect<num_t, p0_11t> p0_t;
 
 // N.B. plain complex form.
 typedef northPole<num_t, p0_1t>  p0_s2t;
@@ -53,7 +53,8 @@ typedef northPole<num_t, p0_s2t> p0_s3t;
 typedef sumChain<num_t, p0_s3t>  p0_s4t;
 typedef logChain<num_t, p0_s4t>  p0_s5t;
 typedef logChain<num_t, p0_s5t>  p0_s6t;
-typedef sumChain<num_t, p0_s6t, true> p0_st;
+typedef sumChain<num_t, p0_s6t, true> p0_s7t;
+typedef P0Expect<num_t, p0_s7t>  p0_st;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -62,18 +63,25 @@ int main(int argc, const char* argv[]) {
   if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
-  assert(4 <= var);
-  // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(abs(var))) * log(num_t(abs(var))))));
-  p0_t  p0(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
+  assert(0 < var);
+  std::vector<p0_t>  p0;
+  std::vector<p0_st> q0;
+  p0.reserve(var);
+  q0.reserve(var);
+  for(int i = 1; i <= var; i ++)
+    for(int j = 0; j < i; j ++) {
+      // N.B. this is not optimal but we use this:
+      const int step(max(num_t(3), exp(log(num_t(i)) * log(num_t(i)))));
+      p0.emplace_back(p0_t(p0_11t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, i), i), i), i), i), i) )) ) )) ), i, j));
+      q0.emplace_back(p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, i), i) )) ) )) ), i, j));
+    }
   auto  p1(p0);
-  p0_st q0(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
   auto  q1(q0);
   num_t d(int(0));
   auto  dS(d);
   auto  M(d);
   auto  S(d);
-  SimpleMatrix<num_t> Mstore(4, max(4, step));
+  SimpleMatrix<num_t> Mstore(4, max(4, int(exp(log(num_t(var)) * log(num_t(var))))));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
@@ -86,18 +94,21 @@ int main(int argc, const char* argv[]) {
     dS += d;
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
-    Mstore(0, Mstore.cols() - 1) = p0.next(d);
-    Mstore(1, Mstore.cols() - 1) = q0.next(d);
-    if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
-      const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
-      Mstore(2, Mstore.cols() - 1) = num_t(int(1)) / (p1.next(ddS) + num_t(int(1)) / dS) - dS;
-      Mstore(3, Mstore.cols() - 1) = num_t(int(1)) / (q1.next(ddS) + num_t(int(1)) / dS) - dS;
-    } else
-      Mstore(2, Mstore.cols() - 1) = Mstore(3, Mstore.cols() - 1) = num_t(int(0));
+    auto msczero(Mstore.col(Mstore.cols() - 1));
+    Mstore.setCol(Mstore.cols() - 1, msczero.O());
+    for(int i = 0; i < p0.size(); i ++) {
+      Mstore(0, Mstore.cols() - 1) += p0[i].next(d);
+      Mstore(1, Mstore.cols() - 1) += q0[i].next(d);
+      if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
+        const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
+        Mstore(2, Mstore.cols() - 1) += num_t(int(1)) / (p1[i].next(ddS) + num_t(int(1)) / dS) - dS;
+        Mstore(3, Mstore.cols() - 1) += num_t(int(1)) / (q1[i].next(ddS) + num_t(int(1)) / dS) - dS;
+      }
+    }
     const auto lsvd(Mstore.SVD());
     const auto svd(lsvd * Mstore);
     std::vector<num_t> stat;
-    stat.reserve(4);
+    stat.reserve(svd.rows());
     int rank;
     M = num_t(rank ^= rank);
     for(int i = 0; i < svd.rows(); i ++)

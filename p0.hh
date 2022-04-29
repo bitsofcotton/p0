@@ -1,7 +1,7 @@
 /*
  BSD 3-Clause License
 
-Copyright (c) 2019-2021, bitsofcotton (kazunobu watatsu)
+Copyright (c) 2019-2022, bitsofcotton (kazunobu watatsu)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -194,12 +194,13 @@ public:
   inline T next(const T& in) {
     static const T zero(int(0));
     static const T one(int(1));
+    static const auto epsilon(sqrt(sqrt(SimpleMatrix<T>().epsilon)));
     const auto bS(S);
     S += in;
     if(bS == zero) return zero;
     const auto dd(S / bS - one);
     if(! isfinite(dd)) return zero;
-    return p.next(dd) * S;
+    return p.next(dd / epsilon) * S * epsilon;
   }
   T S;
   P p;

@@ -105,7 +105,7 @@ If input accuracy is rough enough in fixed point float and recursively apply p0 
 # Tips on jamming
 There always exists jammer to any of the predictor. So to avoid bared predictor jammer, we apply all of the invariants smaller dimension than arguments. However, it is harder but there also exists such jammer on this predictor, they behaves like smaller invariants are balanced in linear combination as to be near 0 vector not to be predicted by some of the invariants. So with this condition, we are only able to do enlarge input argument, otherwise, all of the inputs are full rank differed to input argument, so it's information-rich in the status bits meaning on the stream. So because of them, we can avoid them if input argument is larger than input not to be full rank.
 
--\> this isn't used anymore.
+-\> this isn't used anymore. -\> retry to use this.
 
 # Tips on dimension
 We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion prediction.
