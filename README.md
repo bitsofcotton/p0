@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Predictor on expected value ratio ignored when original function is Lebesgue measurable and no statistical illegal values on input.
+Predictor on expected value ratio ignored when original function is Lebesgue measurable.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
