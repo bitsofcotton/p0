@@ -37,7 +37,7 @@ typedef sumChain<num_t, p0_7t>  p0_8t;
 typedef logChain<num_t, p0_8t>  p0_9t;
 typedef logChain<num_t, p0_9t>  p0_10t;
 // N.B. we take average as origin of input.
-typedef sumChain<num_t, p0_10t, true> p0_11t;
+typedef sumChain<num_t, p0_10t, true> p0_t;
 // N.B. if original sample lebesgue integrate is not enough continuous,
 //      imitate original function by some of sample points,
 //      but move origin point to average one, so a little better
@@ -45,7 +45,7 @@ typedef sumChain<num_t, p0_10t, true> p0_11t;
 // N.B. frequency space *= 2 causes nyquist frequency ok.
 // N.B. but this is equivalent from jammer on PRNG, and probe on some
 //      measurable phenomenon.
-typedef P0Expect<num_t, p0_11t> p0_t;
+//typedef P0Expect<num_t, p0_11t> p0_t;
 
 // N.B. plain complex form.
 typedef northPole<num_t, p0_1t>  p0_s2t;
@@ -53,8 +53,7 @@ typedef northPole<num_t, p0_s2t> p0_s3t;
 typedef sumChain<num_t, p0_s3t>  p0_s4t;
 typedef logChain<num_t, p0_s4t>  p0_s5t;
 typedef logChain<num_t, p0_s5t>  p0_s6t;
-typedef sumChain<num_t, p0_s6t, true> p0_s7t;
-typedef P0Expect<num_t, p0_s7t>  p0_st;
+typedef sumChain<num_t, p0_s6t, true> p0_st;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
@@ -64,28 +63,21 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   assert(0 < var);
-  std::vector<p0_t>  p0;
-  std::vector<p0_st> q0;
-  p0.reserve(var);
-  q0.reserve(var);
-  for(int i = 1; i <= var; i ++)
-    for(int j = 0; j < i; j ++) {
-      // N.B. this is not optimal but we use this:
-      const int step(max(num_t(3), exp(log(num_t(i)) * log(num_t(i)))));
-      p0.emplace_back(p0_t(p0_11t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, i), i), i), i), i), i) )) ) )) ), i, j));
-      q0.emplace_back(p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, i), i) )) ) )) ), i, j));
-    }
-  auto  p1(p0);
-  auto  p2(p0);
-  auto  p3(p0);
-  auto  q1(q0);
-  auto  q2(q0);
-  auto  q3(q0);
+  // N.B. this is not optimal but we use this:
+  const int step(max(num_t(3), exp(log(num_t(var)) * log(num_t(var)))));
+  std::vector<p0_t>  p;
+  std::vector<p0_st> q;
+  p.reserve(4);
+  q.reserve(4);
+  for(int i = 0; i < 4; i ++) {
+    p.emplace_back(p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) ) );
+    q.emplace_back(p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) ) );
+  }
   num_t d(int(0));
   auto  dS(d);
   auto  M(d);
   auto  S(d);
-  SimpleMatrix<num_t> Mstore(8, max(8, int(exp(log(num_t(var)) * log(num_t(var))))));
+  SimpleMatrix<num_t> Mstore(8, max(8, step));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
@@ -104,29 +96,28 @@ int main(int argc, const char* argv[]) {
       continue;
     }
     // N.B. compete with dimension the original function might have.
-    //      (x, f(x), status, const.) is eliminated twice in this method,
+    //      (x, f(x), status, const.) is eliminated twice in this method
+    //      for anti-symmetric ones.
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
     auto msczero(Mstore.col(Mstore.cols() - 1));
     Mstore.setCol(Mstore.cols() - 1, msczero.O());
-    for(int i = 0; i < p0.size(); i ++) {
-      Mstore(0, Mstore.cols() - 1) += p0[i].next(d);
-      Mstore(1, Mstore.cols() - 1) += q0[i].next(d);
-      Mstore(2, Mstore.cols() - 1) -= p2[i].next(dd);
-      Mstore(3, Mstore.cols() - 1) -= q2[i].next(dd);
-      auto pp1(p1[i].next(dd) + idS);
-      auto pq1(q1[i].next(dd) + idS);
-      if(pp1 != num_t(int(0)))
-        Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp1) - dS;
-      if(pq1 != num_t(int(0)))
-        Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq1) - dS;
-      auto pp3(p3[i].next(d) + dS);
-      auto pq3(q3[i].next(d) + dS);
-      if(pp3 != num_t(int(0)))
-        Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp3) - idS;
-      if(pq3 != num_t(int(0)))
-        Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq3) - idS;
-    }
+    Mstore(0, Mstore.cols() - 1) += p[0].next(d);
+    Mstore(1, Mstore.cols() - 1) += q[0].next(d);
+    Mstore(2, Mstore.cols() - 1) -= p[1].next(dd);
+    Mstore(3, Mstore.cols() - 1) -= q[1].next(dd);
+    auto pp2(p[2].next(dd) + idS);
+    auto pq2(q[2].next(dd) + idS);
+    if(pp2 != num_t(int(0)))
+      Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp2) - dS;
+    if(pq2 != num_t(int(0)))
+      Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq2) - dS;
+    auto pp3(p[3].next(d) + dS);
+    auto pq3(q[3].next(d) + dS);
+    if(pp3 != num_t(int(0)))
+      Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp3) - idS;
+    if(pq3 != num_t(int(0)))
+      Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq3) - idS;
     auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
