@@ -58,25 +58,21 @@ typedef sumChain<num_t, p0_s6t, true> p0_st;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(1);
+  int var(2);
   if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
   assert(0 < var);
   // N.B. this is not optimal but we use this:
   const int step(max(num_t(3), exp(log(num_t(var)) * log(num_t(var)))));
-  std::vector<p0_t>  p;
-  std::vector<p0_st> q;
-  p.reserve(4);
-  q.reserve(4);
-  for(int i = 0; i < 4; i ++) {
-    p.emplace_back(p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) ) );
-    q.emplace_back(p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) ) );
-  }
+  p0_t  p(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
+  p0_st q(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
+  auto  pp(p);
+  auto  qq(q);
   num_t d(int(0));
-  auto  dS(d);
   auto  M(d);
   auto  S(d);
+  auto  dS(d);
   SimpleMatrix<num_t> Mstore(8, max(8, step));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
@@ -98,16 +94,20 @@ int main(int argc, const char* argv[]) {
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), status, const.) is eliminated twice in this method
     //      for anti-symmetric ones.
-    auto pp2(p[2].next(dd) + idS);
-    auto pq2(q[2].next(dd) + idS);
-    auto pp3(p[3].next(d) + dS);
-    auto pq3(q[3].next(d) + dS);
+    const auto pd(p.next(d));
+    const auto qd(q.next(d));
+    const auto pdd(pp.next(dd));
+    const auto qdd(qq.next(dd));
+    const auto pp2(pdd + idS);
+    const auto pq2(qdd + idS);
+    const auto pp3(pd  +  dS);
+    const auto pq3(qd  +  dS);
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
-    Mstore(0, Mstore.cols() - 1) =   p[0].next(d);
-    Mstore(1, Mstore.cols() - 1) =   q[0].next(d);
-    Mstore(2, Mstore.cols() - 1) = - p[1].next(dd);
-    Mstore(3, Mstore.cols() - 1) = - q[1].next(dd);
+    Mstore(0, Mstore.cols() - 1) =   pd;
+    Mstore(1, Mstore.cols() - 1) =   qd;
+    Mstore(2, Mstore.cols() - 1) = - pdd;
+    Mstore(3, Mstore.cols() - 1) = - qdd;
     Mstore(4, Mstore.cols() - 1) = pp2 == num_t(int(0)) ? pp2 :    num_t(int(1)) / std::move(pp2) - dS;
     Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :    num_t(int(1)) / std::move(pq2) - dS;
     Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - (num_t(int(1)) / std::move(pp3) - idS);
