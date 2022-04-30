@@ -76,22 +76,41 @@ int main(int argc, const char* argv[]) {
       q0.emplace_back(p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, i), i) )) ) )) ), i, j));
     }
   auto  p1(p0);
+  auto  p2(p0);
+  auto  p3(p0);
   auto  q1(q0);
+  auto  q2(q0);
+  auto  q3(q0);
   num_t d(int(0));
+  auto  iS(d);
   auto  dS(d);
+  auto  ddS(d);
   auto  M(d);
   auto  S(d);
-  SimpleMatrix<num_t> Mstore(4, max(4, int(exp(log(num_t(var)) * log(num_t(var))))));
+  SimpleMatrix<num_t> Mstore(8, max(8, int(exp(log(num_t(var)) * log(num_t(var))))));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+    const auto ibS(iS);
     const auto D(d * M);
+    iS += d;
+    if(ibS == num_t(int(0)) || iS == num_t(int(0))) {
+      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
+      continue;
+    }
+    const auto dd(num_t(int(1)) / iS - num_t(int(1)) / ibS);
+    if(! isfinite(dd) || isnan(dd)) {
+      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
+      continue;
+    }
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), status, const.) is eliminated in this method,
     // XXX: but not stable in practical ones.
     const auto bdS(dS);
-    dS += d;
+    const auto bddS(ddS);
+    dS  += d;
+    ddS += dd;
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
     auto msczero(Mstore.col(Mstore.cols() - 1));
@@ -99,14 +118,35 @@ int main(int argc, const char* argv[]) {
     for(int i = 0; i < p0.size(); i ++) {
       Mstore(0, Mstore.cols() - 1) += p0[i].next(d);
       Mstore(1, Mstore.cols() - 1) += q0[i].next(d);
+      Mstore(2, Mstore.cols() - 1) -= p2[i].next(dd);
+      Mstore(3, Mstore.cols() - 1) -= q2[i].next(dd);
       if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
-        const auto ddS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
-        Mstore(2, Mstore.cols() - 1) += num_t(int(1)) / (p1[i].next(ddS) + num_t(int(1)) / dS) - dS;
-        Mstore(3, Mstore.cols() - 1) += num_t(int(1)) / (q1[i].next(ddS) + num_t(int(1)) / dS) - dS;
+        const auto dDS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
+              auto pp1(p1[i].next(dDS) + num_t(int(1)) / dS);
+              auto pq1(q1[i].next(dDS) + num_t(int(1)) / dS);
+        if(pp1 != num_t(int(0)))
+          Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp1) - dS;
+        if(pq1 != num_t(int(0)))
+          Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq1) - dS;
+      }
+      if(bddS != num_t(int(0)) && ddS != num_t(int(0))) {
+        const auto ddDS(num_t(int(1)) / ddS - num_t(int(1)) / bddS);
+              auto pp1(p3[i].next(ddDS) + num_t(int(1)) / ddS);
+              auto pq1(q3[i].next(ddDS) + num_t(int(1)) / ddS);
+        if(pp1 != num_t(int(0)))
+          Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp1) - ddS;
+        if(pq1 != num_t(int(0)))
+          Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq1) - ddS;
       }
     }
-    const auto lsvd(Mstore.SVD());
-    const auto svd(lsvd * Mstore);
+    auto MMstore(Mstore);
+    for(int i = 0; i < MMstore.rows(); i ++) {
+      const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
+      if(norm2 != num_t(int(0)))
+        MMstore.row(i) /= sqrt(norm2);
+    }
+    const auto lsvd(MMstore.SVD());
+    const auto svd(lsvd * MMstore);
     std::vector<num_t> stat;
     stat.reserve(svd.rows());
     int rank;
