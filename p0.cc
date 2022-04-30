@@ -59,7 +59,7 @@ typedef P0Expect<num_t, p0_s7t>  p0_st;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(4);
+  int var(1);
   if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
@@ -82,9 +82,7 @@ int main(int argc, const char* argv[]) {
   auto  q2(q0);
   auto  q3(q0);
   num_t d(int(0));
-  auto  iS(d);
   auto  dS(d);
-  auto  ddS(d);
   auto  M(d);
   auto  S(d);
   SimpleMatrix<num_t> Mstore(8, max(8, int(exp(log(num_t(var)) * log(num_t(var))))));
@@ -92,25 +90,21 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    const auto ibS(iS);
+    const auto bdS(dS);
     const auto D(d * M);
-    iS += d;
-    if(ibS == num_t(int(0)) || iS == num_t(int(0))) {
+    dS += d;
+    if(bdS == num_t(int(0)) || dS == num_t(int(0))) {
       std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
       continue;
     }
-    const auto dd(num_t(int(1)) / iS - num_t(int(1)) / ibS);
+    const auto idS(num_t(int(1)) / dS);
+    const auto dd(idS - num_t(int(1)) / bdS);
     if(! isfinite(dd) || isnan(dd)) {
       std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
       continue;
     }
     // N.B. compete with dimension the original function might have.
-    //      (x, f(x), status, const.) is eliminated in this method,
-    // XXX: but not stable in practical ones.
-    const auto bdS(dS);
-    const auto bddS(ddS);
-    dS  += d;
-    ddS += dd;
+    //      (x, f(x), status, const.) is eliminated twice in this method,
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
     auto msczero(Mstore.col(Mstore.cols() - 1));
@@ -120,24 +114,18 @@ int main(int argc, const char* argv[]) {
       Mstore(1, Mstore.cols() - 1) += q0[i].next(d);
       Mstore(2, Mstore.cols() - 1) -= p2[i].next(dd);
       Mstore(3, Mstore.cols() - 1) -= q2[i].next(dd);
-      if(bdS != num_t(int(0)) && dS != num_t(int(0))) {
-        const auto dDS(num_t(int(1)) / dS - num_t(int(1)) / bdS);
-              auto pp1(p1[i].next(dDS) + num_t(int(1)) / dS);
-              auto pq1(q1[i].next(dDS) + num_t(int(1)) / dS);
-        if(pp1 != num_t(int(0)))
-          Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp1) - dS;
-        if(pq1 != num_t(int(0)))
-          Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq1) - dS;
-      }
-      if(bddS != num_t(int(0)) && ddS != num_t(int(0))) {
-        const auto ddDS(num_t(int(1)) / ddS - num_t(int(1)) / bddS);
-              auto pp1(p3[i].next(ddDS) + num_t(int(1)) / ddS);
-              auto pq1(q3[i].next(ddDS) + num_t(int(1)) / ddS);
-        if(pp1 != num_t(int(0)))
-          Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp1) - ddS;
-        if(pq1 != num_t(int(0)))
-          Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq1) - ddS;
-      }
+      auto pp1(p1[i].next(dd) + idS);
+      auto pq1(q1[i].next(dd) + idS);
+      if(pp1 != num_t(int(0)))
+        Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp1) - dS;
+      if(pq1 != num_t(int(0)))
+        Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq1) - dS;
+      auto pp3(p3[i].next(d) + dS);
+      auto pq3(q3[i].next(d) + dS);
+      if(pp3 != num_t(int(0)))
+        Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp3) - idS;
+      if(pq3 != num_t(int(0)))
+        Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq3) - idS;
     }
     auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
