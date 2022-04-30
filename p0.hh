@@ -126,8 +126,11 @@ public:
   inline P0DFT() { ; }
   inline P0DFT(P&& p, const int& size) {
     f = feeder(size);
-    (this->p).resize(size, p);
-    q = this->p;
+    (this->p).reserve(size);
+    (this->p).emplace_back(p);
+    for(int i = 1; i < size; i ++)
+      (this->p).emplace_back((this->p)[0]);
+    q  = this->p;
     ff = SimpleVector<complex<T> >(size);
   }
   inline ~P0DFT() { ; };
@@ -237,7 +240,10 @@ template <typename T, typename P> class P0ContRand {
 public:
   inline P0ContRand() { ; }
   inline P0ContRand(P&& p, const int& para) {
-    (this->p).resize(para, p);
+    (this->p).reserve(para);
+    (this->p).emplace_back(p);
+    for(int i = 1; i < para; i ++)
+      (this->p).emplace_back((this->p)[0]);
     r.resize(para, T(t ^= t));
     br.resize(para, T(t));
   }
