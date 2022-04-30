@@ -98,26 +98,20 @@ int main(int argc, const char* argv[]) {
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), status, const.) is eliminated twice in this method
     //      for anti-symmetric ones.
-    for(int i = 0; i < Mstore.cols() - 1; i ++)
-      Mstore.setCol(i, Mstore.col(i + 1));
-    auto msczero(Mstore.col(Mstore.cols() - 1));
-    Mstore.setCol(Mstore.cols() - 1, msczero.O());
-    Mstore(0, Mstore.cols() - 1) += p[0].next(d);
-    Mstore(1, Mstore.cols() - 1) += q[0].next(d);
-    Mstore(2, Mstore.cols() - 1) -= p[1].next(dd);
-    Mstore(3, Mstore.cols() - 1) -= q[1].next(dd);
     auto pp2(p[2].next(dd) + idS);
     auto pq2(q[2].next(dd) + idS);
-    if(pp2 != num_t(int(0)))
-      Mstore(4, Mstore.cols() - 1) += num_t(int(1)) / std::move(pp2) - dS;
-    if(pq2 != num_t(int(0)))
-      Mstore(5, Mstore.cols() - 1) += num_t(int(1)) / std::move(pq2) - dS;
     auto pp3(p[3].next(d) + dS);
     auto pq3(q[3].next(d) + dS);
-    if(pp3 != num_t(int(0)))
-      Mstore(6, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pp3) - idS;
-    if(pq3 != num_t(int(0)))
-      Mstore(7, Mstore.cols() - 1) -= num_t(int(1)) / std::move(pq3) - idS;
+    for(int i = 0; i < Mstore.cols() - 1; i ++)
+      Mstore.setCol(i, Mstore.col(i + 1));
+    Mstore(0, Mstore.cols() - 1) =   p[0].next(d);
+    Mstore(1, Mstore.cols() - 1) =   q[0].next(d);
+    Mstore(2, Mstore.cols() - 1) = - p[1].next(dd);
+    Mstore(3, Mstore.cols() - 1) = - q[1].next(dd);
+    Mstore(4, Mstore.cols() - 1) = pp2 == num_t(int(0)) ? pp2 :   num_t(int(1)) / std::move(pp2) - dS;
+    Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :   num_t(int(1)) / std::move(pq2) - dS;
+    Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - num_t(int(1)) / std::move(pp3) - idS;
+    Mstore(7, Mstore.cols() - 1) = pq3 == num_t(int(0)) ? pq3 : - num_t(int(1)) / std::move(pq3) - idS;
     auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
