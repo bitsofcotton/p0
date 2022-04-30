@@ -108,10 +108,10 @@ int main(int argc, const char* argv[]) {
     Mstore(1, Mstore.cols() - 1) =   q[0].next(d);
     Mstore(2, Mstore.cols() - 1) = - p[1].next(dd);
     Mstore(3, Mstore.cols() - 1) = - q[1].next(dd);
-    Mstore(4, Mstore.cols() - 1) = pp2 == num_t(int(0)) ? pp2 :   num_t(int(1)) / std::move(pp2) - dS;
-    Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :   num_t(int(1)) / std::move(pq2) - dS;
-    Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - num_t(int(1)) / std::move(pp3) - idS;
-    Mstore(7, Mstore.cols() - 1) = pq3 == num_t(int(0)) ? pq3 : - num_t(int(1)) / std::move(pq3) - idS;
+    Mstore(4, Mstore.cols() - 1) = pp2 == num_t(int(0)) ? pp2 :    num_t(int(1)) / std::move(pp2) - dS;
+    Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :    num_t(int(1)) / std::move(pq2) - dS;
+    Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - (num_t(int(1)) / std::move(pp3) - idS);
+    Mstore(7, Mstore.cols() - 1) = pq3 == num_t(int(0)) ? pq3 : - (num_t(int(1)) / std::move(pq3) - idS);
     auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
