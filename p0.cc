@@ -58,16 +58,17 @@ typedef sumChain<num_t, p0_s6t, true> p0_st;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int var(2);
-  if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
-  if(1 < argc) var = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << var << std::endl;
-  assert(0 <= var);
+  int status(60);
+  if(argc <= 1) std::cerr << argv[0] << " <status>? : continue with ";
+  if(1 < argc) status = std::atoi(argv[1]);
+  std::cerr << argv[0] << " " << status << std::endl;
+  assert(0 < status);
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
-  if(! var) {
-    p0_0t p(3);
+  if(status <= 3) {
+    std::cerr << "using plain prediction:" << std::endl;
+    p0_0t p(status);
     while(std::getline(std::cin, s, '\n')) {
       std::stringstream ins(s);
       ins >> d;
@@ -77,20 +78,21 @@ int main(int argc, const char* argv[]) {
     return 0;
   }
   // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(var)) * log(num_t(var)))));
+  const int var(max(num_t(1), exp(sqrt(log(num_t(status))))));
   p0_t  p, pp;
   p0_st q, qq;
   auto  dS(d);
   bool  need_init(true);
-  SimpleMatrix<num_t> Mstore(8, max(8, step));
+  SimpleMatrix<num_t> Mstore(8, max(8, status));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
     if(need_init) {
-      p  = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
-      q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
+      p  = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(status, var), var), var), var), var), var) )) ) )) );
+      q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
       pp = p;
       qq = q;
       need_init = false;
+      std::cerr << "using real status as: " << status + var * 4 << std::endl;
     }
     std::stringstream ins(s);
     ins >> d;
