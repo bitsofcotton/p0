@@ -17,7 +17,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <size>? < stream.txt
-    # 0 < size specifies middle frequency band size.
+    # 0 <= size specifies middle frequency band size.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

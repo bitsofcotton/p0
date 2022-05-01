@@ -62,42 +62,58 @@ int main(int argc, const char* argv[]) {
   if(argc <= 1) std::cerr << argv[0] << " <var>? : continue with ";
   if(1 < argc) var = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << var << std::endl;
-  assert(0 < var);
-  // N.B. this is not optimal but we use this:
-  const int step(max(num_t(3), exp(log(num_t(var)) * log(num_t(var)))));
-  p0_t  p(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
-  p0_st q(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
-  auto  pp(p);
-  auto  qq(q);
+  assert(0 <= var);
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
+  if(! var) {
+    p0_0t p(3);
+    while(std::getline(std::cin, s, '\n')) {
+      std::stringstream ins(s);
+      ins >> d;
+      const auto D(d * M);
+      std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
+    }
+    return 0;
+  }
+  // N.B. this is not optimal but we use this:
+  const int step(max(num_t(3), exp(log(num_t(var)) * log(num_t(var)))));
+  p0_t  p, pp;
+  p0_st q, qq;
   auto  dS(d);
+  bool  need_init(true);
   SimpleMatrix<num_t> Mstore(8, max(8, step));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
+    if(need_init) {
+      p  = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
+      pp = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(step, var), var), var), var), var), var) )) ) )) );
+      q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
+      qq = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(step, var), var) )) ) )) );
+      need_init = false;
+    }
     std::stringstream ins(s);
     ins >> d;
-    const auto bdS(dS);
     const auto D(d * M);
+    const auto bdS(dS);
     dS += d;
     if(bdS == num_t(int(0)) || dS == num_t(int(0))) {
-      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
+      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
       continue;
     }
     const auto idS(num_t(int(1)) / dS);
     const auto dd(idS - num_t(int(1)) / bdS);
     if(! isfinite(dd) || isnan(dd)) {
-      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << ", " << 0 << std::endl << std::flush;
+      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
       continue;
     }
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), status, const.) is eliminated twice in this method
     //      for anti-symmetric ones.
-    const auto pd(p.next(d));
-    const auto qd(q.next(d));
-    const auto pdd(pp.next(dd));
-    const auto qdd(qq.next(dd));
+    const auto pd(pp.next(d));
+    const auto qd(qq.next(d));
+    const auto pdd(p.next(dd));
+    const auto qdd(q.next(dd));
     const auto pp2(pdd + idS);
     const auto pq2(qdd + idS);
     const auto pp3(pd  +  dS);
@@ -112,14 +128,8 @@ int main(int argc, const char* argv[]) {
     Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :    num_t(int(1)) / std::move(pq2) - dS;
     Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - (num_t(int(1)) / std::move(pp3) - idS);
     Mstore(7, Mstore.cols() - 1) = pq3 == num_t(int(0)) ? pq3 : - (num_t(int(1)) / std::move(pq3) - idS);
-    auto MMstore(Mstore);
-    for(int i = 0; i < MMstore.rows(); i ++) {
-      const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
-      if(norm2 != num_t(int(0)))
-        MMstore.row(i) /= sqrt(norm2);
-    }
-    const auto lsvd(MMstore.SVD());
-    const auto svd(lsvd * MMstore);
+    const auto lsvd(Mstore.SVD());
+    const auto svd(lsvd * Mstore);
     std::vector<num_t> stat;
     stat.reserve(svd.rows());
     int rank;
@@ -129,7 +139,8 @@ int main(int argc, const char* argv[]) {
     auto sstat(stat);
     std::sort(sstat.begin(), sstat.end());
     for(int i = 0; i < svd.rows(); i ++)
-      if(sstat[sstat.size() - 1] * sqrt(SimpleMatrix<num_t>().epsilon) < stat[i]) {
+      if(sstat[sstat.size() - 1] * sqrt(sqrt(SimpleMatrix<num_t>().epsilon)) <
+         stat[i]) {
         auto sum(lsvd(i, 0));
         for(int j = 1; j < lsvd.cols(); j ++)
           sum += lsvd(i, j);
@@ -137,7 +148,7 @@ int main(int argc, const char* argv[]) {
         rank ++;
       }
     if(! isfinite(M)) M = num_t(int(0));
-    std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << ", " << sstat[0] / sstat[sstat.size() - 1] << std::endl << std::flush;
+    std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
