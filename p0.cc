@@ -62,7 +62,9 @@ int main(int argc, const char* argv[]) {
   if(argc <= 1) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(0 < status);
+  assert(status);
+  if(status < 0)
+    status = int(max(num_t(3), ceil(exp(log(num_t(- status)) * log(num_t(- status))))));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
