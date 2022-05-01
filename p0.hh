@@ -66,7 +66,7 @@ template <typename T> SimpleVector<T> pnext(const int& size, const int& step = 1
       if(abs(step) * 2 < size) {
         const auto pp(pnext<T>(size - 1, step));
         for(int j = 0; j < pp.size(); j ++)
-          p[j - pp.size() + p.size()] += pp[j] * T(size - 1);
+          p[step < 0 ? j : j - pp.size() + p.size()] += pp[j] * T(size - 1);
         p /= T(size);
         ofstream ocache(file.c_str());
         ocache << p << endl;
@@ -127,17 +127,19 @@ public:
   inline P0DFT(P&& p, const int& size) {
     f = feeder(size);
     (this->p).reserve(size);
+    q.reserve(size);
     (this->p).emplace_back(p);
-    for(int i = 1; i < size; i ++)
+    q.emplace_back((this->p)[0]);
+    for(int i = 1; i < size; i ++) {
       (this->p).emplace_back((this->p)[0]);
-    q  = this->p;
-    ff = SimpleVector<complex<T> >(size);
+      q.emplace_back((this->p)[0]);
+    }
   }
   inline ~P0DFT() { ; };
   inline T next(const T& in) {
     const auto& fn(f.next(in));
     if(! f.full) return T(int(0));
-    ff = dftcache<T>(fn.size()) * fn.template cast<complex<T> >();
+    auto ff(dftcache<T>(fn.size()) * fn.template cast<complex<T> >());
     assert(ff.size() == p.size() && p.size() == q.size());
     for(int i = 0; i < ff.size(); i ++)
       if(! (ff[i].real() == T(int(0)) && ff[i].imag() == T(int(0)) ) )
@@ -146,7 +148,6 @@ public:
   }
   vector<P> p;
   vector<P> q;
-  SimpleVector<complex<T> > ff;
   feeder f;
 };
 
@@ -256,7 +257,7 @@ public:
       res += p[i].next(in * rr);
       if(! (t & 1)) {
         br[i] = r[i];
-        r[i]  = T(arc4random_uniform(0x800000) + 1) / T(int(0x800000));
+        r[i]  = T((random() & 0x7ffffff) + 1) / T(int(0x8000000));
       }
     }
     return res /= T(int(p.size()));
