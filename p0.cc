@@ -84,6 +84,9 @@ int main(int argc, const char* argv[]) {
   p0_t  p, pp;
   p0_st q, qq;
   auto  dS(d);
+  const num_t zero(int(0));
+  const num_t one(int(1));
+  const auto  sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
   bool  need_init(true);
   SimpleMatrix<num_t> Mstore(8, max(8, status));
   Mstore.O();
@@ -101,12 +104,12 @@ int main(int argc, const char* argv[]) {
     const auto D(d * M);
     const auto bdS(dS);
     dS += d;
-    if(bdS == num_t(int(0)) || dS == num_t(int(0))) {
+    if(bdS == zero || dS == zero) {
       std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
       continue;
     }
-    const auto idS(num_t(int(1)) / dS);
-    const auto dd(idS - num_t(int(1)) / bdS);
+    const auto idS(one / dS);
+    const auto dd(idS - one / bdS);
     if(! isfinite(dd) || isnan(dd)) {
       std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
       continue;
@@ -128,31 +131,38 @@ int main(int argc, const char* argv[]) {
     Mstore(1, Mstore.cols() - 1) =   qd;
     Mstore(2, Mstore.cols() - 1) = - pdd;
     Mstore(3, Mstore.cols() - 1) = - qdd;
-    Mstore(4, Mstore.cols() - 1) = pp2 == num_t(int(0)) ? pp2 :    num_t(int(1)) / std::move(pp2) - dS;
-    Mstore(5, Mstore.cols() - 1) = pq2 == num_t(int(0)) ? pq2 :    num_t(int(1)) / std::move(pq2) - dS;
-    Mstore(6, Mstore.cols() - 1) = pp3 == num_t(int(0)) ? pp3 : - (num_t(int(1)) / std::move(pp3) - idS);
-    Mstore(7, Mstore.cols() - 1) = pq3 == num_t(int(0)) ? pq3 : - (num_t(int(1)) / std::move(pq3) - idS);
-    const auto lsvd(Mstore.SVD());
-    const auto svd(lsvd * Mstore);
+    Mstore(4, Mstore.cols() - 1) = pp2 == zero ? pp2 :    one / std::move(pp2) - dS;
+    Mstore(5, Mstore.cols() - 1) = pq2 == zero ? pq2 :    one / std::move(pq2) - dS;
+    Mstore(6, Mstore.cols() - 1) = pp3 == zero ? pp3 : - (one / std::move(pp3) - idS);
+    Mstore(7, Mstore.cols() - 1) = pq3 == zero ? pq3 : - (one / std::move(pq3) - idS);
+    auto MMstore(Mstore);
+    for(int i = 0; i < MMstore.rows(); i ++) {
+      const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
+      if(norm2 != zero) MMstore.row(i) /= sqrt(norm2);
+    }
+    const auto lsvd(MMstore.SVD());
+    const auto svd(lsvd * MMstore);
     std::vector<num_t> stat;
     stat.reserve(svd.rows());
-    int rank;
-    M = num_t(rank ^= rank);
+    int rank(0);
+    M = zero;
     for(int i = 0; i < svd.rows(); i ++)
       stat.emplace_back(sqrt(svd.row(i).dot(svd.row(i))));
     auto sstat(stat);
     std::sort(sstat.begin(), sstat.end());
     for(int i = 0; i < svd.rows(); i ++)
-      if(sstat[sstat.size() - 1] * sqrt(sqrt(SimpleMatrix<num_t>().epsilon)) <
-         stat[i]) {
+      if(sstat[sstat.size() - 1] * sqsqeps < stat[i]) {
         auto sum(lsvd(i, 0));
         for(int j = 1; j < lsvd.cols(); j ++)
           sum += lsvd(i, j);
         M += svd(i, svd.cols() - 1) / stat[i] * sgn<num_t>(sum);
         rank ++;
       }
-    if(! isfinite(M)) M = num_t(int(0));
-    std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    if(! isfinite(M)) M = zero;
+    if(Mstore.col(0).dot(Mstore.col(0)) == zero)
+      std::cout << D << ", " << (M  = zero) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    else
+      std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
