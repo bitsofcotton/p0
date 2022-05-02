@@ -16,9 +16,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <status>? < stream.txt
+    ./p0 <status>? <brk>? < stream.txt
     # 0 < status specifies number of status sample point to be used.
     # status < 0 specifies number of the points look forward.
+    # brk < 0 specifies divide by linear on invariant, otherwise, multiply.
+    #         this breaks balanced invariant not to be predicted.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -107,6 +109,9 @@ There always exists jammer to any of the predictor. So to avoid bared predictor 
 
 # Tips on dimension
 We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion prediction.
+
+# Tips on 0 invariant chain.
+If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing

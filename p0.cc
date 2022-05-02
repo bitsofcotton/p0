@@ -59,15 +59,21 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int status(60);
-  if(argc <= 1) std::cerr << argv[0] << " <status>? : continue with ";
+  int break_invariant0(0);
+  if(argc <= 1) std::cerr << argv[0] << " <status>? <brk>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << status << std::endl;
+  if(2 < argc) break_invariant0 = std::atoi(argv[2]);
+  std::cerr << argv[0] << " " << status << " " << break_invariant0 << std::endl;
   assert(status);
   if(status < 0)
     status = int(max(num_t(3), ceil(exp(log(num_t(- status)) * log(num_t(- status))))));
-  num_t d(int(0));
+  int   t;
+  num_t d(t ^= t);
   auto  M(d);
   auto  S(d);
+  const num_t zero(int(0));
+  const num_t one(int(1));
+  const auto  sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
   if(status <= 3) {
     std::cerr << "using plain prediction:" << std::endl;
     p0_0t p(status);
@@ -75,7 +81,8 @@ int main(int argc, const char* argv[]) {
       std::stringstream ins(s);
       ins >> d;
       const auto D(d * M);
-      std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
+      const auto r(break_invariant0 ? one + num_t(int(t ++)) / num_t(int(abs(break_invariant0))) : one);
+      std::cout << D << ", " << (M = break_invariant0 ? (break_invariant0 < 0 ? p.next(d / r) * r : p.next(d * r) / r) : p.next(d)) << ", " << (S += D) << std::endl << std::flush;
     }
     return 0;
   }
@@ -84,9 +91,6 @@ int main(int argc, const char* argv[]) {
   p0_t  p, pp;
   p0_st q, qq;
   auto  dS(d);
-  const num_t zero(int(0));
-  const num_t one(int(1));
-  const auto  sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
   bool  need_init(true);
   SimpleMatrix<num_t> Mstore(8, max(8, status));
   Mstore.O();
@@ -117,10 +121,11 @@ int main(int argc, const char* argv[]) {
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), status, const.) is eliminated twice in this method
     //      for anti-symmetric ones.
-    const auto pd(pp.next(d));
-    const auto qd(qq.next(d));
-    const auto pdd(p.next(dd));
-    const auto qdd(q.next(dd));
+    const auto r(break_invariant0 ? one + num_t(int(t ++)) / num_t(int(abs(break_invariant0))) : one);
+    const auto pd(pp.next(break_invariant0 ? (break_invariant0 < 0 ? d  / r : d  * r) : d));
+    const auto qd(qq.next(break_invariant0 ? (break_invariant0 < 0 ? d  / r : d  * r) : d));
+    const auto pdd(p.next(break_invariant0 ? (break_invariant0 < 0 ? dd / r : dd * r) : dd));
+    const auto qdd(q.next(break_invariant0 ? (break_invariant0 < 0 ? dd / r : dd * r) : dd));
     const auto pp2(pdd + idS);
     const auto pq2(qdd + idS);
     const auto pp3(pd  +  dS);
@@ -159,10 +164,7 @@ int main(int argc, const char* argv[]) {
         rank ++;
       }
     if(! isfinite(M)) M = zero;
-    if(Mstore.col(0).dot(Mstore.col(0)) == zero)
-      std::cout << D << ", " << (M  = zero) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
-    else
-      std::cout << D << ", " << (M /= num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    std::cout << D << ", " << (M = Mstore.col(0).dot(Mstore.col(0)) == zero ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
