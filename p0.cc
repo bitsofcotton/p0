@@ -22,6 +22,7 @@ typedef myfloat num_t;
 typedef P0<num_t, idFeeder<num_t> > p0_0t;
 // N.B. sectional measurement, also expected value.
 typedef shrinkMatrix<num_t, p0_0t> p0_1t;
+/*
 // N.B. make information-rich not to associative/commutative.
 //      2 dimension semi-order causes (x, status) from input as sedenion.
 typedef P0DFT<num_t, p0_1t, idFeeder<num_t> > p0_2t;
@@ -46,6 +47,8 @@ typedef sumChain<num_t, p0_10t, true> p0_t;
 // N.B. but this is equivalent from jammer on PRNG, and probe on some
 //      measurable phenomenon.
 //typedef P0Expect<num_t, p0_11t> p0_t;
+// N.B. this needs huge memory to run.
+*/
 
 // N.B. plain complex form.
 typedef northPole<num_t, p0_1t>  p0_s2t;
@@ -89,85 +92,23 @@ int main(int argc, const char* argv[]) {
   }
   // N.B. this is not optimal but we use this:
   const int var(max(num_t(1), exp(sqrt(log(num_t(status))))));
-  p0_t  p, pp, p2, pp2;
-  p0_st q, qq, q2, qq2;
-  auto  Sd(d);
-  auto  Sr(d);
-  auto  Sri(d);
-  bool  need_init(true);
-  SimpleMatrix<num_t> Mstore(16, max(16, status));
+  p0_st p(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+  auto  pp(p);
+  SimpleMatrix<num_t> Mstore(2, max(2, status));
   Mstore.O();
   while(std::getline(std::cin, s, '\n')) {
-    if(need_init) {
-      p  = p0_t(p0_10t(p0_9t(p0_8t(p0_7t(p0_6t(p0_5t(p0_4t(p0_3t(p0_2t(p0_1t(p0_0t(status, var), var), var), var), var), var) )) ) )) );
-      q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
-      pp2 = p2 = pp = p;
-      qq2 = q2 = qq = q;
-      need_init = false;
-      std::cerr << "using real status as: " << status + var * 4 << std::endl;
-    }
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    if(d == zero) {
-      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
-      continue;
-    }
-    const auto Sbd(Sd);
-    const auto iSd(one / (Sd += d));
-    // XXX: isfinite(dd).
-    if(Sbd == zero) {
-      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
-      continue;
-    }
-    const auto dd(iSd - one / Sbd);
-    if(! isfinite(dd) || isnan(dd)) {
-      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
-      continue;
-    }
     // N.B. compete with dimension the original function might have.
-    //      (x, f(x), status, const.) is eliminated twice in this method
-    //      for anti-symmetric ones.
-    // N.B. compete with jammer, we average linear weighted and bared.
+    //      (x, f(x)) for symmetric linear, non-linear part is done by
+    //      p0_t, p0_st.
     const auto r(one + num_t(int(t ++)) / num_t(int(abs(break_invariant0))));
-    const auto dr( break_invariant0 < 0 ? d  / r : d  * r);
-    const auto ddr(break_invariant0 < 0 ? dd / r : dd * r);
-    const auto iSr( one / (Sr  += dr));
-    const auto iSri(one / (Sri += ddr));
-    const auto pr(pp.next(dr));
-    const auto qr(qq.next(dr));
-    const auto pir(p.next(ddr));
-    const auto qir(q.next(ddr));
-    const auto p1(pp2.next(d));
-    const auto q1(qq2.next(d));
-    const auto pi1(p2.next(dd));
-    const auto qi1(q2.next(dd));
-    const auto pri(pir + iSr);
-    const auto qri(qir + iSr);
-    const auto p1i(pi1 + iSd);
-    const auto q1i(qi1 + iSd);
-    const auto piri(pr + Sr);
-    const auto qiri(qr + Sr);
-    const auto pi1i(p1 + Sd);
-    const auto qi1i(q1 + Sd);
+    const auto dr(break_invariant0 < 0 ? d / r : d * r);
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
-    Mstore(0, Mstore.cols() - 1) =   pr;
-    Mstore(1, Mstore.cols() - 1) =   qr;
-    Mstore(2, Mstore.cols() - 1) =   p1;
-    Mstore(3, Mstore.cols() - 1) =   q1;
-    Mstore(4, Mstore.cols() - 1) = - pir;
-    Mstore(5, Mstore.cols() - 1) = - qir;
-    Mstore(6, Mstore.cols() - 1) = - p1i;
-    Mstore(7, Mstore.cols() - 1) = - q1i;
-    Mstore(8,  Mstore.cols() - 1) = pri  == zero ? pri  :    one / pri  - Sr;
-    Mstore(9,  Mstore.cols() - 1) = qri  == zero ? qri  :    one / qri  - Sr;
-    Mstore(10, Mstore.cols() - 1) = p1i  == zero ? p1i  :    one / p1i  - Sd;
-    Mstore(11, Mstore.cols() - 1) = q1i  == zero ? q1i  :    one / q1i  - Sd;
-    Mstore(12, Mstore.cols() - 1) = piri == zero ? piri : - (one / piri - iSr);
-    Mstore(13, Mstore.cols() - 1) = qiri == zero ? qiri : - (one / qiri - iSr);
-    Mstore(14, Mstore.cols() - 1) = pi1i == zero ? pi1i : - (one / pi1i - iSd);
-    Mstore(15, Mstore.cols() - 1) = qi1i == zero ? qi1i : - (one / qi1i - iSd);
+    Mstore(0, Mstore.cols() - 1) = p.next(d);
+    Mstore(1, Mstore.cols() - 1) = pp.next(dr);
     auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
@@ -192,7 +133,7 @@ int main(int argc, const char* argv[]) {
         rank ++;
       }
     if(! isfinite(M)) M = zero;
-    std::cout << D << ", " << (M = Mstore.col(0).dot(Mstore.col(0)) == zero ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    std::cout << D << ", " << (M = t <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }

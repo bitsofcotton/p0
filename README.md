@@ -110,6 +110,8 @@ There always exists jammer to any of the predictor. So to avoid bared predictor 
 # Tips on dimension
 We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion prediction.
 
+-\> for speed and memory, we use only plain and complex.
+
 # Tips on 0 invariant chain.
 If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them.
 
