@@ -115,6 +115,11 @@ int main(int argc, const char* argv[]) {
     }
     const auto Sbd(Sd);
     const auto iSd(one / (Sd += d));
+    // XXX: isfinite(dd).
+    if(Sbd == zero) {
+      std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
+      continue;
+    }
     const auto dd(iSd - one / Sbd);
     if(! isfinite(dd) || isnan(dd)) {
       std::cout << D << ", " << M << ", " << (S += D) << ", " << 0 << std::endl << std::flush;
