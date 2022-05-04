@@ -62,54 +62,44 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int status(60);
-  int break_invariant0(600);
   if(argc <= 1) std::cerr << argv[0] << " <status>? <brk>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  if(2 < argc) break_invariant0 = std::atoi(argv[2]);
-  std::cerr << argv[0] << " " << status << " " << break_invariant0 << std::endl;
-  assert(status && break_invariant0);
   if(status < 0)
     status = int(max(num_t(3), ceil(exp(log(num_t(- status)) * log(num_t(- status))))));
+  int break_invariant0(status);
+  if(2 < argc) break_invariant0 = std::atoi(argv[2]);
+  if(break_invariant0 < 0) break_invariant0 = - break_invariant0;
+  std::cerr << argv[0] << " " << status << " " << break_invariant0 << std::endl;
+  assert(status && break_invariant0);
   int   t;
-  num_t d(t ^= t);
+  const num_t zero(t ^= t);
+  const num_t one(int(1));
+  auto  d(zero);
   auto  M(d);
   auto  S(d);
-  const num_t zero(int(0));
-  const num_t one(int(1));
-  const auto  sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
-  if(status <= 3) {
-    std::cerr << "using plain prediction:" << std::endl;
-    p0_0t p(status);
-    auto  pp(p);
-    while(std::getline(std::cin, s, '\n')) {
-      std::stringstream ins(s);
-      ins >> d;
-      const auto D(d * M);
-      const auto r(one + num_t(int(t ++)) / num_t(int(abs(break_invariant0))));
-      std::cout << D << ", " << (M = ((break_invariant0 < 0 ? p.next(d / r) * r : p.next(d * r) / r) + pp.next(d)) / num_t(int(2))) << ", " << (S += D) << std::endl << std::flush;
-    }
-    return 0;
-  }
+  const auto sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
   // N.B. this is not optimal but we use this:
-  const int var(max(num_t(1), exp(sqrt(log(num_t(status))))));
+  const int  var(max(num_t(1), exp(sqrt(log(num_t(status))))));
   p0_st p(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
-  auto  pp(p);
-  SimpleMatrix<num_t> Mstore(2, max(2, status));
+  auto  q(p);
+  auto  r(p);
+  SimpleMatrix<num_t> Mstore(3, max(3, status));
   Mstore.O();
+  std::cerr << "using var : " << var << std::endl;
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
     // N.B. compete with dimension the original function might have.
-    //      (x, f(x)) for symmetric linear, non-linear part is done by
+    //      (x, f(x), const.) for symmetric linear, non-linear part is done by
     //      p0_t, p0_st.
-    const auto r(one + num_t(int(t ++)) / num_t(int(abs(break_invariant0))));
-    const auto dr(break_invariant0 < 0 ? d / r : d * r);
+    const auto rr(one + num_t(int(t ++)) / num_t(int(break_invariant0)));
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
     Mstore(0, Mstore.cols() - 1) = p.next(d);
-    Mstore(1, Mstore.cols() - 1) = pp.next(dr);
-    auto MMstore(Mstore);
+    Mstore(1, Mstore.cols() - 1) = q.next(d / rr);
+    Mstore(2, Mstore.cols() - 1) = r.next(d * rr);
+          auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
       if(norm2 != zero) MMstore.row(i) /= sqrt(norm2);
