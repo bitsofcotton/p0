@@ -112,14 +112,6 @@ int main(int argc, const char* argv[]) {
       num_t(int(t - btt)) / num_t(int(break_invariant0)));
     rr.next(num_t(abs(int(break_invariant0))) -
       num_t(int(t - btt)) / num_t(int(break_invariant0)));
-    if(! ((++ t) % status)) {
-      q    = qq;
-      r    = rr;
-      qq   = p0;
-      rr   = p0;
-      bt   = btt;
-      btt += status;
-    }
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
       if(norm2 != zero) MMstore.row(i) /= sqrt(norm2);
@@ -144,6 +136,15 @@ int main(int argc, const char* argv[]) {
       }
     if(! isfinite(M)) M = zero;
     std::cout << D << ", " << (M = t <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    if(! ((++ t) % status)) {
+      q    = qq;
+      r    = rr;
+      qq   = p0;
+      rr   = p0;
+      bt   = btt;
+      btt += status;
+      Mstore.O();
+    }
   }
   return 0;
 }
