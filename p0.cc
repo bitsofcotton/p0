@@ -93,12 +93,15 @@ int main(int argc, const char* argv[]) {
     // N.B. compete with dimension the original function might have.
     //      (x, f(x), const.) for symmetric linear, non-linear part is done by
     //      p0_t, p0_st.
-    const auto rr(one + num_t(int(t ++)) / num_t(int(break_invariant0)));
     for(int i = 0; i < Mstore.cols() - 1; i ++)
       Mstore.setCol(i, Mstore.col(i + 1));
     Mstore(0, Mstore.cols() - 1) = p.next(d);
-    Mstore(1, Mstore.cols() - 1) = q.next(d / rr);
-    Mstore(2, Mstore.cols() - 1) = r.next(d * rr);
+    Mstore(1, Mstore.cols() - 1) = q.next(d * (
+      num_t(abs(int(break_invariant0))) +
+      num_t(int(t)) / num_t(int(break_invariant0)) ));
+    Mstore(1, Mstore.cols() - 1) = r.next(d * (
+      num_t(abs(int(break_invariant0))) -
+      num_t(int(t)) / num_t(int(break_invariant0)) ));
           auto MMstore(Mstore);
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
@@ -123,7 +126,7 @@ int main(int argc, const char* argv[]) {
         rank ++;
       }
     if(! isfinite(M)) M = zero;
-    std::cout << D << ", " << (M = t <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    std::cout << D << ", " << (M = t ++ <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
