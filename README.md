@@ -16,11 +16,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <status>? <brk>? < stream.txt
+    ./p0 <status>? < stream.txt
     # 0 < status specifies number of status sample point to be used.
     # status < 0 specifies number of the points look forward.
-    # brk < 0 specifies divide by linear on invariant, otherwise, multiply.
-    #         this breaks balanced invariant not to be predicted.
+    # both parameters are in recursive.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
