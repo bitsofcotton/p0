@@ -80,9 +80,14 @@ int main(int argc, const char* argv[]) {
   const auto sqsqeps(sqrt(sqrt(SimpleMatrix<num_t>().epsilon)));
   // N.B. this is not optimal but we use this:
   const int  var(max(num_t(1), exp(sqrt(log(num_t(status))))));
-  p0_st p(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+  p0_st p0(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+  auto  p(p0);
   auto  q(p);
   auto  r(p);
+  auto  qq(p);
+  auto  rr(p);
+  int   bt(- status);
+  int   btt(0);
   SimpleMatrix<num_t> Mstore(3, max(3, status));
   Mstore.O();
   std::cerr << "using var : " << var << std::endl;
@@ -98,11 +103,23 @@ int main(int argc, const char* argv[]) {
     Mstore(0, Mstore.cols() - 1) = p.next(d);
     Mstore(1, Mstore.cols() - 1) = q.next(d * (
       num_t(abs(int(break_invariant0))) +
-      num_t(int(t)) / num_t(int(break_invariant0)) ));
+      num_t(int(t - bt)) / num_t(int(break_invariant0)) ));
     Mstore(1, Mstore.cols() - 1) = r.next(d * (
       num_t(abs(int(break_invariant0))) -
-      num_t(int(t)) / num_t(int(break_invariant0)) ));
+      num_t(int(t - bt)) / num_t(int(break_invariant0)) ));
           auto MMstore(Mstore);
+    qq.next(num_t(abs(int(break_invariant0))) +
+      num_t(int(t - btt)) / num_t(int(break_invariant0)));
+    rr.next(num_t(abs(int(break_invariant0))) -
+      num_t(int(t - btt)) / num_t(int(break_invariant0)));
+    if(! ((++ t) % status)) {
+      q    = qq;
+      r    = rr;
+      qq   = p0;
+      rr   = p0;
+      bt   = btt;
+      btt += status;
+    }
     for(int i = 0; i < MMstore.rows(); i ++) {
       const auto norm2(MMstore.row(i).dot(MMstore.row(i)));
       if(norm2 != zero) MMstore.row(i) /= sqrt(norm2);
@@ -126,7 +143,7 @@ int main(int argc, const char* argv[]) {
         rank ++;
       }
     if(! isfinite(M)) M = zero;
-    std::cout << D << ", " << (M = t ++ <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
+    std::cout << D << ", " << (M = t <= Mstore.cols() ? zero : M / num_t(rank ? rank : 1)) << ", " << (S += D) << ", " << rank << std::endl << std::flush;
   }
   return 0;
 }
