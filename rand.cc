@@ -65,9 +65,17 @@ int main(int argc, const char* argv[]) {
     }
     if(sum <= ++ t) {
       std::stringstream outbuf;
+      std::string obuf;
       const auto D(d * M);
-      outbuf << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
-      outbuf >> buf;
+      outbuf << D;
+      outbuf >> obuf;
+      buf += obuf + std::string(", ");
+      outbuf << (M = p.next(d));
+      outbuf >> obuf;
+      buf += obuf + std::string(", ");
+      outbuf << (S += D);
+      outbuf >> obuf;
+      buf += obuf + std::string("\n");
       d = num_t(t ^= t);
       -- line;
     }
