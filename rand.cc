@@ -40,7 +40,7 @@ int main(int argc, const char* argv[]) {
   // cf. knuth_b for shuffle 128.
   std::shuffle_order_engine<std::linear_congruential_engine<unsigned int, 16807, 0, 2147483647>, 8> kb(rd());
   std::ranlux48 rl48(rd());
-  std::string outbuf;
+  std::string buf;
   P0recur<num_t, P0maxRank<num_t> > p(stat);
   int   t;
   num_t d(t ^= t);
@@ -64,16 +64,15 @@ int main(int argc, const char* argv[]) {
       assert(0 && "Should not be reached.");
     }
     if(sum <= ++ t) {
-      std::stringstream D(d * M);
-      std::stringstream MM(M = p.next(d));
-      std::stringstream SS(S += d * M);
-      outbuf += D.str() + std::string(", ") + MM.str() + std::string(", ") + SS.str() + std::string("\n");
+      std::stringstream outbuf;
+      const auto D(d * M);
+      outbuf << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
+      outbuf >> buf;
       d = num_t(t ^= t);
       -- line;
     }
   }
-  std::cout << std::setprecision(30);
-  std::cout << outbuf;
+  std::cout << std::setprecision(30) << buf;
   return 0;
 }
 
