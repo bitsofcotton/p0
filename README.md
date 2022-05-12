@@ -10,7 +10,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    northPole<double, P0<double, /* feeder */> > p(P0<double, /* feeder */>(range, step));
+    P0recur<double< P0maxRank<double> > p(status);
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);
@@ -20,6 +20,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # 0 < status specifies number of status sample point to be used.
     # status < 0 specifies number of the points look forward.
     # both parameters are in recursive.
+    ./rand <method> <summation range> <status> <output lines>
+    # this is for the system only userland and lib prng, last output is trusted.
+    # if the output controls input PRNGs by callgate/pipe observation
+    # on running state, we need this.
+    # if all of the userland is cracked, this doesn't beat with them.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
