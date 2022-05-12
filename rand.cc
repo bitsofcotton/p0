@@ -64,18 +64,28 @@ int main(int argc, const char* argv[]) {
       assert(0 && "Should not be reached.");
     }
     if(sum <= ++ t) {
-      std::stringstream outbuf;
-      std::string obuf;
       const auto D(d * M);
-      outbuf << D;
-      outbuf >> obuf;
-      buf += obuf + std::string(", ");
-      outbuf << (M = p.next(d));
-      outbuf >> obuf;
-      buf += obuf + std::string(", ");
-      outbuf << (S += D);
-      outbuf >> obuf;
-      buf += obuf + std::string("\n");
+      {
+        std::stringstream outbuf;
+        std::string obuf;
+        outbuf << D;
+        outbuf >> obuf;
+        buf += obuf + std::string(", ");
+      }
+      {
+        std::stringstream outbuf;
+        std::string obuf;
+        outbuf << (M = p.next(d));
+        outbuf >> obuf;
+        buf += obuf + std::string(", ");
+      }
+      {
+        std::stringstream outbuf;
+        std::string obuf;
+        outbuf << (S += D);
+        outbuf >> obuf;
+        buf += obuf + std::string("\n");
+      }
       d = num_t(t ^= t);
       -- line;
     }
