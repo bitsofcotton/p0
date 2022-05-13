@@ -87,6 +87,13 @@ template <typename T> const SimpleVector<T>& pnextcache(const int& size, const i
   return cp[size][step] = (pnext<T>(size, step) + pnext<T>(size, step + 1)) / T(int(2));
 }
 
+template <typename T> class Pnull {
+public:
+  inline Pnull() { ; }
+  inline ~Pnull() { ; };
+  inline T next(const T& in) { return T(int(0)); }
+};
+
 template <typename T, typename feeder> class P0 {
 public:
   typedef SimpleVector<T> Vec;
@@ -176,7 +183,7 @@ public:
 
 template <typename T, typename P, bool avg = false> class sumChain {
 public:
-  inline sumChain() { ; }
+  inline sumChain() { S = T(t ^= t); }
   inline sumChain(P&& p) { this->p = p; S = T(t ^= t); }
   inline ~sumChain() { ; }
   inline T next(const T& in) {
@@ -244,10 +251,9 @@ public:
     assert(0 < status && 0 < var);
     p0 = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
     rr = qq = q = r = p = p0;
-    bt = - status;
+    bt = - (this->status = status);
     t  = (btt ^= btt);
-    M  = SimpleMatrix<T>(3, max(3, status)).O();
-    this->status = status;
+    M  = SimpleMatrix<T>(4, max(4, status)).O();
   }
   inline ~P0maxRank() { ; }
   inline T next(const T& in) {
@@ -261,8 +267,10 @@ public:
       T(status) + T(t - bt) / T(status) ));
     M(2, M.cols() - 1) = r.next(in * (
       T(status) - T(t - bt) / T(status) ));
+    M(3, M.cols() - 1) = - avg.next(in);
     qq.next(in * (T(status) + T(t - btt) / T(status)));
     rr.next(in * (T(status) - T(t - btt) / T(status)));
+    bvg.next(in);
     auto MM(M);
     for(int i = 0; i < MM.rows(); i ++) {
       const auto norm2(MM.row(i).dot(MM.row(i)));
@@ -291,6 +299,8 @@ public:
       rr   = p0;
       bt   = btt;
       btt += status;
+      avg  = bvg;
+      bvg  = cvg;
       M.O();
     }
     return res;
@@ -349,6 +359,9 @@ public:
   p0_st r;
   p0_st qq;
   p0_st rr;
+  sumChain<T, Pnull<T>, true> avg;
+  sumChain<T, Pnull<T>, true> bvg;
+  sumChain<T, Pnull<T>, true> cvg;
   SimpleMatrix<T> M;
 };
 
@@ -361,6 +374,7 @@ public:
       p.emplace_back(P(i, int(max(T(int(3)), ceil(exp(sqrt(log(T(i)))))))));
       std::cerr << i << ", ";
     }
+    if(! p.size()) { p.emplace_back(P(status, 1)); std::cerr << status; }
     std::cerr << std::endl;
     M.resize(p.size(), T(int(0)));
   }

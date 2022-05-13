@@ -20,11 +20,6 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # 0 < status specifies number of status sample point to be used.
     # status < 0 specifies number of the points look forward.
     # both parameters are in recursive.
-    ./rand <method> <summation range> <status> <output lines>
-    # this is for the system only userland and lib prng, last output is trusted.
-    # if the output controls input PRNGs by callgate/pipe observation
-    # on running state, we need this.
-    # if all of the userland is cracked, this doesn't beat with them.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -118,6 +113,9 @@ We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion pred
 
 # Tips on 0 invariant chain.
 If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them.
+
+# Tips on all 0 invariant.
+If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 1\> == const for such series, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
