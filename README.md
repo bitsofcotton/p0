@@ -10,7 +10,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0recur<double< P0maxRank<double> > p(status);
+    P0recur<double, P0maxRank<double> > p(status);
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);
@@ -115,7 +115,7 @@ We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion pred
 If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them.
 
 # Tips on all 0 invariant.
-If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 1\> == const for such series, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
+If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 0\> == 0 causes \<\[x0, ..., xn\], \[(n+1), ..., 1\]\> == const (walk average.) for such series in expectation value, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
