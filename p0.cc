@@ -16,7 +16,7 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int status(60);
+  int status(6);
   if(1 < argc) status = std::atoi(argv[1]);
   if(status < 0)
     status = int(max(num_t(3), ceil(exp(log(num_t(- status)) * log(num_t(- status))))));

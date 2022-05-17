@@ -2675,7 +2675,7 @@ template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::SVD(const int& cut
           auto er(err.row(0).dot(err.row(0)));
     for(int i = 1; i < err.rows(); i ++)
       er = max(er, err.row(i).dot(err.row(i)));
-    if(er < epsilon || ! isfinite(er))
+    if(er * er < epsilon || ! isfinite(er))
       break;
     before = move(next);
   }

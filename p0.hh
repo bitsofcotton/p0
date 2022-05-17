@@ -264,12 +264,12 @@ public:
       M.setCol(i, M.col(i + 1));
     M(0, M.cols() - 1) = p.next(in);
     M(1, M.cols() - 1) = q.next(in * (
-      T(status) + T(t - bt) / T(status) ));
+      T(int(4)) + T(t - bt) / T(status) ));
     M(2, M.cols() - 1) = r.next(in * (
-      T(status) - T(t - bt) / T(status) ));
+      T(int(4)) - T(t - bt) / T(status) ));
     M(3, M.cols() - 1) = avg.next(in);
-    qq.next(in * (T(status) + T(t - btt) / T(status)));
-    rr.next(in * (T(status) - T(t - btt) / T(status)));
+    qq.next(in * (T(int(4)) + T(t - btt) / T(status)));
+    rr.next(in * (T(int(4)) - T(t - btt) / T(status)));
     bvg.next(in);
     auto MM(M);
     for(int i = 0; i < MM.rows(); i ++) {
