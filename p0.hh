@@ -252,8 +252,9 @@ public:
     p0 = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
     rr = qq = q = r = p = p0;
     bt = - (this->status = status);
-    aw = T(t = (btt ^= btt));
+    t  = (btt ^= btt);
     M  = SimpleMatrix<T>(4, max(4, status)).O();
+    bw = aw = SimpleVector<T>(M.rows()).O();
   }
   inline ~P0maxRank() { ; }
   inline T next(const T& in) {
@@ -267,7 +268,10 @@ public:
       T(int(4)) + T(t - bt) / T(status) ));
     M(2, M.cols() - 1) = r.next(in * (
       T(int(4)) - T(t - bt) / T(status) ));
-    aw += M(3, M.cols() - 1) * in;
+    for(int i = 0; i < M.rows(); i ++) {
+      aw[i] += M(i, M.cols() - 1) * in;
+      bw[i] += M(i, M.cols() - 1) * in;
+    }
     M(3, M.cols() - 1) = avg.next(in);
     qq.next(in * (T(int(4)) + T(t - btt) / T(status)));
     rr.next(in * (T(int(4)) - T(t - btt) / T(status)));
@@ -276,8 +280,8 @@ public:
     for(int i = 0; i < MM.rows(); i ++) {
       const auto norm2(MM.row(i).dot(MM.row(i)));
       if(norm2 != zero) MM.row(i) /= sqrt(norm2);
+      MM.row(i) *= sgn<T>(aw[i]);
     }
-    MM.row(3) *= sgn<T>(aw);
     const auto lsvd(MM.SVD());
     const auto svd(lsvd * MM);
     vector<T> stat;
@@ -303,7 +307,9 @@ public:
       btt += status;
       avg  = bvg;
       bvg  = cvg;
+      aw   = bw;
       M.O();
+      bw.O();
     }
     return res;
   }
@@ -355,7 +361,8 @@ public:
   int bt;
   int btt;
   int status;
-  T   aw;
+  SimpleVector<T> aw;
+  SimpleVector<T> bw;
   p0_st p0;
   p0_st p;
   p0_st q;
