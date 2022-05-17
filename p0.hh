@@ -249,8 +249,12 @@ public:
   inline P0maxRank() { ; }
   inline P0maxRank(const int& status, const int& var) {
     assert(0 < status && 0 < var);
-    p0 = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
-    rr = qq = q = r = p = p0;
+    p  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    r  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    qq = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    rr = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    this->var = var;
     bt = - (this->status = status);
     t  = (btt ^= btt);
     M  = SimpleMatrix<T>(4, max(4, status)).O();
@@ -301,8 +305,8 @@ public:
     if(! ((++ t) % status)) {
       q    = qq;
       r    = rr;
-      qq   = p0;
-      rr   = p0;
+      qq   = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+      rr   = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
       bt   = btt;
       btt += status;
       avg  = bvg;
@@ -360,10 +364,10 @@ public:
   int t;
   int bt;
   int btt;
+  int var;
   int status;
   SimpleVector<T> aw;
   SimpleVector<T> bw;
-  p0_st p0;
   p0_st p;
   p0_st q;
   p0_st r;
