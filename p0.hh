@@ -166,7 +166,7 @@ public:
   inline T next(const T& in) {
     static const T zero(int(0));
     static const T one(int(1));
-    static const T M(atan(one / sqrt(SimpleMatrix<T>().epsilon)));
+    static const T M(atan(one / sqrt(SimpleMatrix<T>().epsilon())));
     if(! isfinite(in) || in == zero) return in;
     auto ain(atan(in));
     //assert(- M < ain && ain < M);
@@ -205,7 +205,7 @@ public:
   inline T next(const T& in) {
     static const T zero(int(0));
     static const T one(int(1));
-    static const auto epsilon(sqrt(sqrt(SimpleMatrix<T>().epsilon)));
+    static const auto epsilon(sqrt(sqrt(SimpleMatrix<T>().epsilon())));
     const auto bS(S);
     S += in;
     if(bS == zero) return zero;
@@ -262,7 +262,7 @@ public:
   }
   inline ~P0maxRank() { ; }
   inline T next(const T& in) {
-    static const T epsilon(sqrt(sqrt(SimpleMatrix<T>().epsilon)));
+    static const T epsilon(sqrt(sqrt(SimpleMatrix<T>().epsilon())));
     static const T zero(int(0));
     auto res(zero);
     for(int i = 0; i < M.cols() - 1; i ++)
