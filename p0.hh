@@ -267,15 +267,15 @@ public:
     auto res(zero);
     for(int i = 0; i < M.cols() - 1; i ++)
       M.setCol(i, M.col(i + 1));
+    for(int i = 0; i < M.rows(); i ++) {
+      aw[i] += M(i, M.cols() - 1) * in;
+      bw[i] += M(i, M.cols() - 1) * in;
+    }
     M(0, M.cols() - 1) = p.next(in);
     M(1, M.cols() - 1) = q.next(in * (
       T(int(4)) + T(t - bt) / T(status) ));
     M(2, M.cols() - 1) = r.next(in * (
       T(int(4)) - T(t - bt) / T(status) ));
-    for(int i = 0; i < M.rows(); i ++) {
-      aw[i] += M(i, M.cols() - 1) * in;
-      bw[i] += M(i, M.cols() - 1) * in;
-    }
     M(3, M.cols() - 1) = avg.next(in);
     qq.next(in * (T(int(4)) + T(t - btt) / T(status)));
     rr.next(in * (T(int(4)) - T(t - btt) / T(status)));
