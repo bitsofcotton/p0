@@ -26,16 +26,11 @@ int main(int argc, const char* argv[]) {
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
-  struct rusage t0;
-  struct rusage t1;
-  getrusage(RUSAGE_SELF, &t0);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    getrusage(RUSAGE_SELF, &t1);
-    std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << ", " << (t1.ru_utime.tv_sec - t0.ru_utime.tv_sec) << ", " << (t1.ru_utime.tv_usec - t0.ru_utime.tv_usec) << ", " << (t1.ru_stime.tv_sec - t0.ru_stime.tv_sec) << ", " << (t1.ru_stime.tv_usec - t0.ru_stime.tv_usec) << std::endl << std::flush;
-    t0 = t1;
+    std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
   }
   return 0;
 }
