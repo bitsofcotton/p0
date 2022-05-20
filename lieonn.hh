@@ -2151,7 +2151,7 @@ template <typename T> inline SimpleMatrix<T> SimpleMatrix<T>::SVD() const {
   // N.B. now we have B = Left * B * Right.
   static const T p(int(exp(sqrt(- log(epsilon())) / T(int(2)))));
   try {
-    return (pow(Left, p) * pow(Right, p)).QR() * Qt;
+    return (pow(Left /= sqrt(norm2M(Left)), p) * pow(Right /= sqrt(norm2M(Right)), p)).QR() * Qt;
   } catch(const char* e) {
     /* might be Left or Right are sparse. */
     /* in this case, we should separate them by LDLt S matrix. */
