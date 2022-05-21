@@ -17,12 +17,11 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int status(6);
+  int status(60);
   if(1 < argc) status = std::atoi(argv[1]);
-  if(status < 0)
-    status = int(max(num_t(3), ceil(exp(log(num_t(- status)) * log(num_t(- status))))));
   assert(status);
-  P0recur<num_t, P0maxRank<num_t> > p(status);
+  P0avg<num_t, P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > > > p(P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > >(P0recur<num_t, P0maxRank<num_t> >(abs(status)), abs(status)), abs(status));
+  P0recur<num_t, P0maxRank<num_t> > q(abs(status));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
@@ -30,7 +29,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
+    std::cout << D << ", " << (M = status < 0 ? q.next(d) : p.next(d)) << ", " << (S += D) << std::endl << std::flush;
   }
   return 0;
 }

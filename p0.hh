@@ -216,30 +216,70 @@ public:
   P p;
 };
 
-template <typename T, typename P> class P0Expect {
+template <typename T, typename P> class P0measure {
 public:
-  inline P0Expect() { ; }
-  inline P0Expect(P&& p, const int& nyquist = 2, const int& offset = 0) {
-    Mx = M = d = T(t ^= t);
-    t -= offset;
-    tM = nyquist;
-    assert(0 < tM);
+  inline P0measure() { ; }
+  inline P0measure(P&& p, const int& range) {
     this->p = p;
+    h.resize(range, M = d = T(t ^= t));
+    g.resize(range, d);
+    bd = T(int(1));
   }
-  inline ~P0Expect() { ; }
-  inline const T& next(const T& in) {
-    if(0 <= t) d += in;
-    if(++ t < tM) return M;
-    Mx = max(Mx, abs(d /= T(tM * tM)) * T(int(2)));
-    M  = max(- Mx, min(Mx, p.next(d)));
-    d  = T(t ^= t);
-    return M;
+  inline ~P0measure() { ; }
+  inline T next(const T& in) {
+    static const T zero(int(0));
+    d += in;
+    auto D(zero);
+    if(d * bd < zero) {
+      for(int i = 0; i < h.size() - 1; i ++) h[i] = move(h[i + 1]);
+      for(int i = 0; i < g.size() - 1; i ++) g[i] = move(g[i + 1]);
+      h[h.size() - 1] = p.next(d);
+      g[g.size() - 1] = d;
+      auto hh(zero);
+      auto gg(zero);
+      for(int i = 1; i < min(h.size() - 1, g.size()); i ++) {
+        hh += h[h.size() - i - 1] * h[h.size() - i - 1];
+        gg += g[g.size() - i] * g[g.size() - i];
+      }
+      if(hh == zero) M = zero;
+      else M = sqrt(gg / hh);
+      bd = d;
+      d  = zero;
+      t ++;
+    } else if(abs(M * h[h.size() - 1]) / T(int(2)) < abs(d) &&
+              d * (t & 1 ? - T(int(1)) : T(int(1))) < zero)
+      M = zero;
+    return abs(M * h[h.size() - 1]) * (t & 1 ? - T(int(1)) : T(int(1)));
   }
-  int t;
-  int tM;
   T d;
+  T bd;
   T M;
-  T Mx;
+  int t;
+  vector<T> h;
+  vector<T> g;
+  P p;
+};
+
+template <typename T, typename P> class P0avg {
+public:
+  inline P0avg() { ; }
+  inline P0avg(P&& p, const int& range) {
+    this->p = p;
+    h.resize(range, T(int(0)));
+  }
+  inline ~P0avg() { ; }
+  inline T next(const T& in) {
+    for(int i = 0; i < h.size(); i ++) h[i] = move(h[i + 1]);
+    h[h.size() - 1] = in;
+    auto avg(h[0]);
+    for(int i = 1; i < h.size() - 1; i ++) avg += h[i];
+    auto res(- p.next(in - avg / T(int(h.size() - 1))));
+    avg = h[1];
+    for(int i = 2; i < h.size(); i ++) avg += h[i];
+    if(res * avg < T(int(0))) return T(int(0));
+    return res;
+  }
+  vector<T> h;
   P p;
 };
 

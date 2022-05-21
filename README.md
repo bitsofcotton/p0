@@ -17,9 +17,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <status>? < stream.txt
-    # 0 < status specifies number of status sample point to be used.
-    # status < 0 specifies number of the points look forward.
-    # both parameters are in recursive.
+    # 0 < status for frequent return to average ones,
+    # status < 0 for non frequent return to averge ones.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
