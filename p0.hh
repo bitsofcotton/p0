@@ -221,42 +221,41 @@ public:
   inline P0measure() { ; }
   inline P0measure(P&& p, const int& range) {
     this->p = p;
-    h.resize(range, M = d = T(t ^= t));
-    g.resize(range, d);
+    M = d = T(t ^= t);
+    h = idFeeder<T>(range);
+    g = idFeeder<T>(range);
     bd = T(int(1));
   }
   inline ~P0measure() { ; }
   inline T next(const T& in) {
     static const T zero(int(0));
     d += in;
-    auto D(zero);
     if(d * bd < zero) {
-      for(int i = 0; i < h.size() - 1; i ++) h[i] = move(h[i + 1]);
-      for(int i = 0; i < g.size() - 1; i ++) g[i] = move(g[i + 1]);
-      h[h.size() - 1] = p.next(d);
-      g[g.size() - 1] = d;
+      const auto& H(h.next(p.next(d)));
+      const auto& G(g.next(d));
+      if(! g.full) return zero;
       auto hh(zero);
       auto gg(zero);
-      for(int i = 1; i < min(h.size() - 1, g.size()); i ++) {
-        hh += h[h.size() - i - 1] * h[h.size() - i - 1];
-        gg += g[g.size() - i] * g[g.size() - i];
+      for(int i = 1; i < min(H.size() - 1, H.size()); i ++) {
+        hh += H[H.size() - i - 1] * H[H.size() - i - 1];
+        gg += G[G.size() - i] * G[G.size() - i];
       }
       if(hh == zero) M = zero;
       else M = sqrt(gg / hh);
       bd = d;
       d  = zero;
       t ++;
-    } else if(abs(M * h[h.size() - 1]) / T(int(2)) < abs(d) &&
+    } else if(abs(M * h.res[h.res.size() - 1]) / T(int(2)) < abs(d) &&
               d * (t & 1 ? - T(int(1)) : T(int(1))) < zero)
       M = zero;
-    return abs(M * h[h.size() - 1]) * (t & 1 ? - T(int(1)) : T(int(1)));
+    return abs(M * h.res[h.res.size() - 1]) * (t & 1 ? - T(int(1)) : T(int(1)));
   }
   T d;
   T bd;
   T M;
   int t;
-  vector<T> h;
-  vector<T> g;
+  idFeeder<T> h;
+  idFeeder<T> g;
   P p;
 };
 
@@ -265,21 +264,25 @@ public:
   inline P0avg() { ; }
   inline P0avg(P&& p, const int& range) {
     this->p = p;
-    h.resize(range, T(int(0)));
+    res = T(int(0));
+    h = idFeeder<T>(range);
   }
   inline ~P0avg() { ; }
-  inline T next(const T& in) {
-    for(int i = 0; i < h.size(); i ++) h[i] = move(h[i + 1]);
-    h[h.size() - 1] = in;
-    auto avg(h[0]);
-    for(int i = 1; i < h.size() - 1; i ++) avg += h[i];
-    auto res(- p.next(in - avg / T(int(h.size() - 1))));
-    avg = h[1];
-    for(int i = 2; i < h.size(); i ++) avg += h[i];
-    if(res * avg < T(int(0))) return T(int(0));
+  inline const T& next(const T& in) {
+    static const T zero(int(0));
+    if(in == zero) return res;
+    const auto& H(h.next(in));
+    if(! h.full) return res = zero;
+    auto avg(H[0]);
+    for(int i = 1; i < H.size() - 1; i ++) avg += H[i];
+    res = - p.next(in - avg / T(int(H.size() - 1)));
+    avg = H[1];
+    for(int i = 2; i < H.size(); i ++) avg += H[i];
+    if(res * avg < zero) return res = zero;
     return res;
   }
-  vector<T> h;
+  T res;
+  idFeeder<T> h;
   P p;
 };
 

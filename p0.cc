@@ -20,8 +20,12 @@ int main(int argc, const char* argv[]) {
   int status(60);
   if(1 < argc) status = std::atoi(argv[1]);
   assert(status);
-  P0avg<num_t, P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > > > p(P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > >(P0recur<num_t, P0maxRank<num_t> >(abs(status)), abs(status)), abs(status));
-  P0recur<num_t, P0maxRank<num_t> > q(abs(status));
+  P0avg<num_t, P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > > > p;
+  P0recur<num_t, P0maxRank<num_t> > q;
+  if(0 < status)
+    p = P0avg<num_t, P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > > >(P0measure<num_t, P0recur<num_t, P0maxRank<num_t> > >(P0recur<num_t, P0maxRank<num_t> >(abs(status)), abs(status)), abs(status));
+  else
+    q = P0recur<num_t, P0maxRank<num_t> >(abs(status));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
