@@ -400,16 +400,21 @@ public:
     if(! p.size()) { p.emplace_back(P(status, 1)); std::cerr << status; }
     std::cerr << std::endl;
     M.resize(p.size(), T(int(0)));
+    fm.resize(p.size(), 0);
   }
   inline ~P0recur() { ; }
   inline T next(const T& in) {
     auto b(M);
     auto d(in);
     T    res(int(1));
-    for(int i = 0; i < p.size(); i ++)
+    for(int i = 0; i < p.size(); i ++) {
+      if(i && ! fm[i - 1]) break;
       res *= (M[i] = p[i].next(i ? d *= b[i - 1] : d));
+      if(M[i] != T(int(0))) fm[i] = 1;
+    }
     return res;
   }
+  vector<int> fm;
   vector<P> p;
   vector<T> M;
 };
