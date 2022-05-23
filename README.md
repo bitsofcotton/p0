@@ -119,9 +119,12 @@ If we cannot get any of invariant into 0 invariant chain, it's only a return to 
 # Tips on possible jamming
 Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 3 of predicts described in p2/readme.md. s.t. (a, b, c)-status length triplet for lcm(a, b, c) period jammer, (a, 2a, 3a)-status length triplet for fight with them. We choose triplet because original function has dimension 3 or more because (x, f(x), status) has them.
 
-
 # Tips on non measurable condition
 We add pseudo virtual measurable condition on sign bit with P0measure, but to do so, we need P0avg. So even in jammed condition, the original stream has only measurable or non measurable flag. So if one of them is periodically jammed, we can choose better result with cherry picking 1 of 6 choice.
+
+# Tips on hard jamming
+Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have), they fails in long span.
+So we select simple ones.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
