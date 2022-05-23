@@ -18,7 +18,9 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int status(3);
+  if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
+  std::cerr << argv[0] << " " << status << std::endl;
   assert(0 < status);
   const auto var(max(int(1), int(exp(sqrt(log(num_t(status)))))));
   P0maxRank<num_t> p(status, var);;
@@ -36,8 +38,8 @@ int main(int argc, const char* argv[]) {
     const auto rp(p.next(d));
     assert(rp.size() == M.size());
     for(int i = 0; i < rp.size(); i ++) std::cout << (M[i] = rp[i]) << ", ";
-    for(int i = 0; i < S.size() - 1; i ++) std::cout << (S[i] += D[i]) << ", ";
-    std::cout << (S[S.size() - 1] += D[D.size() - 1]) << std::endl << std::flush;
+    for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
+    std::cout << std::endl << std::flush;
   }
   return 0;
 }
