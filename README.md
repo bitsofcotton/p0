@@ -11,15 +11,13 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0recur<double, P0maxRank<double> > p(status);
+    P0maxRank<double> p(status, variable);
     // pnext<T>(range, step) for prediction vector.
     ...
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <status>? < stream.txt
-    # 0 < status for frequent return to average ones,
-    # status < 0 for non frequent return to averge ones.
+    ./p0 <positive status>? < stream.txt
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -112,16 +110,16 @@ We vanish prediction dimension by 2 of pairs invert/plain, complex/sedenion pred
 -\> for speed and memory, we use only plain and complex.
 
 # Tips on 0 invariant chain.
-If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them.
+If there's non categorized clustered invariant chain, there should be 0 invariant on the categorize chain. So to avoid this, we can pass the argument into p0 as linearly weighted, this causes slips the 0 chain into some of the large number of clustered ones. With this, if there's a invariants balanced whole sum 0 vector, we can break the balance of them. Also multiplication inverse condition breaks them (reverse order on frequency).
 
 # Tips on all 0 invariant.
 If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 0\> == 0 causes \<\[x0, ..., xn\], \[(n+1), ..., 1\]\> == const (walk average.) for such series in expectation value, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
 
 # Tips on possible jamming
-Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 3 of predicts described in p2/readme.md. We choose triplet because original function has dimension 3 or more because (x, f(x), status) has them, literally 3 dimension.
+Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 3 of predicts described in p2/readme.md. We choose triplet because original function has dimension 3 or more because (x, f(x), status) has them, in literally literally 3 dimension.
 
 # Tips on hard jamming
-Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones.
+Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones which output triplets.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
