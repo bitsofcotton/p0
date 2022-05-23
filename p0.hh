@@ -285,9 +285,10 @@ public:
   inline P0maxRank() { ; }
   inline P0maxRank(const int& status, const int& var) {
     assert(0 < status && 0 < var);
-    p  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+    p  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(this->status = status, this->var = var), var) )) ) )) );
+    pp = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(this->status = status, this->var = var), var) )) ) )) );
     q  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
-    this->status = status;
+    qq = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
     t ^= t;
     M  = SimpleMatrix<T>(3, max(3, status)).O();
   }
@@ -305,6 +306,8 @@ public:
     M(1, M.cols() - 1) = one / q.next(one / in);
     // N.B. return to the average on walk, for no invariant chain.
     M(2, M.cols() - 1) = avg.next(in);
+    pp.next(in);
+    qq.next(one / in);
     bvg.next(in);
     const auto lsvd(M.SVD());
     const auto svd(lsvd * M);
@@ -314,17 +317,27 @@ public:
       stat.emplace_back(sqrt(svd.row(i).dot(svd.row(i))));
     auto sstat(stat);
     sort(sstat.begin(), sstat.end());
+    T   ratio(int(1));
+    int cnt(0);
     for(int i = 0; i < svd.rows(); i ++)
       if(sstat[sstat.size() - 1] * epsilon < stat[i]) {
         auto sum(lsvd(i, 0));
         for(int j = 1; j < lsvd.cols(); j ++)
           sum += lsvd(i, j);
         res += svd(i, svd.cols() - 1) / stat[i] * sgn<T>(sum);
+        ratio *= stat[i];
+        cnt ++;
       }
+    if(cnt) res *= pow(ratio, T(int(1)) / T(cnt));
     if(! isfinite(res)) res = zero;
-    if(status <= t ++) {
+    // XXX optimal??
+    if(status * 8 <= t ++) {
       avg = bvg;
       bvg = sumChain<T, sumChain<T, Pnull<T>, true> >();
+      p   = pp;
+      q   = qq;
+      pp  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
+      qq  = p0_st(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) );
       t  ^= t;
     }
     return res;
@@ -375,8 +388,11 @@ public:
   typedef sumChain<T, p0_s6t, true> p0_st;
   int t;
   int status;
+  int var;
   p0_st p;
+  p0_st pp;
   p0_st q;
+  p0_st qq;
   sumChain<T, sumChain<T, Pnull<T>, true> > avg;
   sumChain<T, sumChain<T, Pnull<T>, true> > bvg;
   SimpleMatrix<T> M;

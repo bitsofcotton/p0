@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Predictor on expected value ratio ignored when original function is Lebesgue measurable.
+Generic expectation value constant ratio ignored predictor they produces 6 choices.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -115,6 +115,13 @@ If there's non categorized clustered invariant chain, there should be 0 invarian
 
 # Tips on all 0 invariant.
 If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 0\> == 0 causes \<\[x0, ..., xn\], \[(n+1), ..., 1\]\> == const (walk average.) for such series in expectation value, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
+
+# Tips on possible jamming
+Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 3 of predicts described in p2/readme.md. s.t. (a, b, c)-status length triplet for lcm(a, b, c) period jammer, (a, 2a, 3a)-status length triplet for fight with them. We choose triplet because original function has dimension 3 or more because (x, f(x), status) has them.
+
+
+# Tips on non measurable condition
+We add pseudo virtual measurable condition on sign bit with P0measure, but to do so, we need P0avg. So even in jammed condition, the original stream has only measurable or non measurable flag. So if one of them is periodically jammed, we can choose better result with cherry picking 1 of 6 choice.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
