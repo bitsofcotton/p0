@@ -133,14 +133,8 @@ public:
   inline P0DFT() { ; }
   inline P0DFT(P&& p, const int& size) {
     f = feeder(size);
-    (this->p).reserve(size);
-    q.reserve(size);
-    (this->p).emplace_back(p);
-    q.emplace_back((this->p)[0]);
-    for(int i = 1; i < size; i ++) {
-      (this->p).emplace_back((this->p)[0]);
-      q.emplace_back((this->p)[0]);
-    }
+    (this->p).resize(size, p);
+    q = this->p;
   }
   inline ~P0DFT() { ; };
   inline T next(const T& in) {
@@ -423,10 +417,7 @@ template <typename T, typename P> class P0ContRand {
 public:
   inline P0ContRand() { ; }
   inline P0ContRand(P&& p, const int& para) {
-    (this->p).reserve(para);
-    (this->p).emplace_back(p);
-    for(int i = 1; i < para; i ++)
-      (this->p).emplace_back((this->p)[0]);
+    (this->p).resize(para, p);
     r.resize(para, T(t ^= t));
     br.resize(para, T(t));
   }

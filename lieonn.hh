@@ -2236,6 +2236,7 @@ template <typename T> inline SimpleVector<T> SimpleMatrix<T>::zeroFix(const Simp
     fidx[i].first = - T(int(1));
   }
   // we now have: Q [R [x t] ] <= {0, 1}^m cond.
+  auto Pb(*this);
   const auto on(projectionPt(one));
   fidx.reserve(fidx.size() + this->cols());
   for(int i = 0; i < this->cols(); i ++)
@@ -2244,6 +2245,11 @@ template <typename T> inline SimpleVector<T> SimpleMatrix<T>::zeroFix(const Simp
   // sort by: |<Q^t(1), q_k>|, we subject to minimize each, to do this,
   //   maximize minimum q_k orthogonality.
   for(int i = 0, idx = 0; i < this->rows() - 1 && idx < fidx.size(); idx ++) {
+    if(T(int(0)) < fidx[idx].first &&
+       fidx[idx].first < sqrt(one.dot(one)) * epsilon()) {
+      *this = Pb;
+      break;
+    }
     const auto& iidx(fidx[idx].second);
     const auto  orth(this->col(iidx));
     const auto  n2(orth.dot(orth));
@@ -2262,6 +2268,7 @@ template <typename T> inline SimpleVector<T> SimpleMatrix<T>::zeroFix(const Simp
       const auto on(projectionPt(one));
       for(int j = 0; j < this->cols(); j ++)
         fidx.emplace_back(make_pair(abs(on[j]), i));
+      sort(fidx.begin(), fidx.end());
       i -= rfidxsz - fidx.size();
     }
     i ++;
@@ -2635,7 +2642,7 @@ template <typename T> static inline pair<SimpleVector<T>, T> makeProgramInvarian
   if(T(int(0)) <= index)
     res[in.size() + 1] = T(index);
   T   lsum(0);
-  for(int i = 0; i < res.size() - 1; i ++) {
+  for(int i = 0; i < res.size(); i ++) {
     assert(- T(int(1)) <= res[i] && res[i] <= T(int(1)));
     res[i] += T(int(1));
     if(res[i] != T(int(0))) lsum += log(res[i]);
