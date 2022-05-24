@@ -122,6 +122,9 @@ Even with there's measurable condition, there is able to be jammed this predicti
 Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones which output triplets.
 Also, jammer can jam out any two of the predictors into 0 expectation value condition, and p0 predictor has a symmetry on sign bit, but not both last 2 prediction because they have different meaning, so last one can be used for the prediction.
 
+# Tips on 4 of choices
+This p0 depends on the decomposition low-frequency part (plain p0), high-frequency part (multiplication inverse), linear part (minimum square) and no information be gained part (average). So this is a max rank to categorize input stream, also be a enough dimension to predict.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
