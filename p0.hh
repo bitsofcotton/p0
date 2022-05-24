@@ -294,7 +294,7 @@ public:
   inline P0maxRank(const int& status, const int& var) {
     assert(0 < status && 0 < var);
     p = p0_st(p0_s7t(p0_s6t(p0_s5t(p0_s4t(p0_s3t(p0_s2t(p0_1t(p0_0t(status, var), var) )) ) )) ), status);
-    q = p0_it(p0_i7t(p0_i6t(p0_i5t(p0_i4t(p0_i3t(p0_i2t(p0_i1t(p0_i0t(p0_0t(status, var), var) ) )) ) )) ), status);
+    q = p0_it(p0_i7t(p0_i6t(p0_i5t(p0_i4t(p0_i3t(p0_i2t(p0_i1t(p0_i0t(p0_0t(status, var) ), var) )) ) )) ), status);
     r = p0_mt(p0_m7t(p0_m6t(p0_m5t(p0_m4t(p0_m3t(p0_m2t(p0_m1t(status) )) ) )) ), status);
     s = p0_at(p0_a7t(p0_a6t(p0_a5t(p0_a4t(p0_a3t(p0_a2t(p0_a1t() )) ) )) ), status);
   }
@@ -356,8 +356,8 @@ public:
   typedef sumChain<T, p0_s6t, true> p0_s7t;
   typedef P0restart<T, p0_s7t> p0_st;
 
-  typedef shrinkMatrix<T, p0_0t> p0_i0t;
-  typedef P0inv<T, p0_i0t> p0_i1t;
+  typedef P0inv<T, p0_0t> p0_i0t;
+  typedef shrinkMatrix<T, p0_i0t> p0_i1t;
   typedef northPole<T, p0_i1t> p0_i2t;
   typedef northPole<T, p0_i2t> p0_i3t;
   typedef logChain<T, p0_i3t> p0_i4t;
