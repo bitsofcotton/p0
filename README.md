@@ -2,6 +2,8 @@
 Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 3 choices.
 The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector, so if original function is fixed, no matter the condition in general.).
 
+Normally, first one predicts well. We need second one for assurance, third one for only whole 0 invariant be gained in long enough range.
+
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
 # Contexts
