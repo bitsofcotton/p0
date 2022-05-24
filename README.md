@@ -120,6 +120,7 @@ Even with there's measurable condition, there is able to be jammed this predicti
 
 # Tips on hard jamming
 Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones which output triplets.
+Also, jammer can jam out any two of the predictors into 0 expectation value condition, and p0 predictor has symmetry on sign bit, so the result can be asymptotic to triangular or circular waves but they're avoidable by recursive prediction they increases choices.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
