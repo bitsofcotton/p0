@@ -1,6 +1,6 @@
 # bitsofcotton/p0
-Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 4 choices.
-The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector).
+Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 3 choices.
+The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector, so if original function is fixed, no matter the condition in general.).
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -12,7 +12,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use:
     P0maxRank<double> p(status, variable);
-    // pnext<T>(range, step) for prediction vector.
+    // pnext<T>(range, step) for riemann measurable prediction vector.
     ...
       xnext = p.next(x);
 
@@ -116,15 +116,16 @@ If there's non categorized clustered invariant chain, there should be 0 invarian
 If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 0\> == 0 causes \<\[x0, ..., xn\], \[(n+1), ..., 1\]\> == const (walk average.) for such series in expectation value, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
 
 # Tips on possible jamming
-Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 4 of predicts described in p2/readme.md. We choose triplet because original function has dimension 4 or more because (const., x, f(x), status) has them, in literally literally 4 dimension.
+Even with there's measurable condition, the jam to this prediction can exist. To fight with them, we produce 3 of predicts described in p2/readme.md. We choose triplet because original function has dimension 3 or more because (const., x, f(x), status) has them, and const. part can be described by x\_k - x\_(k - 1), so in literally literally 3 dimension.
+
+# Tips on 3 of choices
+This p0 depends on the decomposition low-frequency part (plain p0), high-frequency part (multiplication inverse), linear part (minimum square) and no information be gained part (average). So this is a max rank to categorize input stream, also be a enough dimension to predict.
+And linear part might be included some plain or inverse part, so integrate them.
 
 # Tips on hard jamming
-Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones which output triplets.
-Also, jammer can jam out any two of the predictors into 0 expectation value condition, and p0 predictor has a symmetry on sign bit, but not both last 2 prediction because they have different meaning, so last one can be used for the prediction.
-
-# Tips on 4 of choices
-This p0 depends on the decomposition low-frequency part (plain p0), high-frequency part (multiplication inverse), linear part (minimum square) and no information be gained part (average). So this is a max rank to categorize input stream, also be a enough dimension to predict.
-And linear part might be included some plain or inverse part, so integrate them. In that case, the const. dimension are treated as some sub sequence part summation dependant in the stream (x, f(x), status), especially x\_k - x\_(k-1).
+Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on any of one predictor), they fails in long span. So we select simple ones which output triplets.
+Also, jammer can jam out any two of the predictors into 0 expectation value condition because the jammer can cheat (f(x), status). The status is literally 1 dimension but since they are possible to have more dimensions virtualy, the predictor triplet is able to be being jammed in short range.
+N.B. in the long range, if the input is deterministic stream, the predictor triplet cannot be jammed because status can be treated as real one dimension. But with modern PRNGs, the status has sporadic sub groups they appears in the f(x) stream rarely, so the gulf will appear on the prediction triplet. Also, if the input stream has a noised ones, since duumy data will be inserted, so prediction on long range will be hard ones because the hypothesis invariant can be noised. In the worst case, noise itself is something biased causes categorized invariant to be biased ones, the prediction itself disturbed.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
