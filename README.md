@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 3 choices.
+Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 4 choices.
 The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector).
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
@@ -116,11 +116,11 @@ If there's non categorized clustered invariant chain, there should be 0 invarian
 If we cannot get any of invariant into 0 invariant chain, it's only a return to the average series in expectation value. This is because \<\[x0, ..., xn, x\+\], a\>==0 satisfies only a==0 vector in expectation value, so after we get \[x0, ..., xn, x\+\], \<\[x0, ..., xn\], a\> == 0 for any a and \<\[x0, ..., xn, x\+\], b\> == 0 for any b in non constant meaning. So with constant, \<\[x0, ..., xn\], 0\> == 0 causes \<\[x0, ..., xn\], \[(n+1), ..., 1\]\> == const (walk average.) for such series in expectation value, differ 2 of them, they concludes \<\[x0, ..., xn, x\+\], 1\> == 0 in general.
 
 # Tips on possible jamming
-Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 3 of predicts described in p2/readme.md. We choose triplet because original function has dimension 3 or more because (x, f(x), status) has them, in literally literally 3 dimension.
+Even with there's measurable condition, there is able to be jammed this prediction. To fight with them, we produce 4 of predicts described in p2/readme.md. We choose triplet because original function has dimension 4 or more because (const., x, f(x), status) has them, in literally literally 4 dimension.
 
 # Tips on hard jamming
 Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on one predictor), they fails in long span. So we select simple ones which output triplets.
-Also, jammer can jam out any two of the predictors into 0 expectation value condition, and p0 predictor has symmetry on sign bit, so the result can be asymptotic to triangular or circular waves but they're avoidable by recursive prediction they increases choices.
+Also, jammer can jam out any two of the predictors into 0 expectation value condition, and p0 predictor has a symmetry on sign bit, but not both last 2 prediction because they have different meaning, so last one can be used for the prediction.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
