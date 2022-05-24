@@ -136,7 +136,7 @@ public:
   inline ~P0ms() { ; };
   inline T next(const T& in) {
     const auto& ff(f.next(in));
-    return f.full ? mscache<T>(ff.size()).dot(ff) : T(int(0));
+    return f.full ? mscache<T>(ff.size()).dot(ff) + in : in;
   }
   feeder f;
 };
