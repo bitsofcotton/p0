@@ -27,7 +27,7 @@ int main(int argc, const char* argv[]) {
   const num_t zero(int(0));
   auto  d(zero);
   std::vector<num_t> M;
-  M.resize(4, d);
+  M.resize(3, d);
   auto  S(M);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);

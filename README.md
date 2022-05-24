@@ -124,6 +124,7 @@ Also, jammer can jam out any two of the predictors into 0 expectation value cond
 
 # Tips on 4 of choices
 This p0 depends on the decomposition low-frequency part (plain p0), high-frequency part (multiplication inverse), linear part (minimum square) and no information be gained part (average). So this is a max rank to categorize input stream, also be a enough dimension to predict.
+And linear part might be included some plain or inverse part, so integrate them. In that case, the const. dimension are treated as some sub sequence part summation dependant in the stream (x, f(x), status), especially x\_k - x\_(k-1).
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
