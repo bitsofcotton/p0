@@ -1,8 +1,8 @@
 # bitsofcotton/p0
-Generic predictor on expectation value when original stream is discrete Lebesgue measurable, this produces 3 choices.
+Generic predictor on expectation value when original stream is discrete Lebesgue measurable.
 The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector, so if original function is fixed, no matter the condition in general.).
 
-Normally, first one predicts well. We need second one for assurance, third one for only whole 0 invariant be gained in long enough range.
+We can use 3 of choices in P0maxRank: normally, first one predicts well. We need second one for assurance, third one for only whole 0 invariant be gained in long enough range.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -16,7 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     P0maxRank<double> p(status, variable);
     // pnext<T>(range, step) for riemann measurable prediction vector.
     ...
-      xnext = p.next(x);
+      xnext = p.next(x)[0];
 
 # How to use (commandline):
     ./p0 <positive status>? < stream.txt
@@ -128,6 +128,10 @@ And linear part might be included some plain or inverse part, so integrate them.
 Even with some of the counter measure on jamming, if there exists slow and nonstatistical illegal jammer (almost every condition have on any of one predictor), they fails in long span. So we select simple ones which output triplets.
 Also, jammer can jam out any two of the predictors into 0 expectation value condition because the jammer can cheat (f(x), status). The status is literally 1 dimension but since they are possible to have more dimensions virtualy, the predictor triplet is able to be being jammed in short range.
 N.B. in the long range, if the input is deterministic stream, the predictor triplet cannot be jammed because status can be treated as real one dimension. But with modern PRNGs, the status has sporadic sub groups they appears in the f(x) stream rarely, so the gulf will appear on the prediction triplet. Also, if the input stream has a noised ones, since duumy data will be inserted, so prediction on long range will be hard ones because the hypothesis invariant can be noised. In the worst case, noise itself is something biased causes categorized invariant to be biased ones, the prediction itself disturbed.
+
+# Tips on pseudo Brown walk
+If we make pseudo Brown walk by frequency space \[1 + random.uniform(-1, 1), ...\] series, the prediction might be harder than original stream from this.
+So from numerical test, we might need the initial (might be supreme of) status dimension in arithmetic operation meaning to status length. So the below extends them arbitrary length from original PRNG.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
