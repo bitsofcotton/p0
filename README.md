@@ -19,7 +19,8 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x)[0];
 
 # How to use (commandline):
-    ./p0 <positive status>? < stream.txt
+    ./p0 <status>? < stream.txt
+    # 0 < status for stable input, status < 0 for unstable intput.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

@@ -21,8 +21,9 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(0 < status);
-  P0maxRank<num_t> p(status, max(int(1), int(exp(sqrt(log(num_t(status)))))));
+  assert(status);
+  const auto var(max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
+  P0maxRank<num_t> p(abs(status), var);
   num_t d(int(0));
   auto  Mx(d);
   std::vector<num_t> D;
@@ -32,7 +33,7 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    Mx = max(Mx, abs(d) * num_t(2));
+    Mx = max(Mx, abs(d) * num_t(status < 0 ? var * 2 : 2));
     for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
     M = p.next(d);
     for(int i = 0; i < M.size(); i ++) std::cout << (M[i] = max(- Mx, min(Mx, M[i]))) << ", ";
