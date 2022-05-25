@@ -134,6 +134,11 @@ N.B. in the long range, if the input is deterministic stream, the predictor trip
 If we make pseudo Brown walk by frequency space \[1 + random.uniform(-1, 1), ...\] series, the prediction might be harder than original stream from this. (This is the analogy of shuffle operation via DFT).
 So from numerical test, we might need the initial (might be supreme of) status dimension in arithmetic operation meaning to status length. So the below extends them arbitrary length from original PRNG.
 
+# Tips on dimension 2
+(x, status) pair can be (counter, status) pair, so if the counter is cyclic, it's in status in general, so we only need first 2 predictors if \|counter\| \< status.
+But in general, \|counter\| -\> infinite, and if we cut some range and slide them, it is different value not fixed from counter causes real 1 dimension, we need to bet the return to average that is treated as 0 invariant in whole range.
+However, if we predict with finite range, \|counter\| \< infinite, so they can integrated to status in literally, so if we only have finite and upper bounded size stream and predict with large enough status length, we can ignore the last prediction.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU

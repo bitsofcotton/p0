@@ -27,7 +27,7 @@ int main(int argc, const char* argv[]) {
   num_t d(int(0));
   auto  Mx(d);
   std::vector<num_t> D;
-  D.resize(3, d);
+  D.resize(2, d);
   auto  M(D);
   auto  S(D);
   while(std::getline(std::cin, s, '\n')) {
@@ -35,8 +35,8 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     Mx = max(Mx, abs(d) * num_t(status < 0 ? var * 2 : 2));
     for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
-    M = p.next(d);
-    for(int i = 0; i < M.size(); i ++) std::cout << (M[i] = max(- Mx, min(Mx, M[i]))) << ", ";
+    const auto pn(p.next(d));
+    for(int i = 0; i < M.size(); i ++) std::cout << (M[i] = max(- Mx, min(Mx, pn[i]))) << ", ";
     for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
     std::cout << std::endl << std::flush;
   }
