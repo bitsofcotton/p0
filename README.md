@@ -130,7 +130,7 @@ Also, jammer can jam out any two of the predictors into 0 expectation value cond
 N.B. in the long range, if the input is deterministic stream, the predictor triplet cannot be jammed because status can be treated as real one dimension. But with modern PRNGs, the status has sporadic sub groups they appears in the f(x) stream rarely, so the gulf will appear on the prediction triplet. Also, if the input stream has a noised ones, since duumy data will be inserted, so prediction on long range will be hard ones because the hypothesis invariant can be noised. In the worst case, noise itself is something biased causes categorized invariant to be biased ones, the prediction itself disturbed.
 
 # Tips on pseudo Brown walk
-If we make pseudo Brown walk by frequency space \[1 + random.uniform(-1, 1), ...\] series, the prediction might be harder than original stream from this.
+If we make pseudo Brown walk by frequency space \[1 + random.uniform(-1, 1), ...\] series, the prediction might be harder than original stream from this. (This is the analogy of shuffle operation via DFT).
 So from numerical test, we might need the initial (might be supreme of) status dimension in arithmetic operation meaning to status length. So the below extends them arbitrary length from original PRNG.
 
 # Another Download Sites (Closed)
