@@ -21,16 +21,21 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(status);
-  P0maxRank<num_t> p(abs(status), max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
+  assert(0 < status);
+  P0maxRank<num_t> p(status, max(int(1), int(exp(sqrt(log(num_t(status)))))));
   num_t d(int(0));
-  auto  M(d);
-  auto  S(d);
+  std::vector<num_t> D;
+  D.resize(3, d);
+  auto  M(D);
+  auto  S(D);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    const auto D(d * M);
-    std::cout << D << ", " << (M = p.next(d)[status < 0 ? 2 : 0]) << ", " << (S += D) << std::endl << std::flush;
+    for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
+    M = p.next(d);
+    for(int i = 0; i < D.size(); i ++) std::cout <<  M[i] << ", ";
+    for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
+    std::cout << std::endl << std::flush;
   }
   return 0;
 }
