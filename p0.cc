@@ -24,6 +24,7 @@ int main(int argc, const char* argv[]) {
   assert(0 < status);
   P0maxRank<num_t> p(status, max(int(1), int(exp(sqrt(log(num_t(status)))))));
   num_t d(int(0));
+  auto  Mx(d);
   std::vector<num_t> D;
   D.resize(3, d);
   auto  M(D);
@@ -31,9 +32,10 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+    Mx = max(Mx, abs(d) * num_t(2));
     for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
     M = p.next(d);
-    for(int i = 0; i < D.size(); i ++) std::cout <<  M[i] << ", ";
+    for(int i = 0; i < M.size(); i ++) std::cout << (M[i] = max(- Mx, min(Mx, M[i]))) << ", ";
     for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
     std::cout << std::endl << std::flush;
   }
