@@ -36,7 +36,10 @@ int main(int argc, const char* argv[]) {
     Mx = max(Mx, abs(d) * num_t(status < 0 ? var * 2 : 2));
     for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
     const auto pn(p.next(d));
-    for(int i = 0; i < M.size(); i ++) std::cout << (M[i] = max(- Mx, min(Mx, pn[i]))) << ", ";
+    for(int i = 0; i < M.size(); i ++) {
+      M[i] = max(- Mx, min(Mx, pn[i]));
+      std::cout << (M[i] = abs(M[i]) == Mx ? num_t(int(0)) : M[i]) << ", ";
+    }
     for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
     std::cout << std::endl << std::flush;
   }
