@@ -29,23 +29,34 @@ int main(int argc, const char* argv[]) {
     p.emplace_back(P0maxRank<num_t>(3, 1));
   for(int i = 1; i <= abs(status); i ++) {
     const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
-    p.emplace_back(P0maxRank<num_t>(status < 0 ? - i : i, var));
+    p.emplace_back(P0maxRank<num_t>(i, var));
   }
   int   t;
   num_t d(t ^= t);
   auto  M(d);
+  auto  Mx(d);
   auto  S(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << D << ", " << (M = p[t ++].next(d)[0]) << ", " << (S += D) << std::endl << std::flush;
+    Mx = max(Mx, abs(d) * num_t(int(2)));
+    M  = p[t ++].next(d)[0];
+    if(t < abs(var0) * 2) M = num_t(int(0));
+    else M /= num_t(max(int(1), int(exp(sqrt(log(num_t(t - abs(var0) * 2 + 1))))) ));
+    if(0 < status) M = max(- Mx, min(Mx, M));
+    if(abs(M) == Mx) M = num_t(int(0));
+    std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
     for(int i = t; i < p.size(); i ++) p[i].next(d);
     if(p.size() <= t) {
       t ^= t;
+      p.resize(0);
+      p.reserve(abs(status) + abs(var0) * 2);
+      for(int i = 0; i <= abs(var0) * 2; i ++)
+        p.emplace_back(P0maxRank<num_t>(3, 1));
       for(int i = 1; i <= abs(status); i ++) {
         const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
-        p[i + abs(var0) * 2 - 1] = P0maxRank<num_t>(status < 0 ? - i : i, var);
+        p.emplace_back(P0maxRank<num_t>(i, var));
       }
     }
   }
