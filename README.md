@@ -1,8 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expectation value when original stream is discrete Lebesgue measurable.
-The discrete Lebesgue mearusable condition needs deterministic input on original stream on the range invariant defined (the invariant can be categorized series or 0 vector, so if original function is fixed, no matter the condition in general.).
-
-We can use 3 of choices in P0maxRank: normally, first one predicts well. We need second one for assurance, third one for only whole 0 invariant be gained in long enough range.
+Generic predictor on expectation value.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -138,6 +135,12 @@ So from numerical test, we might need the initial (might be supreme of) status d
 (x, status) pair can be (counter, status) pair, so if the counter is cyclic, it's in status in general, so we only need first 2 predictors if \|counter\| \< status.
 But in general, \|counter\| -\> infinite, and if we cut some range and slide them, it is different value not fixed from counter causes real 1 dimension, we need to bet the return to average that is treated as 0 invariant in whole range.
 However, if we predict with finite range, \|counter\| \< infinite, so they can integrated to status in literally, so if we only have finite and upper bounded size stream and predict with large enough status length, we can ignore the last prediction.
+
+# Tips on non measurable condition
+When the original stream doesn't have Lebesgue measurable condition in discrete, the description f(x):=<a,x>/<b,x> has the
+hyperbolic triangular function complemented region, and the series they have countable number elements has the description for n elements,
+sqrt(n) sample blocks division in whole.
+The division itself is not only exists but also there might be multiple of them, so if the first point is the same condition, they're virtually measurable.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
