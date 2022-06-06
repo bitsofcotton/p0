@@ -22,26 +22,32 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
   assert(status);
-  const auto var(max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
-  P0maxRank<num_t> p(abs(status), var);
-  num_t d(int(0));
-  auto  Mx(d);
-  std::vector<num_t> D;
-  D.resize(2, d);
-  auto  M(D);
-  auto  S(D);
+  std::vector<P0maxRank<num_t> > p;
+  const auto var0(max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
+  p.reserve(abs(status) + abs(var0) * 2);
+  for(int i = 0; i <= abs(var0) * 2; i ++)
+    p.emplace_back(P0maxRank<num_t>(3, 1));
+  for(int i = 1; i <= abs(status); i ++) {
+    const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
+    p.emplace_back(P0maxRank<num_t>(status < 0 ? - i : i, var));
+  }
+  int   t;
+  num_t d(t ^= t);
+  auto  M(d);
+  auto  S(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    Mx = max(Mx, abs(d) * num_t(status < 0 ? var * 2 : 2));
-    for(int i = 0; i < D.size(); i ++) std::cout << (D[i]  = d * M[i]) << ", ";
-    const auto pn(d == num_t(int(0)) ? M : p.next(d));
-    for(int i = 0; i < M.size(); i ++) {
-      M[i] = max(- Mx, min(Mx, pn[i]));
-      std::cout << (M[i] = abs(M[i]) == Mx ? num_t(int(0)) : M[i]) << ", ";
+    const auto D(d * M);
+    std::cout << D << ", " << (M = p[t ++].next(d)[0]) << ", " << (S += D) << std::endl << std::flush;
+    for(int i = t; i < p.size(); i ++) p[i].next(d);
+    if(p.size() <= t) {
+      t ^= t;
+      for(int i = 1; i <= abs(status); i ++) {
+        const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
+        p[i + abs(var0) * 2 - 1] = P0maxRank<num_t>(status < 0 ? - i : i, var);
+      }
     }
-    for(int i = 0; i < S.size(); i ++) std::cout << (S[i] += D[i]) << ", ";
-    std::cout << std::endl << std::flush;
   }
   return 0;
 }
