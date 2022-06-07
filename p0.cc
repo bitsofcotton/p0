@@ -18,45 +18,58 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
   int status(3);
-  if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
+  int recur(1);
+  if(argc < 2) std::cerr << argv[0] << " <status>? <recur>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << status << std::endl;
-  assert(status);
-  std::vector<P0maxRank<num_t> > p;
+  if(2 < argc) recur  = std::atoi(argv[2]);
+  std::cerr << argv[0] << " " << status << " " << recur << std::endl;
+  assert(status && 0 < recur);
+  std::vector<std::vector<P0maxRank<num_t> > > p;
   const auto var0(max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
-  p.reserve(abs(status) + abs(var0) * 2);
-  for(int i = 0; i <= abs(var0) * 2; i ++)
-    p.emplace_back(P0maxRank<num_t>(3, 1));
-  for(int i = 1; i <= abs(status); i ++) {
-    const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
-    p.emplace_back(P0maxRank<num_t>(i, var));
-  }
+  std::vector<P0maxRank<num_t> > p0;
+  p0.reserve(abs(status));
+  for(int i = 1; i <= abs(status); i ++)
+    p0.emplace_back(P0maxRank<num_t>(i,
+                      max(int(1), int(exp(sqrt(log(num_t(i)))))) ));
+  p.resize(recur, p0);
   int   t;
   num_t d(t ^= t);
-  auto  M(d);
-  auto  Mx(d);
+  auto  M0(d);
   auto  S(d);
+  std::vector<num_t> M;
+  M.resize(p.size(), d);
+  auto  Mx(M);
+  std::vector<idFeeder<num_t> > bb;
+  bb.resize(p.size(), idFeeder<num_t>(var0 * 2));
   while(std::getline(std::cin, s, '\n')) {
+    const auto bM(M);
     std::stringstream ins(s);
     ins >> d;
-    const auto D(d * M);
-    Mx = max(Mx, abs(d) * num_t(int(2)));
-    M  = p[t ++].next(d)[0];
-    if(t < abs(var0) * 2) M = num_t(int(0));
-    else M /= num_t(max(int(1), int(exp(sqrt(log(num_t(t - abs(var0) * 2 + 1))))) ));
-    if(0 < status) M = max(- Mx, min(Mx, M));
-    if(abs(M) == Mx) M = num_t(int(0));
-    std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
-    for(int i = t; i < p.size(); i ++) p[i].next(d);
+    const auto D(d * M0);
+    M0 = num_t(int(1));
+    for(int i = 0; i < p.size(); i ++) {
+      Mx[i] = max(Mx[i], abs(d) * num_t(int(2)));
+      M[i]  = p[i][t].next(d)[0];
+      M[i] /= num_t(max(int(1), int(exp(sqrt(log(num_t(t + 1))))) ));
+      if(0 < status && abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])             M[i] = num_t(int(0));
+      M0    *= (M[i] = sgn<num_t>(M[i]) * pow(abs(M[i]), num_t(int(1)) / num_t(int(p.size()))) );
+      bb[i].next(d);
+      d     *= bM[i];
+    }
+    std::cout << D << ", " << M0 << ", " << (S += D) << std::endl << std::flush;
+    t ++;
+    for(int i = 0; i < p.size(); i ++)
+      for(int j = t; j < p.size(); j ++)
+        p[i][j].next(bb[i].res[bb[i].res.size() - 1]);
     if(p.size() <= t) {
       t ^= t;
       p.resize(0);
-      p.reserve(abs(status) + abs(var0) * 2);
-      for(int i = 0; i <= abs(var0) * 2; i ++)
-        p.emplace_back(P0maxRank<num_t>(3, 1));
-      for(int i = 1; i <= abs(status); i ++) {
-        const auto var(max(int(1), int(exp(sqrt(log(num_t(i)))))));
-        p.emplace_back(P0maxRank<num_t>(i, var));
+      p.resize(recur, p0);
+      for(int i = 0; i < p.size(); i ++) {
+        const auto& bbb(bb[i].res);
+        for(int j = 0; j < p[i].size(); j ++)
+          for(int k = 0; k < bbb.size(); k ++)
+            p[i][j].next(bbb[k]);
       }
     }
   }
