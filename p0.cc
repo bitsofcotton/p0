@@ -17,12 +17,11 @@ typedef myfloat num_t;
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   std::string s;
-  int status(3);
-  int recur(1);
-  if(argc < 2) std::cerr << argv[0] << " <status>? <recur>? : continue with ";
+  int status(- 3);
+  if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  if(2 < argc) recur  = std::atoi(argv[2]);
-  std::cerr << argv[0] << " " << status << " " << recur << std::endl;
+  const int recur(status < 0 ? num_t(int(1)) : ceil(- log(SimpleMatrix<num_t>().epsilon()) / num_t(int(2)) ) );
+  std::cerr << argv[0] << " " << status << " (" << recur << ")" << std::endl;
   assert(status && 0 < recur);
   std::vector<std::vector<P0maxRank<num_t> > > p;
   const auto var0(max(int(1), int(exp(sqrt(log(num_t(abs(status))))))));
@@ -51,7 +50,7 @@ int main(int argc, const char* argv[]) {
       Mx[i] = max(Mx[i], abs(d) * num_t(int(2)));
       M[i]  = p[i][t].next(d)[0];
       M[i] /= num_t(max(int(1), int(exp(sqrt(log(num_t(t + 1))))) ));
-      if(0 < status && abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])             M[i] = num_t(int(0));
+      if(abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])             M[i] = num_t(int(0));
       M0    *= (M[i] = sgn<num_t>(M[i]) * pow(abs(M[i]), num_t(int(1)) / num_t(int(p.size()))) );
       bb[i].next(d);
       d     *= bM[i];
@@ -59,9 +58,9 @@ int main(int argc, const char* argv[]) {
     std::cout << D << ", " << M0 << ", " << (S += D) << std::endl << std::flush;
     t ++;
     for(int i = 0; i < p.size(); i ++)
-      for(int j = t; j < p.size(); j ++)
+      for(int j = t; j < p0.size(); j ++)
         p[i][j].next(bb[i].res[bb[i].res.size() - 1]);
-    if(p.size() <= t) {
+    if(p0.size() <= t) {
       t ^= t;
       p.resize(0);
       p.resize(recur, p0);

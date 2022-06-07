@@ -16,8 +16,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x)[0];
 
 # How to use (commandline):
-    ./p0 <status>? <recur>? < stream.txt
-    # 0 < status for stable input, status < 0 for unstable intput.
+    ./p0 <status>? < stream.txt
+    # 0 < status for unstable input, adds some measurable condition.
+    # status < 0 for stable intput, prediction itself.
 
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -141,6 +142,7 @@ When the original stream doesn't have Lebesgue measurable condition in discrete,
 hyperbolic triangular function complemented region, and the series they have countable number elements has the description for n elements,
 sqrt(n) sample blocks division in whole.
 The division itself is not only exists but also there might be multiple of them, so if the first point is the same condition, they're virtually measurable.
+So this predictor adds such measurable condition softly.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
