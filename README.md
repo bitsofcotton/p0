@@ -20,6 +20,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # 0 < status for unstable input, adds some measurable condition.
     # status < 0 for stable intput, prediction itself.
 
+# Check status length is valid for accuracy or not
+    ./p0r <status>?
+    # second line shows accuracy is valid or not. if valid, it's near \[1, 0\].
+
 # Proof
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
 So each &theta;, exists F: holomorphic function at some axis that real axis is same as f.
