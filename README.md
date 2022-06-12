@@ -24,7 +24,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0r <status>?
     # last line shows accuracy is valid or not. if valid, it's near \[1, 1, 0\].
 
-# Proof
+# Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
 So each &theta;, exists F: holomorphic function at some axis that real axis is same as f.
 So &theta; = &pi;/4 \pm &epsilon;, if we have a area, with gutzmer's inequation and edit integrate path,
@@ -45,38 +45,38 @@ N.B. DFT differential itself is ideal for trigometric function multiply sums. So
 
 N.B. p0 uses northPole class to hack essential point whether or not if near the defined region.
 
-# Tips
+# Tips on diff/integrate.
 This p0 uses weak differential, so integrate(diff) != id because of complex part is omitted (but Re diff(diff) is no matter if we calculate in R or C).
 
-# Tips
+# Tips on recursive on diff/integrate.
 Frequency space prediction is equivalent to differential/integratial prediction in this. But it is equivalent to plain prediction in this.
 
-# Tips
+# Tips on prediction vector recursive.
 P0 calculates left differential by periodical one. To vanish right hand differential, we take sum of each range on next step vector. Whether this works well or not depends on left hand side distribution. But with some of differential sequence meaning, if we have some differential sequence average as 0 value, we can use them bared prediction.
 
-# Tips
+# Tips start with complex function.
 northPole class is formal laurent series essential point hack, if not both side is essential, multiplication inverse series works well, otherwise, the essential point hack enforces them into north pole near the defined region.
 We need to northPole twice because only once sometimes doesn't converges bothside coefficients to 0 in general. But with the range they converges (non infinite values on any of samplepoints we have on the range), we only need to northPole once.
 Because of this, we can handle any function which we can riemann integrable. Since we take probability, so if lebesgue integrate on original function is in C0, we can handle any function.
 
-# Tips
+# Tips on some higher series.
 There's a plenty of a space to extend this algorithm with &uparrow;, &downarrow; definition (they concludes exp(exp(...)) in C, inverse function is defined in randtools meaning inverse limit, but it's also in H if second operand is in C\\R.), they causes 3-variable function causes all of (x, f(x), status) handled on the series. With them, we can handle n-variable on reasonable function (because (n-1)-status block causes only the (x, f(x), status) triplet with extreme accuracy.).
 But with this 1-variable predictor : (x, f(x)) any correspondence, if the parameter is large enough to input stream (as all of the status is on the taylor size), it's equivalent to the one.
 
 -&gt; Knuth tower symbol seems to make some symmetric result on some of imaginary axises. This causes only the symmetric series on some of taylor series on H (with original series as j axis plotted). So this causes as the almost same prediction result via quarternion discrete fourier transform on syntax meaning, and they causes only the frequency-phase phase shifted results on the transformation. So we can define the differential on them on 2 of axises, but they seems to non information-rich one. And on information-rich meaning, we can apply this p0 to frequency series on complex space, they shall be equivalent to the one.
 
-# Tips
+# Tips on o-minimal.
 With referring wikipedia article: https://ja.wikipedia.org/wiki/%E5%AE%9F%E9%96%89%E4%BD%93 (2022/03/19), every weakly o-minimal structure is real closed field causes dim A = 1, 2, 4, 8 (https://ja.wikipedia.org/wiki/%E5%A4%9A%E5%85%83%E4%BD%93 (2022/03/19)), so if we can define {f(x) \| x in R} as semi-ordered one, octanion is enough dimension to calculate. If f has a zero divisor other than zero, the prediction fails in this.
 
-# Tips
+# Tips on sedenion.
 We calculate next step in sedenion, so with this, we can treat 2 dimension of semi-order as pseudo (x, status)-pair on input.
 
 In advance and plenty of the space, there's a little possibility with this condition as to be fast and small space with operators on sedenion.
 
-# Tips
+# Tips on appropriate handle higher dimension.
 The real part and imginary part simple DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination.
 
-# Tips
+# Tips on circular structure.
 We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/2, with applying some ratio twice or more goes arg(z) depend causes the period but not aligned ones on -1 origin point.
 
 In this meaning, random permutation of sin(x) series is a difficult one, but with some small range permutation series applied by this method causes ok. Otherwise, the range we specify is small enough, so this fails.
@@ -84,24 +84,24 @@ In this meaning, random permutation of sin(x) series is a difficult one, but wit
 # Tips
 We gain sectional measurement expected prediction value by plain predictor, but if so, we should average some of input and skip them because of middle part of the frequency to be interpreted uncontinuous condition on original function lebesgue integrate.
 
-# Tips
+# Tips on lebesgue measurable.
 There exists non lebesgue measuarable set if axiom of choice with the set of greater or equal to aleph_1. This can be described in computer with covering a piece of paper completely with writing, even in algorithm meaning. But if so, the algorithm will be non-deterministic nor only the small finite series we can get. Otherwise, I have no idea the functions described in upto aleph_0 with constitutive method which is on non lebesgue measuarable set. So it would be greately appreciated if you know such set especially described in projection of infinite group combinations.
 
-# Tips
+# Tips on one function recursion.
 The tips below some lines are depends on one function recursion data series, but they're described with appending status block each points and only right multiply counter with x\+ := x \*\_(some group) status \*\_(some another group) counter and some f, ... f(x) ... f(x\+) ... data series.
 To invert this method, we should take invariant on f with some appliable dimension.
 Some of the preceding result on some fields shows non special differential equation with proper boundary condition into one dimension projection can be rewrited into some stable approximation block invariant with small error but distant points accumulate large error. This can be described with taylor matrix recursion causes unstable each elements, but with long enough before range with small next step condition, this is reduced. And any of the x^k is described with some range vector in this. (so arctan twice before to apply???)
 So original function is just continuous or one-function recursion, they have a invariant structure on some short ranges.
 
-# Tips
+# Tips on invariant size.
 A longer invariants includes shorter invariant in trivial.
 The invariant dimension size we need on original global function depends on the categorization of the structure of them.
 
-# Tips
+# Tips on short invariant.
 But with randtools meaning, we always have invariants with some of categorized ones in also small dimension. This causes linear summation combination on prediction of each invariants. Therefore, we sometimes have better results even in smaller invariant dimensions. But if the combination coefficient slowly moves in general, so no stable result be gained in smaller dimensions in general.
 A recursive apply on this causes apply them into large number of clustered invariant categorization. So if there's a invariant combination largely changes point, we get gulf on the result. Otherwise, we get better result and usually, the global invariant unchange, so the condition satisfies this.
 
-# Tips
+# Tips around th. condorcet's jury.
 If input accuracy is rough enough in fixed point float and recursively apply p0 with smaller arguments, they causes \#\{structure\} \> \#\{combination\}, so they gain some slice in numerically if Th. Condorcet's jury is being applied, but the theorem can be used with blending PRNG into original stream. And with extending such input accuracy doesn't causes prediction structure change in this.
 
 # Tips on jamming

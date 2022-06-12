@@ -40,23 +40,30 @@ int main(int argc, const char* argv[]) {
   auto  Mx(M);
   std::vector<idFeeder<num_t> > bb;
   bb.resize(p.size(), idFeeder<num_t>(var0 * 2));
+  t -= var0 * 2;
   while(std::getline(std::cin, s, '\n')) {
     const auto bM(M);
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M0);
     M0 = num_t(int(1));
-    for(int i = 0; i < p.size(); i ++) {
-      Mx[i] = max(Mx[i], abs(d) * num_t(int(2)));
-      M[i]  = p[i][t].next(d)[0];
-      M[i] /= num_t(max(int(1), int(exp(sqrt(log(num_t(t + 1))))) ));
-      if(abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])             M[i] = num_t(int(0));
-      M0    *= (M[i] = sgn<num_t>(M[i]) * pow(abs(M[i]), num_t(int(1)) / num_t(int(p.size()))) );
-      bb[i].next(d);
-      d     *= bM[i];
-    }
+    if(t < 0)
+      for(int i = 0; i < p.size(); i ++)
+        for(int j = 0; j < p[i].size(); j ++)
+          p[i][j].next(d);
+    else
+      for(int i = 0; i < p.size(); i ++) {
+        Mx[i] = max(Mx[i], abs(d) * num_t(int(2)));
+        M[i]  = p[i][t].next(d)[0];
+        M[i] /= num_t(max(int(1), int(exp(sqrt(log(num_t(t + 1))))) ));
+        if(abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])
+          M[i] = num_t(int(0));
+        M0    *= (M[i] = sgn<num_t>(M[i]) * pow(abs(M[i]), num_t(int(1)) / num_t(int(p.size()))) );
+        bb[i].next(d);
+        d     *= bM[i];
+      }
     std::cout << D << ", " << M0 << ", " << (S += D) << std::endl << std::flush;
-    t ++;
+    if(t ++ < 0) continue;
     for(int i = 0; i < p.size(); i ++)
       for(int j = t; j < p0.size(); j ++)
         p[i][j].next(bb[i].res[bb[i].res.size() - 1]);

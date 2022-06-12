@@ -25,13 +25,19 @@ int main(int argc, const char* argv[]) {
   num_t sumn(int(0));
   auto  summ(sumn);
   auto  sumd(sumn);
+  auto  n2n(sumn);
+  auto  n2m(sumn);
+  auto  n2d(sumn);
   for(int i = 0; i < len; i ++) {
     std::cout << n[i] << ", " << m[i] << ", " << d[i] << std::endl;
     sumn += n[i];
     summ += m[i];
     sumd += d[i];
+    n2n  += n[i] * n[i];
+    n2m  += m[i] * m[i];
+    n2d  += d[i] * d[i];
   }
-  std::cout << sumn << ", " << summ << ", " << sumd << std::endl;
+  std::cout << sumn << ", " << summ << ", " << sumd << ", " << sqrt(n2n) << ", " << sqrt(n2m) << ", " << sqrt(n2d) << std::endl;
   return 0;
 }
 
