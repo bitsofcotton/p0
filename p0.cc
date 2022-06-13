@@ -54,7 +54,8 @@ int main(int argc, const char* argv[]) {
     else
       for(int i = 0; i < p.size(); i ++) {
         Mx[i] = max(Mx[i], abs(d) * num_t(int(2)));
-        M[i]  = p[i][t].next(d)[0];
+        auto pn(p[i][t].next(d));
+        M[i]  = (pn[0] + pn[1] + pn[2]) / num_t(int(3));
         M[i] /= num_t(max(int(1), int(exp(sqrt(log(num_t(t + 1))))) ));
         if(abs(M[i] = max(- Mx[i], min(Mx[i], M[i]))) == Mx[i])
           M[i] = num_t(int(0));
