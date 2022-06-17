@@ -17,7 +17,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <status>? < stream.txt
-    # 0 < status for unstable input, adds some measurable condition.
+    # 0 < status for unstable input, prediction collection of each bit.
     # status < 0 for stable intput, prediction itself.
 
 # Check status length is valid for accuracy or not
@@ -147,6 +147,13 @@ hyperbolic triangular function complemented region, and the series they have cou
 sqrt(n) sample blocks division in whole.
 The division itself is not only exists but also there might be multiple of them, so if the first point is the same condition, they're virtually measurable.
 So this predictor adds such measurable condition softly.
+-&gt; disabled latest version.
+
+# Tips on insurance run.
+We input lineary complemented stream on behalf of insurace run the result. Because the result of the stack is nonlinear, we can earn some better result on them.
+
+# Tips on statistical illegal result.
+We normalize input delta with logscale/expscale chain. With this, better stable result gained.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
