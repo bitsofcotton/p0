@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expectation value.
+Generic predictor on expectation value. Recursive of this changes the all of context.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -16,9 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x)[0];
 
 # How to use (commandline):
-    ./p0 <status>? < stream.txt
-    # 0 < status for unstable input, normalize input statics.
-    # status < 0 for stable intput, prediction itself.
+    ./p0 <(0 < status)>? < stream.txt
 
 # Check status length is valid for accuracy or not
     ./p0r <status>?
@@ -154,6 +152,10 @@ We input lineary complemented stream on behalf of insurace run the result. Becau
 
 # Tips on statistical illegal result.
 We normalize input delta with logscale/expscale chain. With this, better stable result gained.
+
+# Tips on recursive.
+We do raw prediction twice with and without the condition normalization.
+So the context itself will change on recursive apply result, twice is too much but we suppose the benefit first to shaggy, second to oval.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
