@@ -17,7 +17,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <status>? < stream.txt
-    # 0 < status for unstable input, prediction collection of each bit.
+    # 0 < status for unstable input, normalize input statics.
     # status < 0 for stable intput, prediction itself.
 
 # Check status length is valid for accuracy or not

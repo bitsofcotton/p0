@@ -21,10 +21,11 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(0 < status);
+  assert(status);
   // XXX:
-  // P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p(P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(status) ) );
-  P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p((P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(status) ) ));
+  // P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p(P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(abs(status)) ) );
+  P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p((P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(abs(status)) ) ));
+  P0midLin<num_t, P0alignStart<num_t> > q(P0alignStart<num_t>(abs(status)));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
@@ -35,7 +36,7 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     const auto D(d * M);
     Mx = max(Mx, abs(d) * num_t(int(2)));
-    std::cout << D << ", " << (M = max(- Mx, min(Mx, p.next(d) )) ) << ", " << (S += D) << std::endl << std::flush;
+    std::cout << D << ", " << (M = max(- Mx, min(Mx, status < 0 ? p.next(d) : q.next(d) )) ) << ", " << (S += D) << std::endl << std::flush;
   }
   return 0;
 }
