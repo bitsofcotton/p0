@@ -22,7 +22,7 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
   assert(0 < status);
-  PthenQ<num_t, P0normalizeStat<num_t, P0alignStart<num_t> >,
+  PorQ<num_t, P0normalizeStat<num_t, P0alignStart<num_t> >,
     P0alignStart<num_t> > p(
       // XXX : ()
       (P0normalizeStat<num_t, P0alignStart<num_t> >(
