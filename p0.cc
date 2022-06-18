@@ -21,22 +21,21 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(status);
-  // XXX:
-  // P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p(P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(abs(status)) ) );
-  P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > > p((P0midLin<num_t, P0alignStart<num_t> >(P0alignStart<num_t>(abs(status)) ) ));
-  P0midLin<num_t, P0alignStart<num_t> > q(P0alignStart<num_t>(abs(status)));
+  assert(0 < status);
+  PthenQ<num_t, P0normalizeStat<num_t, P0midLin<num_t, P0alignStart<num_t> > >,
+    P0midLin<num_t, P0alignStart<num_t> > > p(
+      // XXX : ()
+      (P0midLin<num_t, P0alignStart<num_t> >(
+        P0alignStart<num_t>(status) ) ),
+      P0alignStart<num_t>(status));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
-  auto  Mx(M);
   while(std::getline(std::cin, s, '\n')) {
-    const auto bM(M);
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    Mx = max(Mx, abs(d) * num_t(int(2)));
-    std::cout << D << ", " << (M = max(- Mx, min(Mx, status < 0 ? p.next(d) : q.next(d) )) ) << ", " << (S += D) << std::endl << std::flush;
+    std::cout << D << ", " << (M = p.next(d)) << ", " << (S += D) << std::endl << std::flush;
   }
   return 0;
 }

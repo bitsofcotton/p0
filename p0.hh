@@ -404,6 +404,21 @@ public:
   vector<P0maxRank<T> > p;
 };
 
+template <typename T, typename P, typename Q> class PthenQ {
+public:
+  inline PthenQ() { ; }
+  inline PthenQ(P&& p, Q&& q) { this->p = p; this->q = q; M = T(int(0)); }
+  inline ~PthenQ() { ; }
+  inline T next(const T& in) {
+    auto res(q.next(in * M));
+    M = p.next(in);
+    return res;
+  }
+  P p;
+  Q q;
+  T M;
+};
+
 #define _P0_
 #endif
 
