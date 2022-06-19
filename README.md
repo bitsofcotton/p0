@@ -156,7 +156,7 @@ We normalize input delta with logscale/expscale chain. With this, better stable 
 # Tips on recursive.
 We do raw prediction twice with and without the condition normalization.
 So the context itself will change on recursive apply result, twice is too much but we suppose the benefit first to shaggy, second to oval.
--&gt; disabled in the latest version, we always take to normalize.
+-&gt; disabled in the latest version, we always take to normalize. -&gt; disabled, this isn't needed with clang -O0 condition.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
