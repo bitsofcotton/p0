@@ -16,7 +16,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x)[0];
 
 # How to use (commandline):
-    ./p0 <(0 < status)>? < stream.txt
+    ./p0 <status>? < stream.txt
 
 # Check status length is valid for accuracy or not
     ./p0r <status>?
@@ -145,7 +145,7 @@ hyperbolic triangular function complemented region, and the series they have cou
 sqrt(n) sample blocks division in whole.
 The division itself is not only exists but also there might be multiple of them, so if the first point is the same condition, they're virtually measurable.
 So this predictor adds such measurable condition softly.
--&gt; disabled latest version.
+-&gt; disabled in the latest version.
 
 # Tips on insurance run.
 We input lineary complemented stream on behalf of insurace run the result. Because the result of the stack is nonlinear, we can earn some better result on them.
@@ -156,6 +156,7 @@ We normalize input delta with logscale/expscale chain. With this, better stable 
 # Tips on recursive.
 We do raw prediction twice with and without the condition normalization.
 So the context itself will change on recursive apply result, twice is too much but we suppose the benefit first to shaggy, second to oval.
+-&gt; disabled in the latest version, we always take to normalize.
 
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
