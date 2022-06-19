@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expectation value. Recursive of this changes the all of context.
+Generic predictor on expectation value weakly depends on data itself.
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -10,10 +10,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0maxRank<double> p(status, variable);
+    P0maxRank<double> p(status);
     // pnext<T>(range, step) for riemann measurable prediction vector.
     ...
-      xnext = p.next(x)[0];
+      xnext = p.next(x);
 
 # How to use (commandline):
     ./p0 <status>? < stream.txt
@@ -79,7 +79,7 @@ We take (summation ratio) - 1 multiple times. This causes handle the period as p
 
 In this meaning, random permutation of sin(x) series is a difficult one, but with some small range permutation series applied by this method causes ok. Otherwise, the range we specify is small enough, so this fails.
 
-# Tips
+# Tips on lebesgue measurable pseudo condition.
 We gain sectional measurement expected prediction value by plain predictor, but if so, we should average some of input and skip them because of middle part of the frequency to be interpreted uncontinuous condition on original function lebesgue integrate.
 
 # Tips on lebesgue measurable.
@@ -131,7 +131,7 @@ Also, jammer can jam out any two of the predictors into 0 expectation value cond
 N.B. in the long range, if the input is deterministic stream, the predictor triplet cannot be jammed because status can be treated as real one dimension. But with modern PRNGs, the status has sporadic sub groups they appears in the f(x) stream rarely, so the gulf will appear on the prediction triplet. Also, if the input stream has a noised ones, since duumy data will be inserted, so prediction on long range will be hard ones because the hypothesis invariant can be noised. In the worst case, noise itself is something biased causes categorized invariant to be biased ones, the prediction itself disturbed.
 
 # Tips on pseudo Brown walk
-If we make pseudo Brown walk by frequency space \[1 + random.uniform(-1, 1), ...\] series, the prediction might be harder than original stream from this. (This is the analogy of shuffle operation via DFT).
+If we make pseudo Brown walk by frequency space \[(random.uniform(- 1, 1) + 1.j * random.uniform(-1, 1)) / abs(...), ...\] series, the prediction might be harder than original stream from this. (This is the analogy of shuffle operation via DFT).
 So from numerical test, we might need the initial (might be supreme of) status dimension in arithmetic operation meaning to status length. So the below extends them arbitrary length from original PRNG.
 
 # Tips on dimension 2
