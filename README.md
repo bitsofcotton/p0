@@ -72,7 +72,7 @@ We calculate next step in sedenion, so with this, we can treat 2 dimension of se
 In advance and plenty of the space, there's a little possibility with this condition as to be fast and small space with operators on sedenion.
 
 # Tips on appropriate handle higher dimension.
-The real part and imginary part simple DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination.
+The real part and imginary part simple DFT is equivalent to plain prediction in P0. So any of summation based and probability based, sectional measurement based also in them. So to avoid this, P0DFT applies the lower prediction on abs and arg, this is independent from finite linear combination. -&gt; this is reverted because of p2/p.cc use.
 
 # Tips on circular structure.
 We take (summation ratio) - 1 multiple times. This causes handle the period as period on calculation because i-axis plotted sum f'/f goes near to log(f) and once goes log(f) + i &pi;/2, with applying some ratio twice or more goes arg(z) depend causes the period but not aligned ones on -1 origin point.
