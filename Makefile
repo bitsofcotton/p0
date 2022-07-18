@@ -25,8 +25,4 @@ p0r:
 	${CXX} ${CXXFLAGS} -static -o p0r p0r.cc
 p0r32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0r32 p0r.cc
-rand:
-	${CXX} ${CXXFLAGS} -static -o rand rand.cc
-rand32:
-	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o rand32 rand.cc
 
