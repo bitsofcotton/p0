@@ -23,6 +23,7 @@ int main(int argc, const char* argv[]) {
   std::cerr << argv[0] << " " << status << std::endl;
   assert(0 <= status);
   P0maxRank<num_t> p(status ? status : 1);
+  idFeeder<num_t> f(abs(status));
   num_t d(int(0));
   auto  M(d);
   auto  S(d);
@@ -30,7 +31,16 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     const auto D(d * M);
-    std::cout << D << ", " << (M = status ? p.next(d) : num_t(int(1))) << ", " << (S += D) << std::endl << std::flush;
+    if(! status) M = num_t(int(1));
+    else if(status < 0) {
+      const auto& ff(f.next(d));
+      if(f.full) {
+        M = num_t(int(0));
+        for(int i = 0; i < ff.size(); i ++) M += ff[i];
+        M = - M;
+      }
+    } else M = p.next(d);
+    std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
   }
   return 0;
 }
