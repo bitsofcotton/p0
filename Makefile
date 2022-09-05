@@ -19,6 +19,8 @@ clean:
 all:	p0 p0-32 p0r p0r32
 p0:
 	${CXX} ${CXXFLAGS} -static -O0 -o p0 p0.cc
+p0-16:
+	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=16 -O0 -o p0-16 p0.cc
 p0-32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -O0 -o p0-32 p0.cc
 p0r:
