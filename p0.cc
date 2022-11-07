@@ -21,8 +21,8 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
-  assert(0 <= status);
-  P0maxRank<num_t> p(status ? status : 1);
+  assert(status);
+  P0maxRank<num_t> p(status ? abs(status) : 1);
   idFeeder<num_t> f(abs(status));
   num_t d(int(0));
   auto  M(d);
