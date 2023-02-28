@@ -26,7 +26,6 @@ int main(int argc, const char* argv[]) {
   idFeeder<num_t> f(abs(status));
   num_t d(int(0));
   auto  M(d);
-  auto  S(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
@@ -40,7 +39,7 @@ int main(int argc, const char* argv[]) {
         M = - M;
       }
     } else M = p.next(d);
-    std::cout << D << ", " << M << ", " << (S += D) << std::endl << std::flush;
+    std::cout << D << ", " << M << std::endl << std::flush;
   }
   return 0;
 }

@@ -158,8 +158,14 @@ We do raw prediction twice with and without the condition normalization.
 So the context itself will change on recursive apply result, twice is too much but we suppose the benefit first to shaggy, second to oval.
 -&gt; disabled in the latest version, we always take to normalize. -&gt; disabled, this isn't needed with clang -O0 condition.
 
+# Tips on improvement on continuity
+We can logscale input then expscale output. This causes improve continuity but this isn't implemented.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
 * https://ja.osdn.net/users/bitsofcotton/
+
+# Real close
+2023/02/28
 

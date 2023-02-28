@@ -206,7 +206,7 @@ public:
     auto work(p.next(ff));
     if(! isfinite(work) || work == zero) return in[in.size() - 1];
     work = tan(max(- M, min(M, one / tan(max(- M, min(M, work))))));
-    if(isfinite(work)) return move(work);
+    if(isfinite(work)) return work;
     return in[in.size() - 1];
   }
   P p;
@@ -239,6 +239,7 @@ public:
     static const T zero(int(0));
     static const T one(int(1));
     auto ff(in);
+    if(ff[0] == zero) return in[in.size() - 1];
     for(int i = 1; i < ff.size(); i ++)
       if((ff[i] += ff[i - 1]) == zero) return in[in.size() - 1];
     SimpleVector<T> gg(ff.size() - 1);
