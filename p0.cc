@@ -29,7 +29,7 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-    const auto D(d * M);
+    std::cout << d * M << ", ";
     if(! status) M = num_t(int(1));
     else if(status < 0) {
       const auto& ff(f.next(d));
@@ -39,7 +39,7 @@ int main(int argc, const char* argv[]) {
         M = - M;
       }
     } else M = p.next(d);
-    std::cout << D << ", " << M << std::endl << std::flush;
+    std::cout << M << std::endl << std::flush;
   }
   return 0;
 }
