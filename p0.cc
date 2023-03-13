@@ -12,7 +12,6 @@
 
 #include "lieonn.hh"
 typedef myfloat num_t;
-#include "p0.hh"
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
