@@ -21,8 +21,8 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) status = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << status << std::endl;
   assert(status);
-  P0maxRank<num_t> p(status ? abs(status) : 1);
   idFeeder<num_t> f(abs(status));
+  PBond<num_t, P0maxRank<num_t>, idFeeder<num_t>, deltaFeeder<num_t, invFeeder<num_t, sumFeeder<num_t, idFeeder<num_t> > > > > p(P0maxRank<num_t>(), abs(status));
   num_t d(int(0));
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
