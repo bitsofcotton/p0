@@ -17,7 +17,6 @@ int main(int argc, const char* argv[]) {
   const auto len(std::atoi(argv[1]));
   assert(0 < len);
   const auto step(argc <= 2 ? max(int(1), int(exp(sqrt(log(num_t(abs(len)))))) ) : std::atoi(argv[2]));
-  P0<num_t, idFeeder<num_t> > p(len);
   const auto d(diff<num_t>(len).row(len - 1));
   const auto n(pnext<num_t>(len, step));
   const auto m(pnext<num_t>(len, step + 1));
