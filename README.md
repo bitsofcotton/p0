@@ -161,6 +161,9 @@ So the context itself will change on recursive apply result, twice is too much b
 # Tips on improvement on continuity
 We can logscale input then expscale output. This causes improve continuity but this isn't implemented.
 
+# Tips on non linear
+We can log scale input (both x,y-axis). This causes some series of automorphic form to get better result on this.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
@@ -176,4 +179,5 @@ We can logscale input then expscale output. This causes improve continuity but t
 2023/03/31 merge prand.
 2023/04/02 merge catg fix.
 2023/04/03 merge.
+2023/04/04 update readme.
 

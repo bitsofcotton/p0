@@ -27,4 +27,6 @@ p0r:
 	${CXX} ${CXXFLAGS} -static -o p0r p0r.cc
 p0r32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0r32 p0r.cc
+p0r64:
+	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -o p0r64 p0r.cc
 
