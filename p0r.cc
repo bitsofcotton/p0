@@ -13,11 +13,11 @@
 typedef myfloat num_t;
 
 int main(int argc, const char* argv[]) {
-  assert(1 < argc);
+  assert(2 < argc);
   const auto len(std::atoi(argv[1]));
-  assert(0 < len);
-  const auto step(argc <= 2 ? max(int(1), int(exp(sqrt(log(num_t(abs(len)))))) ) : std::atoi(argv[2]));
+  const auto step(std::atoi(argv[2]));
   const auto r(argc <= 3 ? int(2) : std::atoi(argv[3]));
+  assert(0 < len && len <= 11);
   const auto  d(diff<num_t>(len).row(len - 1));
   const auto& n(pnextcacher<num_t>(len, step, r));
   num_t sumn(int(0));
