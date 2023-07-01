@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
   // XXX: reasonable invariant dimension upper bound.
-  if(0 < status) status = min(7, status);
+  if(0 < status) status = max(3, min(7, status));
   std::cerr << argv[0] << " " << status << std::endl;
   idFeeder<num_t> f(max(1, abs(status)));
   PBond<num_t, P0maxRank<num_t> > p(P0maxRank<num_t>(), max(1, abs(status)));
