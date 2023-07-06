@@ -19,7 +19,10 @@ int main(int argc, const char* argv[]) {
   int status(3);
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  // XXX: reasonable invariant dimension upper bound.
+  // N.B. p0 is valid when input is continuous.
+  //      the condition dimension up to 3 is from v2v tanglement
+  //      with separated input, so original cont. input isn't affect.
+  //      the condition dimension up to 7 is also from v2v but non commutative.
   if(0 < status) status = max(3, min(7, status));
   std::cerr << argv[0] << " " << status << std::endl;
   idFeeder<num_t> f(max(1, abs(status)));

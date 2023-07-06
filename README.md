@@ -183,4 +183,5 @@ We can log scale input (both x,y-axis). This causes some series of automorphic f
 2023/04/21 only single side northPole method, we don't need them on stability in such case.
 2023/06/24 fix to avoid observation matters.
 2023/07/01 argv range minimum value change.
+2023/07/07 update .cc comment.
 
