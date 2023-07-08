@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]) {
   const auto len(std::atoi(argv[1]));
   const auto step(std::atoi(argv[2]));
   const auto r(argc <= 3 ? int(2) : std::atoi(argv[3]));
-  assert(0 < len && len <= 11);
+  assert(3 <= len && len <= 7);
   const auto  d(diff<num_t>(len).row(len - 1));
   const auto& n(pnextcacher<num_t>(len, step, r));
   num_t sumn(int(0));

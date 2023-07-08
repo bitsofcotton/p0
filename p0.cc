@@ -15,7 +15,6 @@ typedef myfloat num_t;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
-  std::string s;
   int status(3);
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
@@ -27,6 +26,7 @@ int main(int argc, const char* argv[]) {
   std::cerr << argv[0] << " " << status << std::endl;
   idFeeder<num_t> f(max(1, abs(status)));
   PBond<num_t, P0maxRank<num_t> > p(P0maxRank<num_t>(), max(1, abs(status)));
+  std::string s;
   num_t d(int(0));
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
