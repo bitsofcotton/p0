@@ -26,15 +26,15 @@ int main(int argc, const char* argv[]) {
   int status(2);
   if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
-  assert(0 < status && status <= 3);
+  assert(2 <= status);
   // N.B. p0 is valid when input is continuous.
   //      the condition dimension up to 3 is from v2v tanglement
   //      with separated input, so original cont. input isn't affect.
   //      the condition dimension up to 7 is also from v2v but non commutative.
   std::cerr << argv[0] << " " << status << std::endl;
-  idFeeder<num_t> in(status);
-  idFeeder<num_t> out(status);
-  PBond<num_t, P0maxRank<num_t> > p(P0maxRank<num_t>(status), exp(num_t(status * status)) );
+  idFeeder<num_t> in(status / 2);
+  idFeeder<num_t> out(status / 2);
+  PBond<num_t, P0maxRank<num_t> > p(P0maxRank<num_t>(status), int(exp(num_t(status * status))) );
   std::string s;
   num_t d(int(0));
   auto  M(d);
