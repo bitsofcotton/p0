@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor on expectation value weakly depends on data itself.
+Generic predictor for Riemann measurable input streams and their variants (on aleph_1).
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -164,6 +164,13 @@ We can logscale input then expscale output. This causes improve continuity but t
 # Tips on non linear
 We can log scale input (both x,y-axis). This causes some series of automorphic form to get better result on this.
 
+# Tips on adding continuity.
+We can add some of the continuity by recursive logscale input expscale output.
+
+Also, we can add some of them by sliding average window to make some of the riemann measurable condition.
+
+p0l.cc doing some of this however, this needs huge memory usage and this isn't improve enough.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
@@ -184,4 +191,5 @@ We can log scale input (both x,y-axis). This causes some series of automorphic f
 2023/06/24 fix to avoid observation matters.
 2023/07/01 argv range minimum value change.
 2023/07/07 update .cc comment.
+2023/10/30 add p0l to add some continuity. update readme.
 

@@ -65,7 +65,9 @@ using std::getline;
   using namespace std;
   typedef uint64_t myuint;
   typedef int64_t  myint;
-  typedef long double myfloat;
+  // XXX:
+  // typedef long double myfloat;
+  typedef float myfloat;
 #else
 
 // Double int to new int class.
@@ -1995,9 +1997,13 @@ public:
   }
   myfloat      epsilon() const {
 #if defined(_FLOAT_BITS_)
-    static const auto eps(myfloat(int(1)) >> myint(_FLOAT_BITS_ - 1));
+    // N.B. conservative.
+    static const auto eps(sqrt(myfloat(int(1)) >> myint(_FLOAT_BITS_ - 1)));
+    // static const auto eps(myfloat(int(1)) >> myint(_FLOAT_BITS_ - 1));
 #else
-    static const auto eps(std::numeric_limits<myfloat>::epsilon());
+    // N.B. conservative.
+    static const auto eps(sqrt(std::numeric_limits<myfloat>::epsilon()));
+    // static const auto eps(std::numeric_limits<myfloat>::epsilon());
 #endif
     return eps;
   }
@@ -3038,6 +3044,8 @@ template <typename T> vector<pair<vector<SimpleVector<T> >, vector<int> > > crus
       (score < T(int(0)) ? lidx : ridx).emplace_back(move(result[t].second[i]));
     }
     if(left.size() && right.size()) {
+      left.reserve(left.size());
+      right.reserve(right.size());
       if(left.size() < right.size()) {
         swap(left, right);
         swap(lidx, ridx);
@@ -3140,7 +3148,7 @@ template <typename T> inline T P012L<T>::next(const SimpleVector<T>& d) {
     cache.emplace_back(d.subVector(i, varlen));
     cache[cache.size() - 1][varlen - 1] = d[i + varlen + step - 2];
   }
-  const auto cat(crush<T>(cache));
+  const auto cat(crush<T>(cache, cache[0].size(), cache.size()));
   SimpleVector<T> work(varlen);
   for(int i = 1; i < work.size(); i ++)
     work[i - 1] = d[i - work.size() + d.size()];
@@ -3150,24 +3158,18 @@ template <typename T> inline T P012L<T>::next(const SimpleVector<T>& d) {
         auto sscore(zero);
   for(int i = 0; i < cat.size(); i ++) {
     if(! cat[i].first.size()) continue;
-    SimpleMatrix<T> pw(cat[i].first.size(), cat[i].first[0].size() + 1);
-    pw.row(0) = makeProgramInvariant<T>(cat[i].first[0]).first;
-    auto avg(pw.row(0));
-    for(int j = 1; j < pw.rows(); j ++)
-      avg += (pw.row(j) = makeProgramInvariant<T>(cat[i].first[j]).first);
-    avg /= T(int(pw.rows()));
-    const auto q(pw.rows() <= pw.cols() || ! pw.rows() ? SimpleVector<T>() : linearInvariant<T>(pw));
-    work[work.size() - 1] = (q.size() ?
-      (q[varlen - 1] == zero ? zero :
-       revertProgramInvariant<T>(make_pair(
-        - (q.dot(vdp.first) - q[varlen - 1] * vdp.first[varlen - 1])
-        / q[varlen - 1] / T(int(q.size())), vdp.second) ) ) :
+    if(! (cat[i].first.size() <= cat[i].first[0].size() + 1)) cerr << "!" << flush;
+    SimpleVector<T> avg(cat[i].first[0].size() + 1);
+    for(int j = 0; j < cat[i].first.size(); j ++)
+      avg += makeProgramInvariant<T>(cat[i].first[j]).first;
+    avg *= sqrt(vdp.first.dot(vdp.first) / avg.dot(avg));
+    work[work.size() - 1] =
       revertProgramInvariant<T>(make_pair(avg[varlen - 1] /
-          T(int(avg.size())), vdp.second)) );
+          T(int(avg.size())), vdp.second));
     T score(0);
     for(int j = 0; j < work.size(); j ++)
-      score += work[j] * revertProgramInvariant<T>(make_pair(avg[j] /= T(int(avg.size())), vdp.second));
-    res += q.size() ? (M - abs(score)) * work[work.size() - 1] : score * work[work.size() - 1];
+      score += work[j] * revertProgramInvariant<T>(make_pair(avg[j], vdp.second));
+    res += score * work[work.size() - 1];
     sscore += abs(score);
   }
   return sscore == zero ? sscore : res / sscore;
@@ -3496,102 +3498,6 @@ public:
   P p;
   T M;
 };
-
-template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > predv(const vector<SimpleVector<T> >& in, int msz = - 1) {
-  int p0(0);
-  if(msz < 0) msz = in.size();
-  for( ; p0 < min(int(in.size() / 2), msz); p0 ++) {
-    if(max(int(in.size()) - 2 * (4 + (p0 + 1)), int(sqrt(T(int(in.size()) - (p0 + 1))))) < 1) break;
-    const auto& pn(pnextcacher<T>(min(int(7) * (p0 + 1), int(in.size())), p0 + 1, 4));
-    if(T(min(int(7) * (p0 + 1), int(in.size()))) < pn.dot(pn)) break;
-  }
-  vector<SimpleVector<T> > invariant;
-  invariant.resize(in.size());
-#if defined(_OPENMP)
-#pragma omp parallel for schedule(static, 1)
-#endif
-  for(int i = 0; i < in.size(); i ++) {
-    invariant[i] = makeProgramInvariant<T>(in[i]).first;
-    invariant[i][invariant[i].size() - 1] = sqrt(in[i].dot(in[i]));
-  }
-  vector<SimpleVector<T> > p;
-  if(in.size() < 3) return make_pair(p, p);
-  p.resize(p0);
-  auto q(p);
-  for(int i = 0; i < p0; i ++) {
-    p[i].resize(invariant[0].size());
-    q[i].resize(invariant[0].size());
-    p[i].O();
-    q[i].O();
-  }
-  const auto one65536(T(int(1)) / T(int(65536)));
-#if defined(_OPENMP)
-#pragma omp parallel for schedule(static, 1)
-#endif
-  for(int j = 0; j < invariant[0].size(); j ++) {
-    cerr << j << " / " << invariant[0].size() << endl;
-    idFeeder<T> pb0(min(int(7) * (j + 1), int(invariant.size())));
-    idFeeder<T> pf0(min(int(7) * (j + 1), int(invariant.size())));
-    idFeeder<T> pb1(invariant.size());
-    idFeeder<T> pf1(invariant.size());
-    for(int k = 0; k < invariant.size(); k ++) {
-      pb0.next(invariant[invariant.size() - k - 1][j]);
-      pb1.next(invariant[invariant.size() - k - 1][j]);
-    }
-    for(int k = 0; k < invariant.size(); k ++) {
-      pf0.next(invariant[k][j]);
-      pf1.next(invariant[k][j]);
-    }
-    // N.B. normalize with 0 < v 's maximum orthogonality:
-    T Mb0(log(pb0.res[0] + one65536));
-    T Mb1(log(pb1.res[0] + one65536));
-    T Mf0(log(pf0.res[0] + one65536));
-    T Mf1(log(pf1.res[0] + one65536));
-    for(int k = 1; k < pb0.res.size(); k ++)
-      Mb0 += log(pb0.res[k] + one65536);
-    for(int k = 1; k < pb1.res.size(); k ++)
-      Mb1 += log(pb1.res[k] + one65536);
-    for(int k = 1; k < pf0.res.size(); k ++)
-      Mf0 += log(pf0.res[k] + one65536);
-    for(int k = 1; k < pf1.res.size(); k ++)
-      Mf1 += log(pf1.res[k] + one65536);
-    pb0.res /= (Mb0 = - exp(Mb0 / T(int(pb0.res.size())) ) );
-    pb1.res /= (Mb1 = - exp(Mb1 / T(int(pb1.res.size())) ) );
-    pf0.res /= (Mf0 = - exp(Mf0 / T(int(pf0.res.size())) ) );
-    pf1.res /= (Mf1 = - exp(Mf1 / T(int(pf1.res.size())) ) );
-    for(int i = 0; i < p0; i ++) {
-      northPole<T, P0maxRank0<T> > q0(P0maxRank0<T>(i + 1));
-      P1I<T> q1(min(int(4), int(sqrt(T(int(invariant.size()) - (i + 1))))), i + 1);
-      try {
-        q[i][j] = (q0.next(pb0.res) * Mb0 + q1.next(pb1.res) * Mb1) / T(int(2));
-      } catch(const char* e) {
-        q[i][j] = T(int(0));
-      }
-      try {
-        p[i][j] = (q0.next(pf0.res) * Mf0 + q1.next(pf1.res) * Mf1) / T(int(2));
-      } catch(const char* e) {
-        p[i][j] = T(int(0));
-      }
-    }
-  }
-  for(int i = 0; i < p.size(); i ++) {
-    const auto norm(p[i][p[i].size() - 1]);
-    p[i][p[i].size() - 1] = T(int(0));
-    p[i] = revertProgramInvariant<T>(p[i]);
-    p[i][p[i].size() - 1] = T(int(0));
-    const auto normp(sqrt(p[i].dot(p[i])));
-    if(normp != T(int(0))) p[i] *= norm / normp;
-  }
-  for(int i = 0; i < q.size(); i ++) {
-    const auto norm(q[i][q[i].size() - 1]);
-    q[i][q[i].size() - 1] = T(int(0));
-    q[i] = revertProgramInvariant<T>(q[i]);
-    q[i][q[i].size() - 1] = T(int(0));
-    const auto normq(sqrt(q[i].dot(q[i])));
-    if(normq != T(int(0))) q[i] *= norm / normq;
-  }
-  return make_pair(move(p), move(q));
-}
 
 // N.B. invariant gathers some of the group on the input pattern.
 template <typename T> SimpleMatrix<T> concat(const SimpleMatrix<T>& m0, const SimpleMatrix<T>& m1) {
@@ -4099,6 +4005,240 @@ template <typename T> static inline SimpleVector<T> autoLevel(const SimpleVector
   b[0].resize(1, data.size());
   b[0].row(0) = data;
   return autoLevel<T>(b, count)[0].row(0);
+}
+
+template <typename T> static inline vector<SimpleMatrix<T> > autoGamma(const vector<SimpleMatrix<T> >& data, const T& ratio = T(int(1)) / T(int(2)) ) {
+  T r(int(0));
+  for(int k = 0; k < data.size(); k ++)
+    for(int i = 0; i < data[k].rows(); i ++)
+      for(int j = 0; j < data[k].cols(); j ++) {
+        assert(T(int(0)) <= data[k](i, j) && data[k](i, j) <= T(int(1)) );
+        r += log(data[k](i, j) + T(int(1)) / T(int(65536)) );
+      }
+  r /= T(int(data.size() * data[0].rows() * data[0].cols()));
+  r  = log(ratio) / r;
+  auto result(data);
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(static, 1)
+#endif
+  for(int k = 0; k < data.size(); k ++)
+    for(int i = 0; i < data[k].rows(); i ++)
+      for(int j = 0; j < data[k].cols(); j ++)
+        result[k](i, j) = max(T(int(0)), min(T(int(1)), pow(data[k](i, j) + T(int(1)) / T(int(65536)), r) ));
+  return result;
+}
+
+template <typename T> static inline SimpleVector<T> autoGamma(const SimpleVector<T>& data, const T& r = T(int(1)) / T(int(2)) ) {
+  vector<SimpleMatrix<T> > b;
+  b.resize(1);
+  b[0].resize(1, data.size());
+  b[0].row(0) = data;
+  return autoGamma<T>(b, r)[0].row(0);
+}
+
+template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > predv0(const vector<SimpleVector<T> >& in, int skip = 1) {
+/*
+  int p0(0);
+  for( ; p0 < int(in.size()); p0 ++)
+    if(in.size() - 4 - p0 - 1 + 2 < 4 + 2) break;
+*/
+  assert(0 < skip);
+  // const auto p0(int(in.size() - 4 - 1 + 2 - 4 - 2) / skip);
+  const int p0(ceil(sqrt(T(int(in.size() - 4 - 1 + 2 - 4 - 2) / skip) )) );
+  vector<SimpleVector<T> > invariant;
+  invariant.resize(in.size());
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(static, 1)
+#endif
+  for(int i = 0; i < in.size(); i ++) {
+    invariant[i] = makeProgramInvariant<T>(in[i]).first;
+  }
+  T norm(int(0));
+  for(int i = 0; i < in.size(); i ++) norm += in[i].dot(in[i]);
+  norm = sqrt(norm / T(int(in.size())));
+  vector<SimpleVector<T> > p;
+  if(p0 < 1) return make_pair(p, p);
+  p.resize(p0);
+  auto q(p);
+  for(int i = 0; i < p0; i ++) {
+    p[i].resize(invariant[0].size());
+    q[i].resize(invariant[0].size());
+    p[i].O();
+    q[i].O();
+  }
+  const auto one65536(T(int(1)) / T(int(65536)));
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(static, 1)
+#endif
+  for(int j = 0; j < invariant[0].size(); j ++) {
+    cerr << j << " / " << invariant[0].size() << endl;
+    idFeeder<T> pb(invariant.size());
+    idFeeder<T> pf(invariant.size());
+    for(int k = 0; k < invariant.size(); k ++) {
+      pb.next(invariant[invariant.size() - k - 1][j]);
+      pf.next(invariant[k][j]);
+    }
+    for(int i = 0; i < p0; i ++) {
+      q[i][j] = P1I<T>(4, (i + 1) * skip).next(pb.res);
+      p[i][j] = P1I<T>(4, (i + 1) * skip).next(pf.res);
+    }
+  }
+  for(int i = 0; i < p.size(); i ++) {
+    p[i][p[i].size() - 1] = T(int(0));
+    p[i] = revertProgramInvariant<T>(p[i]);
+    p[i][p[i].size() - 1] = T(int(0));
+    const auto normp(sqrt(p[i].dot(p[i])));
+    if(normp != T(int(0))) p[i] *= norm / normp;
+  }
+  for(int i = 0; i < q.size(); i ++) {
+    q[i][q[i].size() - 1] = T(int(0));
+    q[i] = revertProgramInvariant<T>(q[i]);
+    q[i][q[i].size() - 1] = T(int(0));
+    const auto normq(sqrt(q[i].dot(q[i])));
+    if(normq != T(int(0))) q[i] *= norm / normq;
+  }
+  return make_pair(move(p), move(q));
+}
+
+template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > predv(const vector<SimpleVector<T> >& in0, int skip = 1) {
+  assert(0 < skip);
+  if(skip == 1) return predv0<T>(in0);
+  vector<SimpleVector<T> > in;
+  in.reserve(in0.size() * skip - skip + 1);
+  for(int i = 0; i < in0.size(); i ++)  {
+    if(i)
+      for(int j = 0; j < skip - 1; j ++)
+        in.emplace_back((in0[i - 1] * T(int(skip - 1 - j)) +
+                         in0[i]     * T(int(j + 1)) ) / T(skip) );
+    in.emplace_back(in0[i]);
+  }
+  return predv0<T>(in, skip);
+/*
+  auto res(predv0<T>(in, skip));
+  T M(int(0));
+  for(int i = 0; i < in.size(); i ++) {
+    int ok_cnt(0);
+    for(int j = 0; j < in.size(); j += skip) {
+      const auto ga(revertProgramInvariant<T>(make_pair(makeProgramInvariant<T>(in[j]).second, T(int(1)) )) );
+      M = max(M, abs(ga));
+      if(abs(ga) <= M * sqrt(SimpleMatrix<T>().epsilon()) ) ok_cnt ++;
+      else cerr << "Geometric average " << ga << " is still large." << endl;
+      for(int k = 0; k < in[j].size(); k ++) in[j][k] -= ga;
+      if(j)
+        for(int k = 0; k < skip - 1; k ++)
+          in[j - skip + k + 1] =
+            (in[j - skip] * T(int(skip - 1 - k)) +
+             in[j]        * T(int(k + 1)) ) / T(skip);
+    }
+    if(in0.size() <= ok_cnt) break;
+    cerr << "loop # " << i << endl;
+    auto q(predv0<T>(in, skip));
+    for(int j = 0; j < q.first.size();  j ++) res.first[j]  += q.first[j];
+    for(int j = 0; j < q.second.size(); j ++) res.second[j] += q.second[j];
+  }
+  return res;
+*/
+}
+
+template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > predVec(const vector<vector<SimpleVector<T> > >& in0) {
+  assert(in0.size() && in0[0].size() && in0[0][0].size());
+  cerr << "ratio: " << T(int(in0[0].size() * in0[0][0].size())) / T(int(in0.size())) << endl;
+  vector<SimpleVector<T> > in;
+  in.resize(in0.size());
+  for(int i = 0; i < in0.size(); i ++) {
+    assert(in0[i].size() == in0[0].size() &&
+           in0[i][0].size() == in0[0][0].size());
+    in[i].resize(in0[i].size() * in0[i][0].size());
+    for(int j = 0; j < in0[i].size(); j ++) {
+      assert(in0[i][0].size() == in0[i][j].size());
+      in[i].setVector(j * in0[i][0].size(), in0[i][j]);
+    }
+  }
+  const auto p(predv<T>(in));
+  pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > res;
+  res.first.resize( p.first.size() );
+  res.second.resize(p.second.size());
+  for(int i = 0; i < p.first.size(); i ++) {
+    res.first[i].resize(in0[0].size());
+    for(int j = 0; j < res.first[i].size(); j ++)
+      res.first[i][j]  = p.first[i].subVector( j * in0[0][0].size(), in0[0][0].size());
+    res.second[i].resize(in0[0].size());
+    for(int j = 0; j < res.second[i].size(); j ++)
+      res.second[i][j] = p.second[i].subVector(j * in0[0][0].size(), in0[0][0].size());
+  }
+  return res;
+}
+
+template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > predMat(const vector<vector<SimpleMatrix<T> > >& in0) {
+  assert(in0.size() && in0[0].size() && in0[0][0].rows() && in0[0][0].cols());
+  cerr << "ratio: " << sqrt(T(int(in0[0].size() * in0[0][0].rows() * in0[0][0].cols())) ) / T(int(in0.size())) << endl;
+  vector<SimpleVector<T> > in;
+  in.resize(in0.size());
+  for(int i = 0; i < in0.size(); i ++) {
+    assert(in0[i].size() == in0[0].size());
+    in[i].resize(in0[i].size() * in0[i][0].rows() * in0[i][0].cols());
+    for(int j = 0; j < in0[i].size(); j ++) {
+      assert(in0[i][j].rows() == in0[0][0].rows() &&
+             in0[i][j].cols() == in0[0][0].cols());
+      for(int k = 0; k < in0[i][j].rows(); k ++)
+        in[i].setVector(j * in0[i][0].rows() * in0[i][0].cols() +
+                        k * in0[i][0].cols(), in0[i][j].row(k));
+    }
+  }
+  const auto p(predv<T>(in));
+  pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > res;
+  res.first.resize( p.first.size() );
+  res.second.resize(p.second.size());
+  for(int i = 0; i < p.first.size(); i ++) {
+    res.first[i].resize(in0[i].size());
+    for(int j = 0; j < res.first[i].size(); j ++) {
+      res.first[i][j].resize(in0[0][0].rows(), in0[0][0].cols());
+      for(int k = 0; k < in0[0][0].rows(); k ++)
+        res.first[i][j].row(k) =
+          p.first[i].subVector(j * in0[0][0].rows() * in0[0][0].cols() +
+                               k * in0[0][0].cols(), in0[0][0].cols());
+    }
+    res.second[i].resize(in0[i].size());
+    for(int j = 0; j < res.second[i].size(); j ++) {
+      res.second[i][j].resize(in0[0][0].rows(), in0[0][0].cols());
+      for(int k = 0; k < in0[0][0].rows(); k ++)
+        res.second[i][j].row(k) =
+          p.second[i].subVector(j * in0[0][0].rows() * in0[0][0].cols() +
+                                k * in0[0][0].cols(), in0[0][0].cols());
+    }
+  }
+  return res;
+}
+
+template <typename T> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > predSTen(const vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx) {
+  cerr << "ratio: " << T(int(idx.size() * idx.size() * idx.size() )) / T(int(in0.size() )) << endl;
+  vector<SimpleVector<T> > in;
+  in.resize(in0.size());
+  for(int i = 0; i < in0.size(); i ++) {
+    in[i].resize(idx.size() * idx.size() * idx.size());
+    vector<SimpleMatrix<T> > tensor;
+    tensor.reserve(idx.size());
+    for(int j = 0; j < idx.size(); j ++)
+      for(int k = 0; k < idx.size(); k ++)
+        for(int m = 0; m < idx.size(); m ++)
+          in[i][j * idx.size() * idx.size() + k * idx.size() + m] =
+            in0[i][idx[j]][idx[k]][idx[m]];
+  }
+  const auto p(predv<T>(in));
+  pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > res;
+  res.first.resize( p.first.size() );
+  res.second.resize(p.second.size());
+  for(int i = 0; i < p.first.size(); i ++) {
+    for(int j = 0; j < idx.size(); j ++)
+      for(int k = 0; k < idx.size(); k ++)
+        for(int m = 0; m < idx.size(); m ++) {
+          res.first[i][ idx[j]][idx[k]][idx[m]] =
+            p.first[i][ j * idx.size() * idx.size() + k * idx.size() + m];
+          res.second[i][idx[j]][idx[k]][idx[m]] =
+            p.second[i][j * idx.size() * idx.size() + k * idx.size() + m];
+        }
+  }
+  return res;
 }
 
 #define _SIMPLELIN_
