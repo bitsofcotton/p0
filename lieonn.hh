@@ -59,16 +59,6 @@ using std::endl;
 using std::flush;
 using std::getline;
 
-#if !defined(_FLOAT_BITS_)
-  #include <complex>
-  #include <cmath>
-  using namespace std;
-  typedef uint64_t myuint;
-  typedef int64_t  myint;
-  // XXX:
-  // typedef long double myfloat;
-  typedef double myfloat;
-#else
 
 // Double int to new int class.
 template <typename T, int bits> class DUInt {
@@ -1422,36 +1412,44 @@ template <typename T> static inline T ccot(const T& s) {
 
 template <typename T> using complex = Complex<T>;
 
-# if _FLOAT_BITS_ == 8
+#if !defined(_FLOAT_BITS_)
+  #include <cmath>
+  using namespace std;
+  typedef uint64_t myuint;
+  typedef int64_t  myint;
+  // XXX:
+  // typedef long double myfloat;
+  typedef double myfloat;
+#elif _FLOAT_BITS_ == 8
   typedef uint8_t myuint;
   typedef int8_t  myint;
   typedef SimpleFloat<myuint, uint16_t, 8, myint> myfloat;
-# elif _FLOAT_BITS_ == 16
+#elif _FLOAT_BITS_ == 16
   typedef uint16_t myuint;
   typedef int16_t  myint;
   typedef SimpleFloat<myuint, uint32_t, 16, myint> myfloat;
-# elif _FLOAT_BITS_ == 32
+#elif _FLOAT_BITS_ == 32
   typedef uint32_t myuint;
   typedef int32_t  myint;
   typedef SimpleFloat<myuint, uint64_t, 32, myint> myfloat;
-# elif _FLOAT_BITS_ == 64
+#elif _FLOAT_BITS_ == 64
   typedef uint64_t myuint;
   typedef int64_t  myint;
   typedef SimpleFloat<myuint, unsigned __int128, 64, myint> myfloat;
-# elif _FLOAT_BITS_ == 128
+#elif _FLOAT_BITS_ == 128
   typedef DUInt<uint64_t, 64> uint128_t;
   typedef Signed<uint128_t, 128> int128_t;
   typedef uint128_t myuint;
   typedef int128_t  myint;
   typedef SimpleFloat<myuint, DUInt<myuint, 128>, 128, myint> myfloat;
-# elif _FLOAT_BITS_ == 256
+#elif _FLOAT_BITS_ == 256
   typedef DUInt<uint64_t, 64> uint128_t;
   typedef DUInt<uint128_t, 128> uint256_t;
   typedef Signed<uint256_t, 256> int256_t;
   typedef uint256_t myuint;
   typedef int256_t  myint;
   typedef SimpleFloat<myuint, DUInt<myuint, 256>, 256, myint> myfloat;
-# elif _FLOAT_BITS_ == 512
+#elif _FLOAT_BITS_ == 512
   typedef DUInt<uint64_t, 64> uint128_t;
   typedef DUInt<uint128_t, 128> uint256_t;
   typedef DUInt<uint256_t, 256> uint512_t;
@@ -1459,7 +1457,7 @@ template <typename T> using complex = Complex<T>;
   typedef uint512_t myuint;
   typedef int512_t  myint;
   typedef SimpleFloat<myuint, DUInt<myuint, 512>, 512, myint> myfloat;
-# elif _FLOAT_BITS_ == 1024
+#elif _FLOAT_BITS_ == 1024
   typedef DUInt<uint64_t, 64> uint128_t;
   typedef DUInt<uint128_t, 128> uint256_t;
   typedef DUInt<uint256_t, 256> uint512_t;
@@ -1468,9 +1466,8 @@ template <typename T> using complex = Complex<T>;
   typedef uint1024_t myuint;
   typedef int1024_t  myint;
   typedef SimpleFloat<myuint, DUInt<myuint, 1024>, 1024, myint> myfloat;
-# else
-#   error cannot handle float
-# endif
+#else
+# error cannot handle float
 #endif
 
 
@@ -1556,7 +1553,7 @@ public:
       if(entity[i] != other.entity[i]) return true;
     return false;
   }
-  inline       T                dot         (const SimpleVector<T>& other) const {
+  template <typename U> inline T dot(const SimpleVector<U>& other) const {
     assert(entity.size() == other.entity.size());
     SimpleVector<T> work(other.size());
 #if defined(_OPENMP)
@@ -2263,6 +2260,7 @@ template <typename T> inline SimpleVector<T> SimpleMatrix<T>::zeroFix(const Simp
       continue;
     if(T(int(0)) < fidx[idx].first &&
        fidx[idx].first < sqrt(one.dot(one)) * epsilon()) {
+      cerr << "linearInvariant: P matrix is orthogonal to 1 vector." << endl;
       *this = Pb;
       break;
     }
@@ -2708,21 +2706,24 @@ template <typename T> static inline SimpleVector<T> linearInvariant(const Simple
 }
 
 // N.B. please refer bitsofcotton/randtools.
-template <typename T> static inline pair<SimpleVector<T>, T> makeProgramInvariant(const SimpleVector<T>& in, const T& index = - T(int(1))) {
+template <typename T> static inline T makeProgramInvariantPartial(const T& in, const T& ratio, const bool& on01 = false) {
+  auto res(on01 ? in :
+    ((atan(- in) / atan(T(int(1))) / T(int(2))) + T(int(1))) / T(int(2)) );
+  if(res == T(int(0)) ) res = T(int(1));
+  assert(T(int(0)) < res && res <= T(int(1)));
+  return res /= ratio;
+}
+
+template <typename T> static inline pair<SimpleVector<T>, T> makeProgramInvariant(const SimpleVector<T>& in, const T& index = - T(int(1)), const bool& on01 = false) {
   SimpleVector<T> res(in.size() + (T(int(0)) <= index ? 2 : 1));
   res.setVector(0, in);
   res[in.size()] = T(int(1));
   if(T(int(0)) <= index)
     res[in.size() + 1] = T(index);
   T ratio(0);
-  for(int i = 0; i < res.size(); i ++) {
-    res[i]  = atan(- res[i]) / atan(T(int(1))) / T(int(2));
-    res[i] += T(int(1));
-    res[i] /= T(int(2));
-    assert(T(int(0)) < res[i] && res[i] <= T(int(1)));
-    // ratio  += (res[i] = log(res[i]));
-    ratio  += log(res[i]);
-  }
+  for(int i = 0; i < res.size(); i ++)
+    ratio += log(res[i] = makeProgramInvariantPartial<T>(res[i],
+                            T(int(1)), on01));
   // N.B. x_1 ... x_n == 1.
   // <=> x_1 / (x_1 ... x_n)^(1/n) ... == 1.
   ratio = exp(ratio / T(res.size()));
@@ -2730,13 +2731,14 @@ template <typename T> static inline pair<SimpleVector<T>, T> makeProgramInvarian
   return make_pair(res, ratio);
 }
 
-template <typename T> static inline T revertProgramInvariant(const pair<T, T>& in) {
+template <typename T> static inline T revertProgramInvariant(const pair<T, T>& in, const bool& on01 = false) {
   const auto r0(in.first * in.second);
   const auto r(T(int(0)) < r0 ? r0 - floor(r0) : ceil(- r0) + r0);
-  return - tan(max(- T(int(1)) + sqrt(SimpleMatrix<T>().epsilon()),
-               min(  T(int(1)) - sqrt(SimpleMatrix<T>().epsilon()),
-               r * T(int(2)) - T(int(1)) ))
-                 * atan(T(int(1))) * T(int(2)) );
+  return on01 ? r :
+      - tan(max(- T(int(1)) + sqrt(SimpleMatrix<T>().epsilon()),
+            min(  T(int(1)) - sqrt(SimpleMatrix<T>().epsilon()),
+            r * T(int(2)) - T(int(1)) ))
+              * atan(T(int(1))) * T(int(2)) );
 }
 
 template <typename T> class idFeeder {
@@ -3144,19 +3146,29 @@ template <typename T> inline T P012L<T>::next(const SimpleVector<T>& d) {
   for(int i = 1; i < work.size(); i ++)
     work[i - 1] = d[i - work.size() + d.size()];
   work[work.size() - 1] = zero;
-  const auto vdp(makeProgramInvariant<T>(work));
-        auto res(zero);
-        auto sscore(zero);
+  auto res(zero);
+  auto sscore(zero);
   for(int i = 0; i < cat.size(); i ++) {
     if(! cat[i].first.size()) continue;
     if(! (cat[i].first.size() <= cat[i].first[0].size() + 1)) cerr << "!" << flush;
     SimpleVector<T> avg(cat[i].first[0].size() + 1);
     for(int j = 0; j < cat[i].first.size(); j ++)
       avg += makeProgramInvariant<T>(cat[i].first[j]).first;
-    avg *= sqrt(vdp.first.dot(vdp.first) / avg.dot(avg));
-    work[work.size() - 1] =
-      revertProgramInvariant<T>(make_pair(avg[varlen - 1] /
-          T(int(avg.size())), vdp.second));
+    work[work.size() - 1] = T(int(0));
+    const auto avg0(avg);
+          auto last(sqrt(work.dot(work)));
+    for(int ii = 0;
+            ii < 2 * int(- log(SimpleMatrix<T>().epsilon()) / log(T(int(2))) )
+            && sqrt(work.dot(work) * SimpleMatrix<T>().epsilon()) <
+                 abs(work[work.size() - 1] - last); ii ++) {
+      last = work[work.size() - 1];
+      const auto vdp(makeProgramInvariant<T>(work));
+      avg  = avg0 * sqrt(vdp.first.dot(vdp.first) / avg0.dot(avg0));
+      work[work.size() - 1] =
+        revertProgramInvariant<T>(make_pair(avg[varlen - 1] /
+             T(int(avg.size())), vdp.second));
+    }
+    const auto vdp(makeProgramInvariant<T>(work));
     T score(0);
     for(int j = 0; j < work.size(); j ++)
       score += work[j] * revertProgramInvariant<T>(make_pair(avg[j], vdp.second));
@@ -3168,10 +3180,49 @@ template <typename T> inline T P012L<T>::next(const SimpleVector<T>& d) {
 
 
 template <typename T> SimpleVector<T> pnext(const int& size, const int& step = 1, const int& r = 1) {
+#if defined(_ADVANCE_PNEXT_BITS_)
+  typedef DUInt<uint64_t, 64>          pnext_uint128_t;
+  typedef DUInt<pnext_uint128_t, 128>  pnext_uint256_t;
+  typedef DUInt<pnext_uint256_t, 256>  pnext_uint512_t;
+  typedef Signed<pnext_uint512_t, 512> pnext_int512_t;
+  typedef pnext_uint512_t pnext_uint;
+  typedef pnext_int512_t  pnext_int;
+  typedef SimpleFloat<pnext_uint, DUInt<pnext_uint, 512>, 512, pnext_int> pnext_float;
+  SimpleVector<T> res;
+  const auto file(string("./.cache/lieonn/pnextadv-") + to_string(size) +
+    string("-") + to_string(step) + string("-") + to_string(r));
+  ifstream cache(file.c_str());
+  if(cache.is_open()) {
+    cache >> res;
+    cache.close();
+  } else {
+    cerr << "." << flush;
+    auto work(taylor<pnext_float>(size * r, pnext_float(step * r < 0 ? step * r : (size + step) * r - 1)));
+    for(int i = 1; i < r; i ++)
+      work += taylor<pnext_float>(size * r, pnext_float(step * r < 0 ? step * r + i : (size + step) * r - 1 - i));
+    const auto pn((dft<pnext_float>(- size * r).subMatrix(0, 0, size * r, size) * dft<pnext_float>(size)).template real<pnext_float>().transpose() * work);
+    res.resize(pn.size());
+    for(int i = 0; i < res.size(); i ++) {
+      auto abspni(abs(pn[i]));
+      res[i] = T(abspni.operator int());
+      for(int j = 0; j < 512 / 16; j ++) {
+        abspni -= floor(abspni);
+        abspni *= pnext_float(int(65536));
+        res[i] += T(abspni.operator int()) / pow(T(int(65536)), T(int(j + 1)) );
+      }
+      if(pn[i] < pnext_float(int(0))) res[i] = - res[i];
+    }
+    ofstream ocache(file.c_str());
+    ocache << res;
+    ocache.close();
+  }
+  return res;
+#else
   auto work(taylor(size * r, T(step * r < 0 ? step * r : (size + step) * r - 1)));
   for(int i = 1; i < r; i ++)
     work += taylor(size * r, T(step * r < 0 ? step * r + i : (size + step) * r - 1 - i));
   return (dft<T>(- size * r).subMatrix(0, 0, size * r, size) * dft<T>(size)).template real<T>().transpose() * work;
+#endif
 }
 
 template <typename T> SimpleVector<T> minsq(const int& size) {
@@ -3409,7 +3460,7 @@ public:
   typedef sumChain<T, p0_5t, true> p0_t;
 */
   // N.B. we only handle lebesgue measurable and R(finite)-valued functions.
-  //      so worse structures are handled by P1I.
+  //      so worse structures are handled by P01.
   typedef sumChain<T, p0_1t>  p0_2t;
   typedef sumChain<T, p0_2t, true> p0_t;
   p0_t p;
@@ -3418,39 +3469,60 @@ public:
 // Get invariant structure that
 // \[- &alpha, &alpha;\[ register computer with deterministic calculation.
 // cf. bitsofcotton/randtools .
-template <typename T> class P1I {
+template <typename T, bool nonlinear = true> class P01 {
 public:
-  inline P1I() { varlen = 0; }
-  inline P1I(const int& var, const int& step = 1) {
+  inline P01() { varlen = 0; }
+  inline P01(const int& var, const int& step = 1) {
     assert(0 < var && 0 < step);
     this->varlen = var;
     this->step = step;
   }
-  inline ~P1I() { ; }
-  inline T next(const SimpleVector<T>& in) {
+  inline ~P01() { ; }
+  inline T next(const SimpleVector<T>& in0, const int& skip = 1) {
     static const T zero(0);
+    const auto in(in0.subVector(in0.size() % skip, in0.size() / skip * skip));
     // N.B. please use catgp to compete with over learning.
     // XXX: division accuracy glitch.
     const auto nin(sqrt(in.dot(in)) * T(int(2)));
     if(! isfinite(nin) || nin == zero) return zero;
-    SimpleMatrix<T> toeplitz(in.size() - varlen - step + 2, varlen + 2);
-    for(int i = 0; i < toeplitz.rows(); i ++) {
-      auto work(in.subVector(i, varlen));
-      work[work.size() - 1] = in[i + varlen + step - 2];
-      toeplitz.row(i) = makeProgramInvariant<T>(move(work),
-        T(i + 1) / T(toeplitz.rows() + 1) ).first;
+    SimpleMatrix<T> invariants(3, nonlinear ? varlen + 2 : varlen);
+    invariants.O();
+    for(int i0 = 0; i0 < invariants.rows(); i0 ++) {
+      SimpleMatrix<T> toeplitz((in.size() - varlen - step + 2) / skip
+                               - invariants.rows() + 1, invariants.cols());
+      for(int i = i0; i < toeplitz.rows() + i0; i ++) {
+        auto work(in.subVector(i * skip, varlen));
+        work[work.size() - 1] = in[i * skip + varlen + step - 2];
+        toeplitz.row(i - i0) = nonlinear ? makeProgramInvariant<T>(move(work),
+          T(i + 1) / T(toeplitz.rows() + 1) ).first : move(work);
+      }
+      invariants.row(i0) = linearInvariant<T>(toeplitz);
     }
-    const auto invariant(linearInvariant<T>(toeplitz));
+    SimpleVector<T> invariant(invariants.cols());
+    invariant.O();
+    for(int i = 0; i < invariants.cols(); i ++)
+      invariant[i] = P0maxRank0<T>().next(invariants.col(i));
     if(invariant[varlen - 1] == zero) return zero;
     SimpleVector<T> work(varlen);
     for(int i = 1; i < work.size(); i ++)
       work[i - 1] = in[i - work.size() + in.size()];
     work[work.size() - 1] = zero;
-    const auto work2(makeProgramInvariant<T>(work, T(1)));
-    return revertProgramInvariant<T>(make_pair(
-             - (invariant.dot(work2.first) -
-                    invariant[varlen - 1] * work2.first[varlen - 1]) /
-               invariant[varlen - 1], work2.second));
+    if(nonlinear) {
+      auto last(sqrt(work.dot(work)));
+      for(int ii = 0;
+              ii < 2 * int(- log(SimpleMatrix<T>().epsilon()) / log(T(int(2))) )
+              && sqrt(work.dot(work) * SimpleMatrix<T>().epsilon()) <
+                   abs(work[work.size() - 1] - last); ii ++) {
+        last = work[work.size() - 1];
+        const auto work2(makeProgramInvariant<T>(work, T(1)));
+        work[work.size() - 1] = revertProgramInvariant<T>(make_pair(
+                 - (invariant.dot(work2.first) -
+                        invariant[varlen - 1] * work2.first[varlen - 1]) /
+                   invariant[varlen - 1], work2.second));
+      }
+      return work[work.size() - 1];
+    }
+    return - invariant.dot(work) / invariant[varlen - 1];
   }
 private:
   int varlen;
@@ -3940,35 +4012,44 @@ template <typename T> bool savep2or3(const char* filename, const vector<SimpleMa
   return true;
 }
 
-template <typename T> static inline vector<SimpleMatrix<T> > normalize(const vector<SimpleMatrix<T> >& data, const T& upper = T(1)) {
+template <typename T> static inline vector<vector<SimpleMatrix<T> > > normalize(const vector<vector<SimpleMatrix<T> > >& data, const T& upper = T(1)) {
   T MM(0), mm(0);
   bool fixed(false);
-  for(int k = 0; k < data.size(); k ++)
-    for(int i = 0; i < data[k].rows(); i ++)
-      for(int j = 0; j < data[k].cols(); j ++)
-        if(! fixed || (isfinite(data[k](i, j)) && ! isinf(data[k](i, j)) && ! isnan(data[k](i, j)))) {
-          if(! fixed)
-            MM = mm = data[k](i, j);
-          else {
-            MM = max(MM, data[k](i, j));
-            mm = min(mm, data[k](i, j));
+  for(int kk = 0; kk < data.size(); kk ++)
+    for(int k = 0; k < data[kk].size(); k ++)
+      for(int i = 0; i < data[kk][k].rows(); i ++)
+        for(int j = 0; j < data[kk][k].cols(); j ++)
+          if(! fixed || (isfinite(data[kk][k](i, j)) &&
+               ! isinf(data[kk][k](i, j)) && ! isnan(data[kk][k](i, j)))) {
+            if(! fixed)
+              MM = mm = data[kk][k](i, j);
+            else {
+              MM = max(MM, data[kk][k](i, j));
+              mm = min(mm, data[kk][k](i, j));
+            }
+            fixed = true;
           }
-          fixed = true;
-        }
   if(MM == mm || ! fixed)
     return data;
   auto result(data);
-  for(int k = 0; k < data.size(); k ++)
-    for(int i = 0; i < data[k].rows(); i ++)
-      for(int j = 0; j < data[k].cols(); j ++) {
-        if(isfinite(result[k](i, j)) && ! isinf(data[k](i, j)) && ! isnan(result[k](i, j)))
-          result[k](i, j) -= mm;
-        else
-          result[k](i, j)  = T(0);
-        assert(T(0) <= result[k](i, j) && result[k](i, j) <= MM - mm);
-        result[k](i, j) *= upper / (MM - mm);
-      }
+  for(int kk = 0; kk < data.size(); kk ++)
+    for(int k = 0; k < data[kk].size(); k ++)
+      for(int i = 0; i < data[kk][k].rows(); i ++)
+        for(int j = 0; j < data[kk][k].cols(); j ++) {
+          if(isfinite(result[kk][k](i, j)) && ! isinf(data[kk][k](i, j)) && ! isnan(result[kk][k](i, j)))
+            result[kk][k](i, j) -= mm;
+          else
+            result[kk][k](i, j)  = T(0);
+          assert(T(0) <= result[kk][k](i, j) && result[kk][k](i, j) <= MM - mm);
+          result[kk][k](i, j) *= upper / (MM - mm);
+        }
   return result;
+}
+
+template <typename T> static inline vector<SimpleMatrix<T> > normalize(const vector<SimpleMatrix<T> >& data, const T& upper = T(1)) {
+  vector<vector<SimpleMatrix<T> > > w;
+  w.emplace_back(data);
+  return normalize<T>(w, upper)[0];
 }
 
 template <typename T> static inline vector<SimpleMatrix<T> > autoLevel(const vector<SimpleMatrix<T> >& data, const int& count = 0) {
@@ -4027,88 +4108,93 @@ template <typename T> static inline SimpleVector<T> autoGamma(const SimpleVector
   return autoGamma<T>(b, r)[0].row(0);
 }
 
-template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > predv0(const vector<SimpleVector<T> >& in, int skip = 1) {
-/*
-  int p0(0);
-  for( ; p0 < int(in.size()); p0 ++)
-    if(in.size() - 4 - p0 - 1 + 2 < 4 + 2) break;
-*/
+template <typename T> static inline T getImgPt(const T& y, const T& h) {
+  auto yy(y % (2 * h));
+  if(yy < 0)
+    yy = - yy;
+  if(yy >= h)
+    yy = h - (yy - h);
+  return yy % h;
+}
+
+template <typename T> pair<pair<vector<SimpleVector<T> >, vector<T> >, pair<vector<SimpleVector<T> >, vector<T> > > predv(const vector<SimpleVector<T> >& in, const int& skip = 1) {
   assert(0 < skip);
-  // const auto p0(int(in.size() - 4 - 1 + 2 - 4 - 2) / skip);
-  const int p0(ceil(sqrt(T(int(in.size() - 4 - 1 + 2 - 4 - 2) / skip) )) );
-  vector<SimpleVector<T> > invariant;
-  invariant.resize(in.size());
+  // N.B. we need to initialize p0 vector.
+  SimpleVector<T> init(3);
+  for(int i = 0; i < init.size(); i ++)
+    init[i] = T(int(i));
+  // N.B. we need rich internal status.
+  int p0(floor(sqrt(T(int(in.size() - 4 - 1 + 2 - 4 - 2 - 3)) ) / T(skip) ));
+  // N.B. we need large accuracy to continue much more.
+  for(int i = 0; i < p0; i ++) {
+    const auto pp(pnextcacher<T>(3, i + 1, 4));
+    if(T(int(in.size())) < sqrt(pp.dot(pp))) {
+      p0 = i + 1;
+      break;
+    }
+    cerr << "P0 initialize: " << P0maxRank0<T>(i + 1).next(init) << endl;
+  }
+  vector<SimpleVector<T> > p;
+  vector<T> psec;
+  if(p0 < 1) return make_pair(make_pair(p, psec), make_pair(p, psec));
   SimpleVector<T> secondsf(in.size());
-  SimpleVector<T> secondsb(in.size());
+  secondsf.O();
 #if defined(_OPENMP)
 #pragma omp parallel for schedule(static, 1)
 #endif
-  for(int i = 0; i < in.size(); i ++) {
-    auto mpi(makeProgramInvariant<T>(in[i]));
-    invariant[i] = move(mpi.first);
-    secondsf[i]  = move(mpi.second);
+  for(int i = 0; i < in.size(); i ++)  {
+    secondsf[i] = makeProgramInvariant<T>(in[i], - T(int(1)), true).second;
   }
+  SimpleVector<T> secondsb(secondsf.size());
+  secondsb.O();
   for(int i = 0; i < secondsf.size(); i ++)
     secondsb[i] = secondsf[secondsf.size() - 1 - i];
-  vector<SimpleVector<T> > p;
-  if(p0 < 1) return make_pair(p, p);
   p.resize(p0);
+  psec.resize(p0);
   auto q(p);
+  auto qsec(psec);
   for(int i = 0; i < p0; i ++) {
-    p[i].resize(invariant[0].size());
-    q[i].resize(invariant[0].size());
+    p[i].resize(in[0].size());
+    q[i].resize(in[0].size());
     p[i].O();
     q[i].O();
+    psec[i] = qsec[i] = T(int(0));
   }
-  const auto one65536(T(int(1)) / T(int(65536)));
 #if defined(_OPENMP)
 #pragma omp parallel for schedule(static, 1)
 #endif
-  for(int j = 0; j < invariant[0].size(); j ++) {
-    cerr << j << " / " << invariant[0].size() << endl;
-    idFeeder<T> pb(invariant.size());
-    idFeeder<T> pf(invariant.size());
-    for(int k = 0; k < invariant.size(); k ++) {
-      pb.next(invariant[invariant.size() - k - 1][j]);
-      pf.next(invariant[k][j]);
-    }
+  for(int j = 0; j < in[0].size(); j ++) {
+    cerr << j << " / " << in[0].size() << endl;
+    idFeeder<T> pb(secondsf.size());
+    idFeeder<T> pf(secondsf.size());
+    for(int i = 0; i < in.size(); i ++)
+      pf.next(makeProgramInvariantPartial<T>(in[i][j], secondsf[i], true));
+    assert(pf.full);
+    for(int k = 0; k < pf.res.size(); k ++)
+      pb.next(pf.res[pf.res.size() - 1 - k]);
+    assert(pb.full);
     for(int i = 0; i < p0; i ++) {
-      q[i][j] = P1I<T>(4, (i + 1) * skip).next(pb.res);
-      p[i][j] = P1I<T>(4, (i + 1) * skip).next(pf.res);
+      q[i][j] += P01<T, false>(4, i + 1).next(pb.res, skip);
+      p[i][j] += P01<T, false>(4, i + 1).next(pf.res, skip);
     }
   }
 #if defined(_OPENMP)
 #pragma omp parallel for schedule(static, 1)
 #endif
   for(int i = 0; i < p.size(); i ++) {
-    const auto qsec(P1I<T>(4, (i + 1) * skip).next(secondsb));
-    const auto psec(P1I<T>(4, (i + 1) * skip).next(secondsf));
-    for(int j = 0; j < p[i].size(); j ++)
-      p[i][j] = revertProgramInvariant<T>(make_pair(p[i][j], psec));
-    for(int j = 0; j < q[i].size(); j ++)
-      q[i][j] = revertProgramInvariant<T>(make_pair(q[i][j], qsec));
+    qsec[i] = P01<T, false>(4, i + 1).next(secondsb, skip);
+    psec[i] = P01<T, false>(4, i + 1).next(secondsf, skip);
+    // p[i][j] = revertProgramInvariant<T>(make_pair(rres[5], psec), true);
+    // q[i][j] = revertProgramInvariant<T>(make_pair(rres[5], qsec), true);
   }
-  return make_pair(move(p), move(q));
+  return make_pair(make_pair(move(p), move(psec)),
+                   make_pair(move(q), move(qsec)));
 }
 
-template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > predv(const vector<SimpleVector<T> >& in0, int skip = 1) {
-  assert(0 < skip);
-  if(skip == 1) return predv0<T>(in0);
-  vector<SimpleVector<T> > in;
-  in.reserve(in0.size() * skip - skip + 1);
-  for(int i = 0; i < in0.size(); i ++)  {
-    if(i)
-      for(int j = 0; j < skip - 1; j ++)
-        in.emplace_back((in0[i - 1] * T(int(skip - 1 - j)) +
-                         in0[i]     * T(int(j + 1)) ) / T(skip) );
-    in.emplace_back(in0[i]);
-  }
-  return predv0<T>(in, skip);
-}
-
-template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > predVec(const vector<vector<SimpleVector<T> > >& in0) {
-  assert(in0.size() && in0[0].size() && in0[0][0].size());
-  cerr << "ratio: " << T(int(in0[0].size() * in0[0][0].size())) / T(int(in0.size())) << endl;
+template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > predVec(const vector<vector<SimpleVector<T> > >& in0, const int& skip = 1, const int& cj = 11) {
+  assert(0 < skip && in0.size() / skip && in0[0].size() && in0[0][0].size() && 0 < cj);
+  if(19683 * cj < in0[0].size() * in0[0][0].size())
+    cerr << "predVec : elements larger than 19683, exceeds function entropy." << endl;
   vector<SimpleVector<T> > in;
   in.resize(in0.size());
   for(int i = 0; i < in0.size(); i ++) {
@@ -4120,24 +4206,45 @@ template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<Simp
       in[i].setVector(j * in0[i][0].size(), in0[i][j]);
     }
   }
-  const auto p(predv<T>(in));
+  const auto p(predv<T>(in, skip));
   pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > res;
-  res.first.resize( p.first.size() );
-  res.second.resize(p.second.size());
-  for(int i = 0; i < p.first.size(); i ++) {
+  res.first.resize( p.first.first.size() );
+  res.second.resize(p.second.first.size());
+  vector<T> rres;
+  rres.resize(cj);
+  for(int i = 0; i < p.first.first.size(); i ++) {
     res.first[i].resize(in0[0].size());
-    for(int j = 0; j < res.first[i].size(); j ++)
-      res.first[i][j]  = p.first[i].subVector( j * in0[0][0].size(), in0[0][0].size());
     res.second[i].resize(in0[0].size());
-    for(int j = 0; j < res.second[i].size(); j ++)
-      res.second[i][j] = p.second[i].subVector(j * in0[0][0].size(), in0[0][0].size());
+    for(int j = 0; j < res.first[i].size(); j ++) {
+      res.first[i][j].resize(in0[0][0].size());
+      res.second[i][j].resize(in0[0][0].size());
+      for(int k = 0; k < in0[0][0].size(); k ++) {
+        for(int m = 0; m < rres.size(); m ++)
+          rres[m] = p.first.first[i][j * in0[0][0].size() +
+            getImgPt<int>(k + m - rres.size() / 2, in0[0][0].size())];
+        sort(rres.begin(), rres.end());
+        res.first[i][j][k] = revertProgramInvariant<T>(make_pair(
+          rres[rres.size() / 2], p.first.second[i]), true);
+      }
+      for(int k = 0; k < in0[0][0].size(); k ++) {
+        for(int m = 0; m < rres.size(); m ++)
+          rres[m] = p.second.first[i][j * in0[0][0].size() +
+            getImgPt<int>(k + m - rres.size() / 2, in0[0][0].size())];
+        sort(rres.begin(), rres.end());
+        res.second[i][j][k] = revertProgramInvariant<T>(make_pair(
+          rres[rres.size() / 2], p.second.second[i]), true);
+      }
+    }
   }
   return res;
 }
 
-template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > predMat(const vector<vector<SimpleMatrix<T> > >& in0) {
-  assert(in0.size() && in0[0].size() && in0[0][0].rows() && in0[0][0].cols());
-  cerr << "ratio: " << sqrt(T(int(in0[0].size() * in0[0][0].rows() * in0[0][0].cols())) ) / T(int(in0.size())) << endl;
+template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > predMat(const vector<vector<SimpleMatrix<T> > >& in0, const int& skip = 1, const int& cj = 11) {
+  assert(0 < skip && in0.size() / skip && in0[0].size() && in0[0][0].rows() && in0[0][0].cols());
+  const int ccj(ceil(sqrt(T(cj))));
+  assert(0 < ccj);
+  if(ccj * ccj * 19683 < in0[0].size() * in0[0][0].rows() * in0[0][0].cols())
+    cerr << "predMat : elements larger than 19683, exceeds function entropy." << endl;
   vector<SimpleVector<T> > in;
   in.resize(in0.size());
   for(int i = 0; i < in0.size(); i ++) {
@@ -4151,60 +4258,162 @@ template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<Simp
                         k * in0[i][0].cols(), in0[i][j].row(k));
     }
   }
-  const auto p(predv<T>(in));
+  const auto p(predv<T>(in, skip));
   pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > res;
-  res.first.resize( p.first.size() );
-  res.second.resize(p.second.size());
-  for(int i = 0; i < p.first.size(); i ++) {
+  res.first.resize( p.first.first.size() );
+  res.second.resize(p.second.first.size());
+  vector<T> rres;
+  rres.resize(ccj * ccj);
+  for(int i = 0; i < p.first.first.size(); i ++) {
     res.first[i].resize(in0[i].size());
+    res.second[i].resize(in0[i].size());
     for(int j = 0; j < res.first[i].size(); j ++) {
       res.first[i][j].resize(in0[0][0].rows(), in0[0][0].cols());
-      for(int k = 0; k < in0[0][0].rows(); k ++)
-        res.first[i][j].row(k) =
-          p.first[i].subVector(j * in0[0][0].rows() * in0[0][0].cols() +
-                               k * in0[0][0].cols(), in0[0][0].cols());
-    }
-    res.second[i].resize(in0[i].size());
-    for(int j = 0; j < res.second[i].size(); j ++) {
       res.second[i][j].resize(in0[0][0].rows(), in0[0][0].cols());
+      
       for(int k = 0; k < in0[0][0].rows(); k ++)
-        res.second[i][j].row(k) =
-          p.second[i].subVector(j * in0[0][0].rows() * in0[0][0].cols() +
-                                k * in0[0][0].cols(), in0[0][0].cols());
+        for(int m = 0; m < in0[0][0].cols(); m ++) {
+          for(int kk = 0; kk < ccj; kk ++)
+            for(int mm = 0; mm < ccj; mm ++)
+              rres[kk * ccj + mm] = p.first.first[i][
+                j * in0[0][0].rows() * in0[0][0].cols() +
+                getImgPt<int>(k + kk - ccj / 2, in0[0][0].rows()) *
+                  in0[0][0].cols() +
+                getImgPt<int>(m + mm - ccj / 2, in0[0][0].cols())];
+          sort(rres.begin(), rres.end());
+          res.first[i][j](k, m) = revertProgramInvariant<T>(make_pair(
+            rres[rres.size() / 2], p.first.second[i]), true);
+        }
+      for(int k = 0; k < in0[0][0].rows(); k ++)
+        for(int m = 0; m < in0[0][0].cols(); m ++) {
+          for(int kk = 0; kk < ccj; kk ++)
+            for(int mm = 0; mm < ccj; mm ++)
+              rres[kk * ccj + mm] = p.second.first[i][
+                j * in0[0][0].rows() * in0[0][0].cols() +
+                getImgPt<int>(k + kk - ccj / 2, in0[0][0].rows()) *
+                  in0[0][0].cols() +
+                getImgPt<int>(m + mm - ccj / 2, in0[0][0].cols())];
+          sort(rres.begin(), rres.end());
+          res.second[i][j](k, m) = revertProgramInvariant<T>(make_pair(
+            rres[rres.size() / 2], p.second.second[i]), true);
+        }
     }
   }
   return res;
 }
 
-template <typename T> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > predSTen(const vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx) {
-  cerr << "ratio: " << T(int(idx.size() * idx.size() * idx.size() )) / T(int(in0.size() )) << endl;
+template <typename T> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > predSTen(const vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx, const int& skip = 1, const int& cj = 11) {
+  assert(idx.size() && 0 < skip && in0.size() / skip);
+  // N.B.: we don't do input scaling.
+  // const int ccj(ceil(pow(T(cj), T(int(1)) / T(int(3)) )) );
+  const int ccj(1);
+  assert(0 < ccj);
+  if(ccj * ccj * ccj * 19683 < idx.size() * idx.size() * idx.size())
+    cerr << "predSTen : elements larger than 19683, exceeds function entropy." << endl;
+  // N.B. the data we target is especially string stream corpus.
+  //      they are incontinuous one, so complementing with continuous stream
+  //      shouldn't improve outputs.
   vector<SimpleVector<T> > in;
   in.resize(in0.size());
   for(int i = 0; i < in0.size(); i ++) {
     in[i].resize(idx.size() * idx.size() * idx.size());
-    vector<SimpleMatrix<T> > tensor;
-    tensor.reserve(idx.size());
     for(int j = 0; j < idx.size(); j ++)
       for(int k = 0; k < idx.size(); k ++)
         for(int m = 0; m < idx.size(); m ++)
           in[i][j * idx.size() * idx.size() + k * idx.size() + m] =
-            in0[i][idx[j]][idx[k]][idx[m]];
+            (in0[i][idx[j]][idx[k]][idx[m]] + T(int(1))) / T(int(2));
   }
-  const auto p(predv<T>(in));
+  auto p(predv<T>(in, skip));
+  in.resize(0);
   pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > res;
-  res.first.resize( p.first.size() );
-  res.second.resize(p.second.size());
-  for(int i = 0; i < p.first.size(); i ++) {
+  res.first.resize( p.first.first.size() );
+  res.second.resize(p.second.first.size());
+  vector<T> rres(ccj * ccj * ccj);
+  for(int i = 0; i < p.first.first.size(); i ++)
     for(int j = 0; j < idx.size(); j ++)
       for(int k = 0; k < idx.size(); k ++)
         for(int m = 0; m < idx.size(); m ++) {
+          for(int jj = 0; jj < ccj; jj ++)
+            for(int kk = 0; kk < ccj; kk ++)
+              for(int mm = 0; mm < ccj; mm ++)
+                rres[jj * ccj * ccj + kk * ccj + mm] =
+                  p.first.first[i][getImgPt<int>(j + jj - ccj / 2, idx.size()) *
+                      idx.size() * idx.size() +
+                    getImgPt<int>(k + kk - ccj / 2, idx.size()) * idx.size() +
+                    getImgPt<int>(m + mm - ccj / 2, idx.size())] * T(int(2)) -
+                      T(int(1));
+          sort(rres.begin(), rres.end());
           res.first[i][ idx[j]][idx[k]][idx[m]] =
-            p.first[i][ j * idx.size() * idx.size() + k * idx.size() + m];
-          res.second[i][idx[j]][idx[k]][idx[m]] =
-            p.second[i][j * idx.size() * idx.size() + k * idx.size() + m];
+            revertProgramInvariant<T>(make_pair(
+              rres[rres.size() / 2], p.first.second[i]), true);
+          for(int jj = 0; jj < ccj; jj ++)
+            for(int kk = 0; kk < ccj; kk ++)
+              for(int mm = 0; mm < ccj; mm ++)
+                rres[jj * ccj * ccj + kk * ccj + mm] =
+                  p.second.first[i][getImgPt<int>(j + jj - ccj / 2, idx.size()) *
+                      idx.size() * idx.size() +
+                    getImgPt<int>(k + kk - ccj / 2, idx.size()) * idx.size() +
+                    getImgPt<int>(m + mm - ccj / 2, idx.size())] * T(int(2)) -
+                      T(int(1));
+          sort(rres.begin(), rres.end());
+          res.second[i][ idx[j]][idx[k]][idx[m]] =
+            revertProgramInvariant<T>(make_pair(
+              rres[rres.size() / 2], p.second.second[i]), true);
         }
-  }
   return res;
+}
+
+template <typename T> static inline vector<SimpleMatrix<T> > rgb2xyz(const vector<SimpleMatrix<T> >& rgb) {
+  // CIE 1931 XYZ from wikipedia.org
+  SimpleMatrix<T> mRGB2XYZ(3, 3);
+  mRGB2XYZ(0, 0) = T(49000);
+  mRGB2XYZ(0, 1) = T(31000);
+  mRGB2XYZ(0, 2) = T(20000);
+  mRGB2XYZ(1, 0) = T(17697);
+  mRGB2XYZ(1, 1) = T(81240);
+  mRGB2XYZ(1, 2) = T( 1063);
+  mRGB2XYZ(2, 0) = T(0);
+  mRGB2XYZ(2, 1) = T( 1000);
+  mRGB2XYZ(2, 2) = T(99000);
+  mRGB2XYZ /= T(17697);
+  assert(rgb.size() == 3);
+  assert(rgb[0].rows() == rgb[1].rows() && rgb[1].rows() == rgb[2].rows());
+  assert(rgb[0].cols() == rgb[1].cols() && rgb[1].cols() == rgb[2].cols());
+  auto xyz(rgb);
+  xyz[0] = rgb[0] * mRGB2XYZ(0, 0) + rgb[1] * mRGB2XYZ(0, 1) + rgb[2] * mRGB2XYZ(0, 2);
+  xyz[1] = rgb[0] * mRGB2XYZ(1, 0) + rgb[1] * mRGB2XYZ(1, 1) + rgb[2] * mRGB2XYZ(1, 2);
+  xyz[2] = rgb[0] * mRGB2XYZ(2, 0) + rgb[1] * mRGB2XYZ(2, 1) + rgb[2] * mRGB2XYZ(2, 2);
+  assert(xyz.size() == 3);
+  assert(xyz[0].rows() == xyz[1].rows() && xyz[1].rows() == xyz[2].rows());
+  assert(xyz[0].cols() == xyz[1].cols() && xyz[1].cols() == xyz[2].cols());
+  return xyz;
+}
+
+template <typename T> static inline vector<SimpleMatrix<T> > xyz2rgb(const vector<SimpleMatrix<T> >& xyz) {
+  // CIE 1931 XYZ from wikipedia.org
+  SimpleMatrix<T> mRGB2XYZ(3, 3);
+  mRGB2XYZ(0, 0) = T(49000);
+  mRGB2XYZ(0, 1) = T(31000);
+  mRGB2XYZ(0, 2) = T(20000);
+  mRGB2XYZ(1, 0) = T(17697);
+  mRGB2XYZ(1, 1) = T(81240);
+  mRGB2XYZ(1, 2) = T( 1063);
+  mRGB2XYZ(2, 0) = T(0);
+  mRGB2XYZ(2, 1) = T( 1000);
+  mRGB2XYZ(2, 2) = T(99000);
+  mRGB2XYZ /= T(17697);
+  const auto mXYZ2RGB(mRGB2XYZ.inverse());
+  assert(xyz.size() == 3);
+  assert(xyz[0].rows() == xyz[1].rows() && xyz[1].rows() == xyz[2].rows());
+  assert(xyz[0].cols() == xyz[1].cols() && xyz[1].cols() == xyz[2].cols());
+  auto rgb(xyz);
+  rgb[0] = xyz[0] * mXYZ2RGB(0, 0) + xyz[1] * mXYZ2RGB(0, 1) + xyz[2] * mXYZ2RGB(0, 2);
+  rgb[1] = xyz[0] * mXYZ2RGB(1, 0) + xyz[1] * mXYZ2RGB(1, 1) + xyz[2] * mXYZ2RGB(1, 2);
+  rgb[2] = xyz[0] * mXYZ2RGB(2, 0) + xyz[1] * mXYZ2RGB(2, 1) + xyz[2] * mXYZ2RGB(2, 2);
+  assert(rgb.size() == 3);
+  assert(rgb[0].rows() == rgb[1].rows() && rgb[1].rows() == rgb[2].rows());
+  assert(rgb[0].cols() == rgb[1].cols() && rgb[1].cols() == rgb[2].cols());
+  return rgb;
 }
 
 #define _SIMPLELIN_

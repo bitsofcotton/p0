@@ -17,9 +17,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <status>? < stream.txt
+    # 0 > status for blurred next step prediction, needs 2 <= \|status\|.
+    # 0 < status for P0maxRank plain prediction.
 
 # Check status length is valid for accuracy or not
-    ./p0r <status>?
+    ./p0r <len> <step> <r>
     # last line shows accuracy is valid or not. if valid, it's near \[1, 1, 0\].
 
 # Proof on Riemann measurable condition.
@@ -192,4 +194,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2023/07/01 argv range minimum value change.
 2023/07/07 update .cc comment.
 2023/10/30 add p0l to add some continuity. update readme.
+2024/05/06 integrate p0l into p0, p0's argv\[1\]\<0 is integrated into bitsofcotton/p1.
 
