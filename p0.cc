@@ -42,7 +42,11 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
+#if defined(_JAM_)
+    if(M != num_t(int(0))) d = abs(d) * sgn<num_t>(arc4random_uniform(2) & 1 ? - M : M);
+#else
     std::cout << d * M << ", ";
+#endif
     if(! status) M = num_t(int(1));
     else if(status < 0) {
       const auto& inn(in.next(logscale<num_t>(logscale<num_t>(d)) ));
@@ -53,7 +57,11 @@ int main(int argc, const char* argv[]) {
       for(int i = 1; i < outn.size(); i ++) M += outn[i];
       M = expscale<num_t>(expscale<num_t>(M / num_t(int(outn.size())) ));
     } else M = p.next(d);
+#if defined(_JAM)
+    std::cout << d << std::endl << std::flush;
+#else
     std::cout << M << std::endl << std::flush;
+#endif
   }
   return 0;
 }
