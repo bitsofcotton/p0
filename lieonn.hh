@@ -3562,6 +3562,26 @@ public:
   T M;
 };
 
+template <typename T> class P00 {
+public:
+  inline P00() {
+    pj = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
+    p  = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
+    M0 = M = T(int(1));
+  }
+  inline ~P00() { ; }
+  inline T next(const T& in) {
+    const auto in2(sgn<T>(M0) * in);
+    const auto p0(M0 = pj.next(in));
+    if(M0 != T(int(0))) M *= sgn<T>(M0);
+    return p.next(in2) * M;
+  }
+  PBond<T, P0maxRank<T> > pj;
+  PBond<T, P0maxRank<T> > p;
+  T M0;
+  T M;
+};
+
 // N.B. invariant gathers some of the group on the input pattern.
 template <typename T> SimpleMatrix<T> concat(const SimpleMatrix<T>& m0, const SimpleMatrix<T>& m1) {
   // det diag result = det diag m0 + det diag m1
@@ -4117,7 +4137,7 @@ template <typename T> static inline T getImgPt(const T& y, const T& h) {
   return yy % h;
 }
 
-template <typename T> pair<pair<vector<SimpleVector<T> >, vector<T> >, pair<vector<SimpleVector<T> >, vector<T> > > predv(const vector<SimpleVector<T> >& in, const int& skip = 1) {
+template <typename T, bool p0j = false> pair<pair<vector<SimpleVector<T> >, vector<T> >, pair<vector<SimpleVector<T> >, vector<T> > > predv(const vector<SimpleVector<T> >& in, const int& skip = 1) {
   assert(0 < skip);
   // N.B. we need to initialize p0 vector.
   SimpleVector<T> init(3);
@@ -4166,16 +4186,34 @@ template <typename T> pair<pair<vector<SimpleVector<T> >, vector<T> >, pair<vect
       pb.next(pf.res[pf.res.size() - 1 - k]);
     assert(pb.full);
     for(int i = 0; i < p0; i ++) {
-      q[i][j] += P01<T, false>(4, i + 1).next(pb.res, skip);
-      p[i][j] += P01<T, false>(4, i + 1).next(pf.res, skip);
+      if(p0j) {
+        P00<T> p0j0;
+        P00<T> p0j1;
+        for(int k = pb.res.size() % skip; k < pb.res.size(); k += skip) {
+          q[i][j] = p0j0.next(pb.res[k]);
+          p[i][j] = p0j1.next(pf.res[k]);
+        }
+       } else {
+        q[i][j] = P01<T, false>(4, i + 1).next(pb.res, skip);
+        p[i][j] = P01<T, false>(4, i + 1).next(pf.res, skip);
+      }
     }
   }
 #if defined(_OPENMP)
 #pragma omp parallel for schedule(static, 1)
 #endif
   for(int i = 0; i < p.size(); i ++) {
-    qsec[i] = P01<T, false>(4, i + 1).next(secondsb, skip);
-    psec[i] = P01<T, false>(4, i + 1).next(secondsf, skip);
+    if(p0j) {
+      P00<T> p0j0;
+      P00<T> p0j1;
+      for(int k = secondsb.size() % skip; k < secondsb.size(); k += skip) {
+        qsec[i] = p0j0.next(secondsb[k]);
+        psec[i] = p0j1.next(secondsf[k]);
+      }
+    } else {
+      qsec[i] = P01<T, false>(4, i + 1).next(secondsb, skip);
+      psec[i] = P01<T, false>(4, i + 1).next(secondsf, skip);
+    }
     // p[i][j] = revertProgramInvariant<T>(make_pair(rres[5], psec), true);
     // q[i][j] = revertProgramInvariant<T>(make_pair(rres[5], qsec), true);
   }
@@ -4183,7 +4221,7 @@ template <typename T> pair<pair<vector<SimpleVector<T> >, vector<T> >, pair<vect
                    make_pair(move(q), move(qsec)));
 }
 
-template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > predVec(const vector<vector<SimpleVector<T> > >& in0, const int& skip = 1, const int& cj = 11) {
+template <typename T, bool p0j = false> pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > predVec(const vector<vector<SimpleVector<T> > >& in0, const int& skip = 1, const int& cj = 11) {
   assert(0 < skip && in0.size() / skip && in0[0].size() && in0[0][0].size() && 0 < cj);
   if(19683 * cj < in0[0].size() * in0[0][0].size())
     cerr << "predVec : elements larger than 19683, exceeds function entropy." << endl;
@@ -4198,7 +4236,7 @@ template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<Simp
       in[i].setVector(j * in0[i][0].size(), in0[i][j]);
     }
   }
-  const auto p(predv<T>(in, skip));
+  const auto p(predv<T, p0j>(in, skip));
   pair<vector<vector<SimpleVector<T> > >, vector<vector<SimpleVector<T> > > > res;
   res.first.resize( p.first.first.size() );
   res.second.resize(p.second.first.size());
@@ -4231,7 +4269,7 @@ template <typename T> pair<vector<vector<SimpleVector<T> > >, vector<vector<Simp
   return res;
 }
 
-template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > predMat(const vector<vector<SimpleMatrix<T> > >& in0, const int& skip = 1, const int& cj = 11) {
+template <typename T, bool p0j = false> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > predMat(const vector<vector<SimpleMatrix<T> > >& in0, const int& skip = 1, const int& cj = 11) {
   assert(0 < skip && in0.size() / skip && in0[0].size() && in0[0][0].rows() && in0[0][0].cols());
   const int ccj(ceil(sqrt(T(cj))));
   assert(0 < ccj);
@@ -4250,7 +4288,7 @@ template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<Simp
                         k * in0[i][0].cols(), in0[i][j].row(k));
     }
   }
-  const auto p(predv<T>(in, skip));
+  const auto p(predv<T, p0j>(in, skip));
   pair<vector<vector<SimpleMatrix<T> > >, vector<vector<SimpleMatrix<T> > > > res;
   res.first.resize( p.first.first.size() );
   res.second.resize(p.second.first.size());
@@ -4294,7 +4332,7 @@ template <typename T> pair<vector<vector<SimpleMatrix<T> > >, vector<vector<Simp
   return res;
 }
 
-template <typename T> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > predSTen(const vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx, const int& skip = 1) {
+template <typename T, bool p0j = false> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > predSTen(const vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx, const int& skip = 1) {
   assert(idx.size() && 0 < skip && in0.size() / skip);
   // N.B. we don't do input scaling.
   // N.B. the data we target is especially string stream corpus.
@@ -4326,7 +4364,7 @@ template <typename T> pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTe
             in[i][cnt ++] =
               (in0[i][idx[j]][idx[k]][idx[m]] + T(int(1))) / T(int(2));
   }
-  auto p(predv<T>(in, skip));
+  auto p(predv<T, p0j>(in, skip));
   in.resize(0);
   pair<vector<SimpleSparseTensor<T> >, vector<SimpleSparseTensor<T> > > res;
   res.first.resize( p.first.first.size() );

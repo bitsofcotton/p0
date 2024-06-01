@@ -43,7 +43,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
 #if defined(_JAM_)
-    if(M != num_t(int(0))) d = abs(d) * sgn<num_t>(arc4random_uniform(2) & 1 ? - M : M);
+    if(M != num_t(int(0))) d *= sgn<num_t>(arc4random_uniform(2) & 1 ? - M : M);
 #else
     std::cout << d * M << ", ";
 #endif
