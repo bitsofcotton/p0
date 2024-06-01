@@ -197,4 +197,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/05/06 integrate p0l into p0, p0's argv\[1\]\<0 is integrated into bitsofcotton/p1.
 2024/05/31 compile jammer.
 2024/06/01 fix JAM.
+2024/06/02 fix _JAM replace with _JAM_, this caused pseudo correct results.
 

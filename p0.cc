@@ -57,7 +57,7 @@ int main(int argc, const char* argv[]) {
       for(int i = 1; i < outn.size(); i ++) M += outn[i];
       M = expscale<num_t>(expscale<num_t>(M / num_t(int(outn.size())) ));
     } else M = p.next(d);
-#if defined(_JAM)
+#if defined(_JAM_)
     std::cout << d << std::endl << std::flush;
 #else
     std::cout << M << std::endl << std::flush;
