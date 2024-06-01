@@ -3562,24 +3562,52 @@ public:
   T M;
 };
 
-template <typename T> class P00 {
+template <typename T> class P2100 {
 public:
-  inline P00() {
-    pj = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
-    p  = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
-    M0 = M = T(int(1));
+  inline P2100() {
+    catgpj = PBond<T, P012L<T> >(P012L<T>(4), 124);
+    p1j    = PBond<T, P01<T> >(P01<T>(4), 28);
+    p0j    = PBond<T, P0maxRank<T> >(P0maxRank<T>(2), 54);
+    p    = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
+    q    = PBond<T, P0maxRank<T> >(P0maxRank<T>(), 3);
+    M0   = M1 = M2 = bM2 = M3 = T(int(1));
+    bin1 = T(int(0));
   }
-  inline ~P00() { ; }
+  inline ~P2100() { ; }
   inline T next(const T& in) {
-    const auto in2(sgn<T>(M0) * in);
-    const auto p0(M0 = pj.next(in));
-    if(M0 != T(int(0))) M *= sgn<T>(M0);
-    return p.next(in2) * M;
+    const T zero(int(0));
+    const T one(int(1));
+    const auto in0(M0 * in);
+    const auto in1(M0 * M1 * in);
+    const auto in2(M0 * M1 * M2 * in);
+    const auto in3(M0 * M1 * M2 * M3 * in);
+    const auto p0(M0 = catgpj.next(in));
+    M0 = sgn<T>(arc4random_uniform(2) & 1 ? - M0 : M0);
+    if(M0 == zero) M0 = one;
+    M1 = p1j.next(in0);
+    M1 = sgn<T>(arc4random_uniform(2) & 1 ? - M1 : M1);
+    if(M1 == zero) M1 = one;
+    M2   = p0j.next((in1 + bin1) / T(int(2)));
+    auto bcM2(M2);
+    M2   = sgn<T>(arc4random_uniform(2) & 1 ? - (M2 + bM2) : (M2 + bM2));
+    bM2  = move(bcM2);
+    bin1 = in1;
+    if(M2 == zero) M2 = one;
+    M3 = p.next(in2);
+    const auto M(q.next(in3) * M0 * M1 * M2 * M3);
+    return M;
   }
-  PBond<T, P0maxRank<T> > pj;
+  PBond<T, P012L<T> > catgpj;
+  PBond<T, P01<T> >   p1j;
+  PBond<T, P0maxRank<T> > p0j;
   PBond<T, P0maxRank<T> > p;
+  PBond<T, P0maxRank<T> > q;
   T M0;
-  T M;
+  T M1;
+  T M2;
+  T bM2;
+  T M3;
+  T bin1;
 };
 
 // N.B. invariant gathers some of the group on the input pattern.
@@ -4144,8 +4172,17 @@ template <typename T, bool p0j = false> pair<pair<vector<SimpleVector<T> >, vect
   for(int i = 0; i < init.size(); i ++)
     init[i] = T(int(i));
   cerr << "P0 initialize: " << P0maxRank0<T>(1).next(init) << endl;
+  if(p0j) {
+    init.resize(54);
+    for(int i = 0; i < init.size(); i ++)
+      init[i] = T(int(i));
+    cerr << "P0 initialize (2nd): " << P0maxRank<T>(2).next(init) << endl;
+  }
   // N.B. we need rich internal status.
-  int p0(floor(sqrt(T(int(in.size() - 4 - 1 + 2 - 4 - 2 - 3)) ) / T(skip) ));
+  // N.B. in p0j case, we use in.size / 60 from our unreliable numerical calc.
+  //      also, we don't /= skip because of some better output could be gained.
+  int p0(p0j ? T(in.size() / 60) :
+    floor(sqrt(T(int(in.size() - 4 - 1 + 2 - 4 - 2 - 3)) ) / T(skip) ));
   vector<SimpleVector<T> > p;
   vector<T> psec;
   if(p0 < 1) return make_pair(make_pair(p, psec), make_pair(p, psec));
@@ -4180,20 +4217,20 @@ template <typename T, bool p0j = false> pair<pair<vector<SimpleVector<T> >, vect
     idFeeder<T> pb(secondsf.size());
     idFeeder<T> pf(secondsf.size());
     for(int i = 0; i < in.size(); i ++)
-      pf.next(makeProgramInvariantPartial<T>(in[i][j], secondsf[i], true));
+      pf.next(p0j ? in[i][j] : makeProgramInvariantPartial<T>(in[i][j], secondsf[i], true));
     assert(pf.full);
     for(int k = 0; k < pf.res.size(); k ++)
       pb.next(pf.res[pf.res.size() - 1 - k]);
     assert(pb.full);
     for(int i = 0; i < p0; i ++) {
       if(p0j) {
-        P00<T> p0j0;
-        P00<T> p0j1;
+        P2100<T> p0j0;
+        P2100<T> p0j1;
         for(int k = pb.res.size() % skip; k < pb.res.size(); k += skip) {
           q[i][j] = p0j0.next(pb.res[k]);
           p[i][j] = p0j1.next(pf.res[k]);
         }
-       } else {
+      } else {
         q[i][j] = P01<T, false>(4, i + 1).next(pb.res, skip);
         p[i][j] = P01<T, false>(4, i + 1).next(pf.res, skip);
       }
@@ -4204,8 +4241,8 @@ template <typename T, bool p0j = false> pair<pair<vector<SimpleVector<T> >, vect
 #endif
   for(int i = 0; i < p.size(); i ++) {
     if(p0j) {
-      P00<T> p0j0;
-      P00<T> p0j1;
+      P2100<T> p0j0;
+      P2100<T> p0j1;
       for(int k = secondsb.size() % skip; k < secondsb.size(); k += skip) {
         qsec[i] = p0j0.next(secondsb[k]);
         psec[i] = p0j1.next(secondsf[k]);
@@ -4253,16 +4290,18 @@ template <typename T, bool p0j = false> pair<vector<vector<SimpleVector<T> > >, 
           rres[m] = p.first.first[i][j * in0[0][0].size() +
             getImgPt<int>(k + m - rres.size() / 2, in0[0][0].size())];
         sort(rres.begin(), rres.end());
-        res.first[i][j][k] = revertProgramInvariant<T>(make_pair(
-          rres[rres.size() / 2], p.first.second[i]), true);
+        res.first[i][j][k] = p0j ? rres[rres.size() / 2] :
+          revertProgramInvariant<T>(make_pair(
+            rres[rres.size() / 2], p.first.second[i]), true);
       }
       for(int k = 0; k < in0[0][0].size(); k ++) {
         for(int m = 0; m < rres.size(); m ++)
           rres[m] = p.second.first[i][j * in0[0][0].size() +
             getImgPt<int>(k + m - rres.size() / 2, in0[0][0].size())];
         sort(rres.begin(), rres.end());
-        res.second[i][j][k] = revertProgramInvariant<T>(make_pair(
-          rres[rres.size() / 2], p.second.second[i]), true);
+        res.second[i][j][k] = p0j ? rres[rres.size() / 2] :
+          revertProgramInvariant<T>(make_pair(
+            rres[rres.size() / 2], p.second.second[i]), true);
       }
     }
   }
@@ -4311,8 +4350,9 @@ template <typename T, bool p0j = false> pair<vector<vector<SimpleMatrix<T> > >, 
                   in0[0][0].cols() +
                 getImgPt<int>(m + mm - ccj / 2, in0[0][0].cols())];
           sort(rres.begin(), rres.end());
-          res.first[i][j](k, m) = revertProgramInvariant<T>(make_pair(
-            rres[rres.size() / 2], p.first.second[i]), true);
+          res.first[i][j](k, m) = p0j ? rres[rres.size() / 2] :
+            revertProgramInvariant<T>(make_pair(
+              rres[rres.size() / 2], p.first.second[i]), true);
         }
       for(int k = 0; k < in0[0][0].rows(); k ++)
         for(int m = 0; m < in0[0][0].cols(); m ++) {
@@ -4324,8 +4364,9 @@ template <typename T, bool p0j = false> pair<vector<vector<SimpleMatrix<T> > >, 
                   in0[0][0].cols() +
                 getImgPt<int>(m + mm - ccj / 2, in0[0][0].cols())];
           sort(rres.begin(), rres.end());
-          res.second[i][j](k, m) = revertProgramInvariant<T>(make_pair(
-            rres[rres.size() / 2], p.second.second[i]), true);
+          res.second[i][j](k, m) = p0j ? rres[rres.size() / 2] :
+            revertProgramInvariant<T>(make_pair(
+              rres[rres.size() / 2], p.second.second[i]), true);
         }
     }
   }
@@ -4377,10 +4418,12 @@ template <typename T, bool p0j = false> pair<vector<SimpleSparseTensor<T> >, vec
                make_pair(j, make_pair(k, m))))
             continue;
           res.first[i][idx[j]][idx[k]][idx[m]] =
+            p0j ? p.first.first[i][cnt ++] * T(int(2)) - T(int(1)) :
             revertProgramInvariant<T>(make_pair(
               p.first.first[i][cnt] * T(int(2)) - T(int(1)),
                 p.first.second[i]), true);
           res.second[i][idx[j]][idx[k]][idx[m]] =
+            p0j ? p.second.first[i][cnt ++] * T(int(2)) - T(int(1)) :
             revertProgramInvariant<T>(make_pair(
               p.second.first[i][cnt ++] * T(int(2)) - T(int(1)),
                 p.second.second[i]), true);
