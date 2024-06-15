@@ -2726,7 +2726,7 @@ template <typename T> static inline pair<SimpleVector<T>, T> makeProgramInvarian
                             T(int(1)), on01));
   // N.B. x_1 ... x_n == 1.
   // <=> x_1 / (x_1 ... x_n)^(1/n) ... == 1.
-  ratio = exp(ratio / T(res.size()));
+  ratio = isfinite(ratio) ? exp(ratio / T(res.size())) : T(int(1));
   for(int i = 0; i < res.size(); i ++) res[i] /= ratio;
   return make_pair(res, ratio);
 }
@@ -3158,6 +3158,8 @@ template <typename T> inline T P012L<T>::next(const SimpleVector<T>& d) {
     work[work.size() - 1] = T(int(0));
     const auto avg0(avg);
           auto last(sqrt(work.dot(work)));
+    const auto navg(avg.dot(avg));
+    if(! isfinite(navg) || navg == zero) continue;
     for(int ii = 0;
             ii < 2 * int(- log(SimpleMatrix<T>().epsilon()) / log(T(int(2))) )
             && sqrt(work.dot(work) * SimpleMatrix<T>().epsilon()) <
@@ -3561,6 +3563,52 @@ public:
   idFeeder<T> f;
   P p;
   T M;
+};
+
+template <typename T, typename P> class Pprogression {
+public:
+  inline Pprogression() { ; }
+  inline Pprogression(const P& p, const int& loop = 1) {
+    (this->p).resize(loop);
+    for(int i = 0; i < (this->p).size(); i ++)
+      (this->p)[i].resize(i + 1, p);
+    h  = idFeeder<T>(loop);
+    {
+      vector<int> ph0;
+      ph0.resize(loop, 0);
+      ph.resize(loop, ph0);
+      vector<T> eh0;
+      eh0.resize(loop, T(int(0)));
+      eh.resize(loop, eh0);
+    }
+    t ^= t;
+  }
+  inline ~Pprogression() { ; }
+  inline const T& progression(const SimpleVector<T>& h, const int& idx, const int& count) {
+    assert(0 <= idx && 0 <= count);
+    if(! count) return h[idx];
+    if(ph[idx][count]) return eh[idx][count];
+    ph[idx][count] = 1;
+    return (eh[idx][count] = progression(h, idx, count - 1) - progression(h, idx - 1, count - 1));
+  }
+  inline T next(const T& in) {
+    static const T zero(int(0));
+    const auto& hh(h.next(in));
+    if(! h.full) return zero;
+    auto M(zero);
+    for(int i = 0; i < p.size(); i ++)
+      M += p[i][t % p[i].size()].next(progression(hh, hh.size() - 1, i)) + (i ? progression(hh, hh.size() - 2, i - 1) : zero);
+    t ++;
+    for(int i = 0; i < ph.size(); i ++)
+      for(int j = 0; j < ph[i].size(); j ++)
+        ph[i][j] = 0;
+    return M /= T(int(p.size()));
+  }
+  vector<vector<P> > p;
+  idFeeder<T> h;
+  vector<vector<int> > ph;
+  vector<vector<T> > eh;
+  int t;
 };
 
 // N.B. invariant gathers some of the group on the input pattern.

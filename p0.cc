@@ -24,18 +24,21 @@ template <typename T> inline T expscale(const T& x) {
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   int status(3);
-  if(argc < 2) std::cerr << argv[0] << " <status>? : continue with ";
+  int progression(1);
+  if(argc < 2) std::cerr << argv[0] << " <status>? <progression num>? : continue with ";
   if(1 < argc) status = std::atoi(argv[1]);
+  if(2 < argc) progression = std::atoi(argv[2]);
+  assert(0 < progression);
   // N.B. p0 is valid when input is continuous.
   //      the condition dimension up to 3 is from v2v tanglement
   //      with separated input, so original cont. input isn't affect.
   //      the condition dimension up to 7 is also from v2v but non commutative.
   if(0 < status) status = max(3, min(7, status));
-  std::cerr << argv[0] << " " << status << std::endl;
-  PBond<num_t, P0maxRank<num_t> > p(P0maxRank<num_t>(), max(1, abs(status)));
+  std::cerr << argv[0] << " " << status << " " << progression << std::endl;
+  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > p(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(), max(1, abs(status))), progression);
   idFeeder<num_t> in(max(1, abs(status / 2)));
   idFeeder<num_t> out(max(1, abs(status / 2)));
-  PBond<num_t, P0maxRank<num_t> > q(P0maxRank<num_t>(abs(status)), int(exp(num_t(status * status))) );
+  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > q(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(abs(status)), int(exp(num_t(status * status))) ), progression);
   std::string s;
   num_t d(int(0));
   auto  M(d);
