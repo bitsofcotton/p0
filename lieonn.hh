@@ -3581,6 +3581,9 @@ public:
       eh0.resize(loop, T(int(0)));
       eh.resize(loop, eh0);
     }
+    bb.reserve(loop);
+    for(int i = 0; i < loop; i ++)
+      bb.emplace_back(idFeeder<T>(i + 1));
     t ^= t;
   }
   inline ~Pprogression() { ; }
@@ -3597,7 +3600,7 @@ public:
     if(! h.full) return zero;
     auto M(zero);
     for(int i = 0; i < p.size(); i ++)
-      M += p[i][t % p[i].size()].next(progression(hh, hh.size() - 1, i)) + (i ? progression(hh, hh.size() - 2, i - 1) : zero);
+      M += bb[i].next(p[i][t % p[i].size()].next(progression(hh, hh.size() - 1, i)))[0] + (i ? progression(hh, hh.size() - 2, i - 1) : zero);
     t ++;
     for(int i = 0; i < ph.size(); i ++)
       for(int j = 0; j < ph[i].size(); j ++)
@@ -3608,7 +3611,22 @@ public:
   idFeeder<T> h;
   vector<vector<int> > ph;
   vector<vector<T> > eh;
+  vector<idFeeder<T> > bb;
   int t;
+};
+
+template <typename T, typename P, typename Q> class PAthenB {
+public:
+  inline PAthenB() { ; }
+  inline PAthenB(P&& p, Q&& q) { this->p = p; this->q = q; M = T(int(0)); }
+  inline ~PAthenB() { ; }
+  inline T next(const T& in) {
+    const auto M2(q.next(in * M));
+    return M2 * (M = p.next(in));
+  }
+  P p;
+  Q q;
+  T M;
 };
 
 // N.B. invariant gathers some of the group on the input pattern.
