@@ -3568,7 +3568,9 @@ public:
 template <typename T, typename P> class Pprogression {
 public:
   inline Pprogression() { ; }
-  inline Pprogression(const P& p, const int& loop = 1) {
+  inline Pprogression(const P& p, const int& loop0 = 1) {
+    assert(loop0);
+    const auto loop(abs(loop0));
     (this->p).resize(loop);
     for(int i = 0; i < (this->p).size(); i ++)
       (this->p)[i].resize(i + 1, p);
@@ -3583,7 +3585,7 @@ public:
     }
     bb.reserve(loop);
     for(int i = 0; i < loop; i ++)
-      bb.emplace_back(idFeeder<T>(i + 1));
+      bb.emplace_back(idFeeder<T>(loop0 < 0 ? 1 : i + 1));
     t ^= t;
   }
   inline ~Pprogression() { ; }
@@ -4228,8 +4230,8 @@ template <typename T> pair<pair<SimpleVector<T>, SimpleVector<T> >, pair<T, T> >
           P0maxRank<T>(), 3), progression) ) );
     auto pb(pf);
     for(int i = 0; i < in.size(); i ++) {
-      p.first[i]  = pf.next(makeProgramInvariantPartial<T>(in[i][j], seconds[i], true));
-      p.second[i] = pb.next(makeProgramInvariantPartial<T>(in[in.size() - i - 1][j], seconds[in.size() - i - 1], true));
+      p.first[j]  = pf.next(makeProgramInvariantPartial<T>(in[i][j], seconds[i], true));
+      p.second[j] = pb.next(makeProgramInvariantPartial<T>(in[in.size() - i - 1][j], seconds[in.size() - i - 1], true));
     }
   }
   P210<T> pf(Pprogression<T, PBond<T, P012L<T> > >(PBond<T, P012L<T> >(
@@ -4268,6 +4270,7 @@ template <typename T> pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > 
   }
   const auto p(predv<T>(in));
   pair<vector<SimpleVector<T> >, vector<SimpleVector<T> > > res;
+  if(! p.first.first.size()) return res;
   vector<T> rres;
   rres.resize(cj);
   res.first.resize(in0[0].size());
@@ -4318,6 +4321,7 @@ template <typename T> pair<vector<SimpleMatrix<T> >, vector<SimpleMatrix<T> > > 
   }
   const auto p(predv<T>(in));
   pair<vector<SimpleMatrix<T> >, vector<SimpleMatrix<T> > > res;
+  if(! p.first.first.size()) return res;
   vector<T> rres;
   rres.resize(ccj * ccj);
   res.first.resize(in0[0].size());
@@ -4393,6 +4397,7 @@ template <typename T> pair<SimpleSparseTensor<T>, SimpleSparseTensor<T> > predST
   auto p(predv<T>(in));
   in.resize(0);
   pair<SimpleSparseTensor<T>, SimpleSparseTensor<T> > res;
+  if(! p.first.first.size()) return res;
   for(int j = 0, cnt = 0; j < idx.size(); j ++)
     for(int k = 0; k < idx.size(); k ++)
       for(int m = 0; m < idx.size(); m ++) {

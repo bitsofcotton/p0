@@ -16,9 +16,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <status>? < stream.txt
+    ./p0 <status>? <progression>? < stream.txt
     # 0 > status for blurred next step prediction, needs 2 <= \|status\|.
     # 0 < status for P0maxRank plain prediction.
+    # 0 > progression for next 1 step prediction with some of the deltas.
+    # 0 < progression for next |progression| step prediction.
 
 # Check status length is valid for accuracy or not
     ./p0r <len> <step> <r>
@@ -202,4 +204,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/13 add p0i.cc.
 2024/06/15 punch p0i.cc, it's no use.
 2024/06/15 add progression.
+2024/06/16 add progression \<0 arg.
 
