@@ -1,5 +1,5 @@
 # bitsofcotton/p0
-Generic predictor for Riemann measurable input streams and their variants (on aleph_1).
+Generic predictor for Riemann measurable input streams and their variants (on aleph_1 cf. C).
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
@@ -24,7 +24,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # Check status length is valid for accuracy or not
     ./p0r <len> <step> <r>
-    # last line shows accuracy is valid or not. if valid, it's near \[1, 1, 0\].
+    # last line shows accuracy is valid or not. if valid, it's near \[1, 0, ...\].
 
 # Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.

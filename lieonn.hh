@@ -3586,6 +3586,7 @@ public:
     bb.reserve(loop);
     for(int i = 0; i < loop; i ++)
       bb.emplace_back(idFeeder<T>(loop0 < 0 ? 1 : i + 1));
+    addp = 0 < loop0;
     t ^= t;
   }
   inline ~Pprogression() { ; }
@@ -3602,7 +3603,7 @@ public:
     if(! h.full) return zero;
     auto M(zero);
     for(int i = 0; i < p.size(); i ++)
-      M += bb[i].next(p[i][t % p[i].size()].next(progression(hh, hh.size() - 1, i)))[0] + (i ? progression(hh, hh.size() - 2, i - 1) : zero);
+      M += bb[i].next(p[i][t % p[i].size()].next(progression(hh, hh.size() - 1, i)))[0] + (i && addp ? progression(hh, hh.size() - 2, i - 1) : zero);
     t ++;
     for(int i = 0; i < ph.size(); i ++)
       for(int j = 0; j < ph[i].size(); j ++)
@@ -3615,6 +3616,7 @@ public:
   vector<vector<T> > eh;
   vector<idFeeder<T> > bb;
   int t;
+  bool addp;
 };
 
 template <typename T, typename P, typename Q> class PAthenB {
