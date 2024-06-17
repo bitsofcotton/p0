@@ -205,4 +205,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/15 punch p0i.cc, it's no use.
 2024/06/15 add progression.
 2024/06/16 add progression \<0 arg.
+2024/06/17 fix progression.
 
