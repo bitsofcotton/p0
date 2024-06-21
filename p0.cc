@@ -23,22 +23,19 @@ template <typename T> inline T expscale(const T& x) {
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
-  int status(3);
   int progression(1);
-  if(argc < 2) std::cerr << argv[0] << " <status>? <progression num>? : continue with ";
-  if(1 < argc) status = std::atoi(argv[1]);
-  if(2 < argc) progression = std::atoi(argv[2]);
-  assert(progression);
+  if(argc < 2) std::cerr << argv[0] << " <progression num>? : continue with ";
+  if(1 < argc) progression = std::atoi(argv[1]);
   // N.B. p0 is valid when input is continuous.
   //      the condition dimension up to 3 is from v2v tanglement
   //      with separated input, so original cont. input isn't affect.
   //      the condition dimension up to 7 is also from v2v but non commutative.
-  if(0 < status) status = max(3, min(7, status));
-  std::cerr << argv[0] << " " << status << " " << progression << std::endl;
-  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > p(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(), max(1, abs(status))), progression);
-  idFeeder<num_t> in(max(1, abs(status / 2)));
-  idFeeder<num_t> out(max(1, abs(status / 2)));
-  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > q(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(abs(status)), int(exp(num_t(status * status))) ), progression);
+  std::cerr << argv[0] << " " << progression << std::endl;
+  // N.B. since P0maxRank isn't linear, Pprogression works.
+  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > p(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(), 3), progression ? progression : 1, 3);
+  idFeeder<num_t> in(1);
+  idFeeder<num_t> out(1);
+  PBond<num_t, P0maxRank<num_t> > q(P0maxRank<num_t>(2), int(exp(num_t(2 * 2))) );
   std::string s;
   num_t d(int(0));
   auto  M(d);
@@ -46,8 +43,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     std::cout << d * M << ", ";
-    if(! status) M = num_t(int(1));
-    else if(status < 0) {
+    if(! progression) {
       const auto& inn(in.next(logscale<num_t>(logscale<num_t>(d)) ));
             auto  dd(inn[0]);
       for(int i = 1; i < inn.size(); i ++) dd += inn[i];
