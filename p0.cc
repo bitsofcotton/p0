@@ -27,8 +27,8 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <progression num>? : continue with ";
   if(1 < argc) progression = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << progression << std::endl;
-  if(progression) {
-    const auto& pn(pnTinySingle(abs(progression)));
+  if(1 < abs(progression)) {
+    const auto& pn(pnTinySingle(abs(progression) - 1));
     progression = sgn<int>(progression);
     for(int i = 0; i < pn.size(); i ++) progression *= pn[i];
     std::cerr << "using raw progression: " << progression << std::endl;
