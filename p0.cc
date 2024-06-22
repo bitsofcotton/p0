@@ -38,10 +38,10 @@ int main(int argc, const char* argv[]) {
   //      with separated input, so original cont. input isn't affect.
   //      the condition dimension up to 7 is also from v2v but non commutative.
   // N.B. since P0maxRank isn't linear, Pprogression works.
-  Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > p(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(), 3), progression ? progression : 1, 3);
+  Pprogression<num_t, P0maxRank<num_t> > p(progression ? progression : 1, 3);
   idFeeder<num_t> in(1);
   idFeeder<num_t> out(1);
-  PBond<num_t, P0maxRank<num_t> > q(P0maxRank<num_t>(2), int(exp(num_t(2 * 2))) );
+  PBond<num_t, P0maxRank<num_t> > q(int(exp(num_t(2 * 2))), P0maxRank<num_t>(2));
   std::string s;
   num_t d(int(0));
   auto  M(d);
