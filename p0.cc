@@ -26,11 +26,17 @@ int main(int argc, const char* argv[]) {
   int progression(1);
   if(argc < 2) std::cerr << argv[0] << " <progression num>? : continue with ";
   if(1 < argc) progression = std::atoi(argv[1]);
+  std::cerr << argv[0] << " " << progression << std::endl;
+  if(progression) {
+    const auto& pn(pnTinySingle(abs(progression)));
+    progression = sgn<int>(progression);
+    for(int i = 0; i < pn.size(); i ++) progression *= pn[i];
+    std::cerr << "using raw progression: " << progression << std::endl;
+  }
   // N.B. p0 is valid when input is continuous.
   //      the condition dimension up to 3 is from v2v tanglement
   //      with separated input, so original cont. input isn't affect.
   //      the condition dimension up to 7 is also from v2v but non commutative.
-  std::cerr << argv[0] << " " << progression << std::endl;
   // N.B. since P0maxRank isn't linear, Pprogression works.
   Pprogression<num_t, PBond<num_t, P0maxRank<num_t> > > p(PBond<num_t, P0maxRank<num_t> >(P0maxRank<num_t>(), 3), progression ? progression : 1, 3);
   idFeeder<num_t> in(1);
@@ -51,7 +57,8 @@ int main(int argc, const char* argv[]) {
       M = outn[0];
       for(int i = 1; i < outn.size(); i ++) M += outn[i];
       M = expscale<num_t>(expscale<num_t>(M / num_t(int(outn.size())) ));
-    } else M = p.next(d);
+    } else if(progression == - 1) M = num_t(int(1));
+    else M = p.next(d);
     std::cout << M << std::endl << std::flush;
   }
   return 0;

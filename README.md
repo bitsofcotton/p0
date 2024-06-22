@@ -17,9 +17,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 
 # How to use (commandline):
     ./p0 <progression>? < stream.txt
-    # progression <  0 for next 1 step prediction with some of the deltas.
+    # progression <  - 1 for next |progression| step prediction.
+    # progression == - 1 for plain const. prediction.
     # progression == 0 for exp/log scale plain next 2 step prediction.
-    # 0 < progression  for next |progression| step prediction.
+    # progression <  0 for next 1 step prediction with some of the deltas.
 
 # Check status length is valid for accuracy or not
     ./p0r <len> <step> <r>
@@ -207,4 +208,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/17 fix progression.
 2024/06/19 merge latest lieonn.
 2024/06/21 merge latest lieonn. INCLUDES command line argument change.
+2024/06/22 update readme, merge latest lieonn.
 
