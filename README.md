@@ -211,4 +211,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/22 update readme, merge latest lieonn.
 2024/06/23 large change around class instance initializer, also have progression short range fix.
 2024/06/23 fatal fix around last update on lieonn.hh, readme.md.
+2024/06/24 fix addp == true progression case.
 
