@@ -213,4 +213,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/23 fatal fix around last update on lieonn.hh, readme.md.
 2024/06/24 fix addp == true progression case.
 2024/06/26 fix Ppersistent.
+2024/07/07 Pprogression uses shorter range but enough internal states.
 
