@@ -3,6 +3,9 @@ Generic predictor for Riemann measurable input streams and their variants (on al
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
 
+Also there's another plenty of the room to make th. Peter-Weyl based transformations s.t. \[\[1*0^1+sgn(\chi,0)/2*0^2+...\],...\] / sqrt(dim(\pi_{i,j})) based matrices.
+This is harder to apply because original function must be compatible to \chi group decompositions however to calculate them decomposition in numerical isn't so harder. Either we don't know how to calculate differential coefficient of their decomposition.
+
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
 And, if we make DFT and IDFT on them, there exists differential on them in DFT meaning.
@@ -214,4 +217,5 @@ p0l.cc doing some of this however, this needs huge memory usage and this isn't i
 2024/06/24 fix addp == true progression case.
 2024/06/26 fix Ppersistent.
 2024/07/07 Pprogression uses shorter range but enough internal states.
+2024/08/27 add plenty of the room another directions.
 
