@@ -5,7 +5,7 @@ There's a plenty of the room to make this into n-variable predictor, but this re
 
 Also there's another plenty of the room to make th. Peter-Weyl based transformations as some of the normal orthogonal base but we cannot define differential of them in generic ones.
 
-Also, there's some of the L-function based transformation s.t. \[\[Sum chi(k)(0/n)^k\*1, ...\],\[..., Sum chi(k)(1/n)^k\*2, ...\]\]1 based matrix but this is obscure. With lacking fundation but they could be transformation on Archimedean helicoid also a single loop on P0DFT about prediction.
+Also, there's some of the L-function based transformation s.t. \[\[Sum chi(k)(0/n)^k\*1, ...\],\[..., Sum chi(k)(1/n)^k\*2, ...\]\]1 based matrix but this is obscure. With lacking foundation but they could be transformation on Archimedean helicoid also a single loop on P0DFT about prediction.
 
 # Contexts
 There exists discrete fourier transform on given (same interval) series (This is well described on everywhere.).
