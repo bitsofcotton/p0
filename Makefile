@@ -15,8 +15,8 @@ LDFLAGS+=	-lc++
 #LDFLAGS+=	-lestdc++
 
 clean:
-	@rm -rf p0 p0-32 p0r p0r32
-all:	p0 p0-32 p0r p0r32
+	@rm -rf p0 p0-32 p0r p0r32 p04 p04-32
+all:	p0 p0-32 p0r p0r32 p04 p04-32
 p0:
 	${CXX} ${CXXFLAGS} -static -O0 -o p0 p0.cc
 p0-32:
@@ -29,4 +29,10 @@ p0r32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -o p0r32 p0r.cc
 p0r64:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -o p0r64 p0r.cc
+p04:
+	${CXX} ${CXXFLAGS} -static -O0 -o p04 p04.cc
+p04-32:
+	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -O0 -o p04-32 p04.cc
+p04-64:
+	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -O0 -o p04-64 p04.cc
 
