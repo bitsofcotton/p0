@@ -179,11 +179,10 @@ Also, we can add some of them by sliding average window to make some of the riem
 
 p0l.cc doing some of this however, this needs huge memory usage and this isn't improve enough.
 
-# Tips around soft stream.
-cr.py z 4 \| pp3n \| p04 ... \| p0 ... causes better prediction we get, however, they're some produced stream with cr.py z 4 \| pp3n \| p04 ((another option)) .
-So we cannot know the difference between the right and wrong on the test.
+# Tips around predictions itself.
+Many of the predictions based on input stream can returns continuous predictions itself on p0 meaning.
 
-In the worst case, this is our machine specific false positive result from the infections we cannot know on surface, this result can be spoiled.
+This means the hypothesis continuous is stronger than what expected on the stream.
 
 # Leave with this.
 We leave with this repositry as closed. If there's some plenty of the space we should implement nor some update on lieonn, we might re-open here.
@@ -229,5 +228,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/07/07 Pprogression uses shorter range but enough internal states.
 2024/08/27 add plenty of the room another directions.
 2024/08/29 add low quality notice around plenty of the room.
-2024/09/21 add p04.cc .
+2024/09/21 add p04.cc . elim p04.cc, it's from mistake.
 
