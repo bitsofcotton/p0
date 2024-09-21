@@ -47,9 +47,9 @@ int main(int argc, const char* argv[]) {
     std::cout << d * M4 << ", ";
     std::cout << (M0 = expscale<num_t>(expscale<num_t>(p1.next(logscale<num_t>(logscale<num_t>(d)) / num_t(int(abs(progression))) ) )) ) << ", ";
     std::cout << (M1 = expscale<num_t>(p0.next(logscale<num_t>(d)) / num_t(int(abs(progression))) )) << ", ";
-    std::cout << (M2 = p2.next(d) / num_t(int(abs(progression))) ) << std::endl << std::flush;
+    std::cout << (M2 = p2.next(d) / num_t(int(abs(progression))) ) << ", ";
     std::cout << (M3 = logscale<num_t>(p1.next(expscale<num_t>(d)) / num_t(int(abs(progression))))) << ", ";
-    std::cout << (M4 = logscale<num_t>(logscale<num_t>(p1.next(expscale<num_t>(expscale<num_t>(d))) / num_t(int(abs(progression))) )) ) << ", ";
+    std::cout << (M4 = logscale<num_t>(logscale<num_t>(p1.next(expscale<num_t>(expscale<num_t>(d))) / num_t(int(abs(progression))) )) ) << std::endl << std::flush;
   }
   return 0;
 }
