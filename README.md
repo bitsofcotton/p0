@@ -229,4 +229,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/08/27 add plenty of the room another directions.
 2024/08/29 add low quality notice around plenty of the room.
 2024/09/21 add p04.cc . elim p04.cc, it's from mistake.
+2024/09/24 revert p0.cc as to use only raw P0maxRank. Pprogression is duplicate and exhaust of the resources.
 
