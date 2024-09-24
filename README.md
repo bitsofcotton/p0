@@ -20,11 +20,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <progression>? < stream.txt
-    # progression <  - 1 for next |progression| step prediction.
-    # progression == - 1 for plain const. prediction.
-    # progression == 0 for exp/log scale plain next 2 step prediction.
-    # 0 <  progression for next 1 step prediction with some of the deltas.
+    ./p0 <length>? < stream.txt
+    # abs(length) : pnext length
+    # length < 0 for log-exp scale prediction.
+    # 0 < length for raw linear scale prediction.
 
 # Check status length is valid for accuracy or not
     ./p0r <len> <step> <r>
