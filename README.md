@@ -20,7 +20,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <length>? < stream.txt
+    ./p0 <length>? <step>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
@@ -229,4 +229,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/08/29 add low quality notice around plenty of the room.
 2024/09/21 add p04.cc . elim p04.cc, it's from mistake.
 2024/09/24 revert p0.cc as to use only raw P0maxRank. Pprogression is duplicate and exhaust of the resources.
+2024/09/28 add step option.
 

@@ -24,18 +24,22 @@ template <typename T> static inline T logscale(const T& x) {
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   int length(3);
-  if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
+  int step(1);
+  if(argc < 2) std::cerr << argv[0] << " <length>? <step>? : continue with ";
   if(1 < argc) length = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << length << std::endl;
-  PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2));
+  if(2 < argc) step   = std::atoi(argv[2]);
+  assert(0 < step);
+  std::cerr << argv[0] << " " << length << " " << step << std::endl;
+  PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2), P0maxRank<num_t>(step));
+  idFeeder<num_t> f(step);
   std::string s;
   num_t d(int(0));
-  auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
+    const auto& M(f.res[0]);
     std::stringstream ins(s);
     ins >> d;
     std::cout << d * M << ", ";
-    std::cout << (length ? (0 < length ? M = p.next(d) : M = expscale<num_t>(p.next(logscale<num_t>(d)))) : M = d) << std::endl << std::flush;
+    std::cout << f.next(length ? (0 < length ? p.next(d) : expscale<num_t>(p.next(logscale<num_t>(d)))) : d)[f.res.size() - 1] << std::endl << std::flush;
   }
   return 0;
 }
