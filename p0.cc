@@ -31,6 +31,7 @@ int main(int argc, const char* argv[]) {
   assert(0 < step);
   std::cerr << argv[0] << " " << length << " " << step << std::endl;
   PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2), P0maxRank<num_t>(step));
+  SimpleVector<num_t> b;
   idFeeder<num_t> f(step);
   std::string s;
   num_t d(int(0));
@@ -39,7 +40,11 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
     std::cout << d * M << ", ";
-    std::cout << f.next(length ? (0 < length ? p.next(d) : expscale<num_t>(p.next(logscale<num_t>(d)))) : d)[f.res.size() - 1] << std::endl << std::flush;
+    if(! length) {
+      b.entity.emplace_back(d);
+      std::cout << f.next(2 < b.size() ? P0maxRank<num_t>(step).next(b) : num_t(int(0)))[f.res.size() - 1] << std::endl << std::flush;
+    } else
+      std::cout << f.next(0 < length ? p.next(d) : expscale<num_t>(p.next(logscale<num_t>(d))) )[f.res.size() - 1] << std::endl << std::flush;
   }
   return 0;
 }
