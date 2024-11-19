@@ -231,4 +231,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/09/24 revert p0.cc as to use only raw P0maxRank. Pprogression is duplicate and exhaust of the resources.
 2024/09/28 add step option.
 2024/11/16 add p0 0 ... command.
+2024/11/19 speed/accuracy fix on taylor on lieonn.hh.
 
