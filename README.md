@@ -232,4 +232,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/09/28 add step option.
 2024/11/16 add p0 0 ... command.
 2024/11/19 speed/accuracy fix on taylor on lieonn.hh. this change leads us doubles pnext r variable.
+2024/12/02 taylor function improvement, reclose with this.
 
