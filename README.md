@@ -26,7 +26,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # 0 < length for raw linear scale prediction.
 
 # Check status length is valid for accuracy or not
-    ./p0r <len> <step> <r>
+    ./p0 r <len> <step>
     # last line shows accuracy is valid or not. if valid, it's near \[1, 0, ...\].
 
 # Proof on Riemann measurable condition.
