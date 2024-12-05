@@ -43,20 +43,21 @@ int main(int argc, const char* argv[]) {
     std::cout << sumn << ", " << sumd << ", " << sqrt(n2n) << ", " << sqrt(n2d) << std::endl;
     return 0;
   }
-  int length(3);
   int step(1);
-  if(argc < 2) std::cerr << argv[0] << " <length>? <step>? : continue with ";
-  if(1 < argc) length = std::atoi(argv[1]);
-  if(2 < argc) step   = std::atoi(argv[2]);
+  int length(0);
+  if(argc < 2) std::cerr << argv[0] << " <step>? <length>? : continue with ";
+  if(1 < argc) step   = std::atoi(argv[1]);
+  if(2 < argc) length = std::atoi(argv[2]);
   assert(0 < step);
-  std::cerr << argv[0] << " " << length << " " << step << std::endl;
+  std::cerr << argv[0] << " " << step << " " << length << std::endl;
   PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2), P0maxRank<num_t>(step));
   SimpleVector<num_t> b;
   idFeeder<num_t> f(step);
   std::string s;
-  num_t d(int(0));
+  num_t zero(int(0));
+  auto  d(zero);
   while(std::getline(std::cin, s, '\n')) {
-    const auto& M(f.res[0]);
+    const auto& M(f.full ? f.res[0] : zero);
     std::stringstream ins(s);
     ins >> d;
     std::cout << d * M << ", ";

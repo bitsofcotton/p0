@@ -20,10 +20,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
       xnext = p.next(x);
 
 # How to use (commandline):
-    ./p0 <length>? <step>? < stream.txt
+    ./p0 <step>? <length>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
+    # length == 0 for increasingly increase length with raw linear scale.
 
 # Check status length is valid for accuracy or not
     ./p0 r <len> <step>
@@ -233,4 +234,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/11/16 add p0 0 ... command.
 2024/11/19 speed/accuracy fix on taylor on lieonn.hh. this change leads us doubles pnext r variable.
 2024/12/02 taylor function improvement, reclose with this.
+2024/12/05 exchanged argv[1] and argv[2] meanings.
 
