@@ -25,9 +25,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
     # length == 0 for increasingly increase length with raw linear scale.
-    #   this takes O((input lines)^2) ratio calculation time.
+    #   this takes O((input lines)^3) ratio calculation time.
     # step == 0 && length == 0 for persistent predictions on p0.
-    #   this also takes O((input lines)^2) ratio calculation time.
+    #   this also takes O((input lines)^3) ratio calculation time.
 
 # Check status length is valid for accuracy or not
     ./p0 r <len> <step>
