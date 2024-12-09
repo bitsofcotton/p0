@@ -27,7 +27,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
     # step == 0 && length == 0 for persistent predictions on p0.
-    #   this also takes O((input lines)^3) ratio calculation time.
+    #   this takes O((input lines)^4) ratio calculation time.
 
 # Check status length is valid for accuracy or not
     ./p0 r <len> <step>
@@ -239,4 +239,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/12/02 taylor function improvement, reclose with this.
 2024/12/05 exchanged argv[1] and argv[2] meanings.
 2024/12/08 new p0 0 0 command line option is now default.
+2024/12/09 fix readme calculation order as to match implementation.
 
