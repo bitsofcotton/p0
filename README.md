@@ -190,6 +190,8 @@ This means the hypothesis continuous is stronger than what expected on the strea
 # Leave with this.
 We leave with this repositry as closed. If there's some plenty of the space we should implement nor some update on lieonn, we might re-open here.
 
+Should really leave here.
+
 # Another Download Sites (Closed)
 * https://drive.google.com/drive/folders/1B71X1BMttL6yyi76REeOTNRrpopO8EAR?usp=sharing
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
@@ -240,4 +242,5 @@ We leave with this repositry as closed. If there's some plenty of the space we s
 2024/12/05 exchanged argv[1] and argv[2] meanings.
 2024/12/08 new p0 0 0 command line option is now default.
 2024/12/09 fix readme calculation order as to match implementation.
+2024/12/13 should really leave, close readme.md.
 
