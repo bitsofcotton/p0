@@ -14,13 +14,12 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
  but, in discrete meaning, I can't find preceding results but might be exists.)
 
 # How to use:
-    P0maxRank<double> p(status);
-    // pnext<T>(range, step) for riemann measurable prediction vector.
+    SimpleVector<double> buf;
     ...
-      xnext = p.next(x);
+    xnext = P0maxRank<double>(step).next(buf);
 
 # How to use (commandline):
-    ./p0 <step>? <length>? < stream.txt
+    ./p0(-(32|64)) <step>? <length>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
@@ -30,7 +29,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     #   this takes O((input lines)^4) ratio calculation time.
 
 # Check status length is valid for accuracy or not
-    ./p0 r <len> <step>
+    ./p0(-(32|64)) r <len> <step>
     # last line shows accuracy is valid or not. if valid, it's near \[1, 0, ...\].
 
 # Proof on Riemann measurable condition.
@@ -243,4 +242,5 @@ Should really leave here.
 2024/12/08 new p0 0 0 command line option is now default.
 2024/12/09 fix readme calculation order as to match implementation.
 2024/12/13 should really leave, close readme.md.
+2024/12/14 shoud last update readme.md.
 
