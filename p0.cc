@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,6 +9,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <assert.h>
+#include <stdint.h>
 #include <sys/resource.h>
 
 #include "lieonn.hh"
