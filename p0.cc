@@ -23,11 +23,11 @@ template <typename T> static inline T logscale(const T& x) {
   return sgn<T>(x) * log(abs(x) + T(int(1)));
 }
 
-template <typename T> static inline T pseudoerf(const T& x) {
+template <typename T> static inline T pseudoerfscale(const T& x) {
   return sgn<T>(x) == T(int(0)) ? x : sgn<T>(x) * exp(- x * x);
 }
 
-template <typename T> static inline T pseudoierf(const T& y) {
+template <typename T> static inline T pseudoierfscale(const T& y) {
   return sgn<T>(y) == T(int(0)) ? y : sgn<T>(y) * sqrt(abs(log(abs(y))));
 }
 
@@ -72,8 +72,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
 #if defined(_CHAIN_)
-    std::cout << pseudoerf<num_t>(d - M) << ", ";
-    d = pseudoierf<num_t>(d);
+    std::cout << pseudoerfscale<num_t>((d = pseudoierfscale<num_t>(d)) - M) << ", ";
 #else
     std::cout << d * M << ", ";
 #endif
