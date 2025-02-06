@@ -243,4 +243,5 @@ Should really leave here.
 2024/12/09 fix readme calculation order as to match implementation.
 2024/12/13 should really leave, close readme.md.
 2024/12/14 shoud last update readme.md.
+2025/02/07 add _CHAIN_ compile option.
 
