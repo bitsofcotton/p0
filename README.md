@@ -244,4 +244,5 @@ Should really leave here.
 2024/12/13 should really leave, close readme.md.
 2024/12/14 shoud last update readme.md.
 2025/02/07 add _CHAIN_ compile option.
+2025/02/07 absent and integrate lastup into p2/persistent.cc.
 

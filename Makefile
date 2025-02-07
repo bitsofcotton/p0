@@ -14,8 +14,8 @@ LDFLAGS+=	-lc++
 #LDFLAGS+=	-lestdc++
 
 clean:
-	@rm -rf p0 p0-32 p0c p0c32
-all:	p0 p0-32 p0c p0c32
+	@rm -rf p0 p0-32
+all:	p0 p0-32
 p0:
 	${CXX} ${CXXFLAGS} -static -O0 -o p0 p0.cc
 p0-32:
