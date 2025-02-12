@@ -15,14 +15,6 @@
 #include "lieonn.hh"
 typedef myfloat num_t;
 
-template <typename T> static inline T expscale(const T& x) {
-  return sgn<T>(x) * (exp(abs(x)) - T(int(1)));
-}
-
-template <typename T> static inline T logscale(const T& x) {
-  return sgn<T>(x) * log(abs(x) + T(int(1)));
-}
-
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   if(1 < argc && argv[1][0] == 'r') {
@@ -64,7 +56,7 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
 #if defined(_CHAIN_)
-    // std::cout << pseudoerfscale<num_t>((d = pseudoierfscale<num_t>(d)) - M) << ", ";
+    // std::cout << pseudoerfscale<num_t>(((d = pseudoierfscale<num_t>(d / num_t(int(2)))) - M) * num_t(int(2))) << ", ";
     std::cout << d - M << ", ";
 #else
     std::cout << d * M << ", ";

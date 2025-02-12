@@ -4415,6 +4415,14 @@ template <typename T> static inline T pseudoierfscale(const T& y) {
   return sgn<T>(y) == T(int(0)) ? y : sgn<T>(y) * sqrt(abs(- log(abs(y))));
 }
 
+template <typename T> static inline T expscale(const T& x) {
+  return sgn<T>(x) * (exp(abs(x)) - T(int(1)));
+}
+
+template <typename T> static inline T logscale(const T& x) {
+  return sgn<T>(x) * log(abs(x) + T(int(1)));
+}
+
 template <typename T> static inline T plainrecurPersistent(T x, const int& r, const vector<T>& Mp, const vector<T>& Mq) {
   assert(Mp.size() == Mq.size() && r <= Mp.size());
   for(int i = 0; i < r; i ++) {
@@ -4436,7 +4444,7 @@ template <typename T> static inline vector<T> samplerecurPersistent(const vector
 #endif
     for(int j = 0; j < interval; j ++) {
       const auto x(T(j * 2) / T(interval - 1) - T(int(1)));
-      samples[j] = make_pair(abs(plainrecurPersistent<T>(x, i + 1, Mp, Mq) - d[i]), x);
+      samples[j] = make_pair(abs(plainrecurPersistent<T>(x, i + 1, Mp, Mq)), x);
     }
     sort(samples.begin(), samples.end());
     res.emplace_back(samples[0].second);
@@ -4534,12 +4542,18 @@ public:
     const auto MMp(nextdfPersistent<T>(d, Mp, Mq, fp, fq));
     const auto MMm(nextdfPersistent<T>(md, mMp, mMq, mfp, mfq));
     T M(int(0));
-    for(int j = 0; j < sizeof(feeds) / sizeof(feeds[0]) && M == T(int(0)); j ++)
-      for(int i = d[j].size() - 2; 0 <= i && M == T(int(0)); i --) {
+    int cnt(0);
+    for(int j = 0; j < sizeof(feeds) / sizeof(feeds[0]); j ++)
+      for(int i = d[j].size() - 2; 0 <= i; i --) {
         if(! isfinite(MMp[j][i]) || ! isfinite(MMm[j][i])) continue;
-        M = (MMp[j][i] == T(int(0)) || MMm[j][i] == T(int(0)) ? T(int(0)) : (MMp[j][i] - MMm[j][i] < T(int(0)) ? (MMp[j][i] < - MMm[j][i] ? - MMm[j][i] : MMp[j][i]) : (- MMm[j][i] < MMp[j][i] ? - MMm[j][i] : MMp[j][i]) ));
-        if(abs(M) == T(int(1)) ) M = T(int(0));
+        auto lMM(MMp[j][i] == T(int(0)) || MMm[j][i] == T(int(0)) ? T(int(0)) : (MMp[j][i] - MMm[j][i] < T(int(0)) ? (MMp[j][i] < - MMm[j][i] ? - MMm[j][i] : MMp[j][i]) : (- MMm[j][i] < MMp[j][i] ? - MMm[j][i] : MMp[j][i]) ));
+        if(abs(lMM) != T(int(1)) ) {
+          M += lMM;
+          cnt ++;
+          break;
+        }
       }
+    if(cnt) M /= T(cnt);
     if(! ((++ t) % ((stat + 8) * 2)))
       for(int j = 0; j < sizeof(feeds) / sizeof(feeds[0]); j ++) {
         {
