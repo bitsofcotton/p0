@@ -19,17 +19,15 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = P0maxRank<double>(step).next(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <step>? <length>? < stream.txt
+    ./p0(-(32|64)) <length>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
-    # step == 0 && length == 0 for persistent predictions on p0.
-    #   this takes O((input lines)^4) ratio calculation time.
 
 # Check status length is valid for accuracy or not
-    ./p0(-(32|64)) r <len> <step>
+    ./p0(-(32|64)) r <len>
     # last line shows accuracy is valid or not. if valid, it's near \[1, 0, ...\].
 
 # Proof on Riemann measurable condition.
@@ -246,4 +244,5 @@ Should really leave here.
 2025/02/07 add _CHAIN_ compile option.
 2025/02/07 absent and integrate lastup into p2/persistent.cc.
 2025/02/13 compat with latest lieonn.hh.
+2025/02/27 elim step parameter.
 
