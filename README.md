@@ -245,4 +245,5 @@ Should really leave here.
 2025/02/07 absent and integrate lastup into p2/persistent.cc.
 2025/02/13 compat with latest lieonn.hh.
 2025/02/27 elim step parameter.
+2025/03/08 improves argv[1] == 0 memory usage instead of caching pnext results, this slow downs another argv[1] > 0 cases.
 
