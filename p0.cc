@@ -36,18 +36,22 @@ int main(int argc, const char* argv[]) {
     std::cout << sumn << ", " << sumd << ", " << sqrt(n2n) << ", " << sqrt(n2d) << std::endl;
     return 0;
   }
+  int step(1);
   int length(0);
-  if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
-  if(1 < argc) length = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << length << std::endl;
-  PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2), P0maxRank<num_t>());
+  if(argc < 2) std::cerr << argv[0] << " <step>? <length>? : continue with ";
+  if(1 < argc) step   = std::atoi(argv[1]);
+  if(2 < argc) length = std::atoi(argv[2]);
+  std::cerr << argv[0] << " " << step << " " << length << std::endl;
+  assert(0 < step);
+  PBond<num_t, P0maxRank<num_t> > p(max(abs(length), 2), P0maxRank<num_t>(step));
   SimpleVector<num_t> b;
+  idFeeder<num_t> f(step);
   std::string s;
   num_t zero(int(0));
   auto  d(zero);
-  auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
+    const auto& M(f.res[0]);
     ins >> d;
 #if defined(_CHAIN_)
     // std::cout << pseudoerfscale<num_t>(((d = pseudoierfscale<num_t>(d / num_t(int(2)))) - M) * num_t(int(2))) << ", ";
@@ -57,9 +61,9 @@ int main(int argc, const char* argv[]) {
 #endif
     if(! length) {
       b.entity.emplace_back(d);
-      std::cout << (M = (2 < b.size() ? P0maxRank<num_t>().next(b) : num_t(int(0))) ) << std::endl << std::flush;
+      std::cout << f.next(2 < b.size() ? P0maxRank<num_t>().next(b) : num_t(int(0)))[step - 1] << std::endl << std::flush;
     } else
-      std::cout << (M = (0 < length ? p.next(d) : expscale<num_t>(p.next(logscale<num_t>(d))) ) ) << std::endl << std::flush;
+      std::cout << f.next(0 < length ? p.next(d) : expscale<num_t>(p.next(logscale<num_t>(d))) )[step - 1] << std::endl << std::flush;
   }
   return 0;
 }

@@ -19,7 +19,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = P0maxRank<double>(step).next(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <length>? < stream.txt
+    ./p0(-(32|64)) <step>? <length>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
@@ -247,4 +247,5 @@ Should really leave here.
 2025/02/27 elim step parameter.
 2025/03/08 improves argv[1] == 0 memory usage instead of caching pnext results, this slow downs another argv[1] > 0 cases.
 2025/03/09 merge latest lieonn.
+2025/03/17 revert step param.
 
