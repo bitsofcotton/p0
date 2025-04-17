@@ -16,10 +16,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use:
     SimpleVector<double> buf;
     ...
-    xnext = P0maxRank<double>(step).next(buf);
+    xnext = P0maxRank<double>().next(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <step>? <length>? < stream.txt
+    ./p0(-(32|64)) <length>? < stream.txt
     # abs(length) : pnext length
     # length < 0 for log-exp scale prediction.
     # 0 < length for raw linear scale prediction.
@@ -249,4 +249,5 @@ Should really leave here.
 2025/03/09 merge latest lieonn.
 2025/03/17 revert step param.
 2025/04/17 merge latest lieonn, brush up length == 0 case move into lieonn.hh.
+2025/04/18 eliminate step param, they doesn't improves result.
 
