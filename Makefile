@@ -17,15 +17,15 @@ clean:
 	@rm -rf p0 p0-32
 all:	p0 p0-32
 p0:
-	${CXX} ${CXXFLAGS} -static -D_PNEXT_ON_MEMORY_=false -O0 -o p0 p0.cc
+	${CXX} ${CXXFLAGS} -static -D_PNEXT_NOT_ON_MEMORY_ -O0 -o p0 p0.cc
 p0-32:
-	${CXX} ${CXXFLAGS} -static -D_PNEXT_ON_MEMORY_=false -D_FLOAT_BITS_=32 -O0 -o p0-32 p0.cc
+	${CXX} ${CXXFLAGS} -static -D_PNEXT_NOT_ON_MEMORY_ -D_FLOAT_BITS_=32 -O0 -o p0-32 p0.cc
 p0-64:
-	${CXX} ${CXXFLAGS} -static -D_PNEXT_ON_MEMORY_=false -D_FLOAT_BITS_=64 -O0 -o p0-64 p0.cc
+	${CXX} ${CXXFLAGS} -static -D_PNEXT_NOT_ON_MEMORY_ -D_FLOAT_BITS_=64 -O0 -o p0-64 p0.cc
 p0c:
-	${CXX} ${CXXFLAGS} -D_CHAIN_ -static -D_PNEXT_ON_MEMORY_=false -O0 -o p0c p0.cc
+	${CXX} ${CXXFLAGS} -D_PONEXT_NOT_ON_MEMORY_ -D_CHAIN_ -static -O0 -o p0c p0.cc
 p0c32:
-	${CXX} ${CXXFLAGS} -D_CHAIN_ -static -D_PNEXT_ON_MEMORY_=false -D_FLOAT_BITS_=32 -O0 -o p0c32 p0.cc
+	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -D_CHAIN_ -static -D_FLOAT_BITS_=32 -O0 -o p0c32 p0.cc
 p0c64:
-	${CXX} ${CXXFLAGS} -D_CHAIN_ -static -D_PNEXT_ON_MEMORY_=false -D_FLOAT_BITS_=64 -O0 -o p0c64 p0.cc
+	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -D_CHAIN_ -static -D_FLOAT_BITS_=64 -O0 -o p0c64 p0.cc
 
