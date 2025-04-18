@@ -40,7 +40,7 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
   if(1 < argc) length = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << length << std::endl;
-  PBond<num_t, P0maxRank<num_t> > p(abs(length));
+  PBond0<num_t> p(abs(length));
   std::string s;
   num_t d(int(0));
   auto  M(d);
