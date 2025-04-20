@@ -16,19 +16,15 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
 # How to use:
     SimpleVector<double> buf;
     ...
-    xnext = P0maxRank<double>().next(buf);
+    xnext = p0maxNext<double>(buf);
 
 # How to use (commandline):
     ./p0(-(32|64)) <length>? < stream.txt
-    # abs(length) : pnext length
-    # length < 0 for log-exp scale prediction.
-    # 0 < length for raw linear scale prediction.
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
-
-# Check status length is valid for accuracy or not
-    ./p0(-(32|64)) r <len>
-    # last line shows accuracy is valid or not. if valid, it's near \[1, 0, ...\].
+    # 0 < length for using recent length input numbers.
+    # length < 0 for checking result is valid or not:
+    #   if they're valid, it's near \[\[01\], 0, ...\].
 
 # Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -251,4 +247,5 @@ Should really leave here.
 2025/04/17 merge latest lieonn, brush up length == 0 case move into lieonn.hh.
 2025/04/18 eliminate step param, they doesn't improves result.
 2025/04/19 merge latest lieonn.
+2025/04/20 compile out exp-log scale to -D_NONLIN_ option. argc change.
 
