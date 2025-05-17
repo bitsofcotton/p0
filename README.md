@@ -248,4 +248,5 @@ Should really leave here.
 2025/04/18 eliminate step param, they doesn't improves result.
 2025/04/19 merge latest lieonn.
 2025/04/20 compile out exp-log scale to -D_NONLIN_ option. argc change.
+2025/05/17 add p0p.cc for persistent.
 

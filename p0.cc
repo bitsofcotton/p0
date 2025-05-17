@@ -39,7 +39,7 @@ int main(int argc, const char* argv[]) {
     std::cout << sumn << ", " << sumd << ", " << sqrt(n2n) << ", " << sqrt(n2d) << std::endl;
     return 0;
   }
-  PBond0<num_t> p(length);
+  idFeeder<num_t> p(length);
   std::string s;
   num_t d(int(0));
   auto  M(d);
@@ -56,9 +56,9 @@ int main(int argc, const char* argv[]) {
     std::cout << d * M << ", ";
 #endif
 #if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(p.next(logscale<num_t>(d))) ) << std::endl << std::flush;
+    std::cout << (M = expscale<num_t>(logscale<num_t>(pbond<num_t, p0maxNext<num_t> >(p.next(d)) )) ) << std::endl << std::flush;
 #else
-    std::cout << (M = p.next(d)) << std::endl << std::flush;
+    std::cout << (M = pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
   return 0;
