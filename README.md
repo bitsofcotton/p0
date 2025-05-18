@@ -249,4 +249,5 @@ Should really leave here.
 2025/04/19 merge latest lieonn.
 2025/04/20 compile out exp-log scale to -D_NONLIN_ option. argc change.
 2025/05/17 add p0p.cc for persistent.
+2025/05/19 fix p0p function to have correct meaning.
 

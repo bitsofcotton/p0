@@ -3916,10 +3916,10 @@ template <typename T, T (*p)(const SimpleVector<T>&, const int&)> static inline 
       depth(j - 1, 1) = depth(j - 1, 2);
       if(j & 1) {
         depth(j - 1, 2) = offsetHalf<T>(d);
-        depth(j, depth.cols() - 1) = d *= p(depth.row(j - 1), unit);
+        d *= depth(j, depth.cols() - 1) = p(depth.row(j - 1), unit);
       } else {
-        depth(j - 1, 2) = unOffsetHalf<T>(d);
-        depth(j, depth.cols() - 1) = d -= p(depth.row(j - 1), unit);
+        depth(j - 1, 2) = d;
+        d -= depth(j, depth.cols() - 1) = p(depth.row(j - 1), unit);
         d = - d;
       }
     }
