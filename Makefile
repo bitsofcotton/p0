@@ -32,4 +32,8 @@ p0p:
 	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -static -O0 -o p0p p0p.cc
 p0p32:
 	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -static -D_FLOAT_BITS_=32 -O0 -o p0p32 p0p.cc
+p0pc:
+	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -D_CHAIN_ -static -O0 -o p0pc p0p.cc
+p0pc32:
+	${CXX} ${CXXFLAGS} -D_PNEXT_NOT_ON_MEMORY_ -D_CHAIN_ -static -D_FLOAT_BITS_=32 -O0 -o p0pc32 p0p.cc
 

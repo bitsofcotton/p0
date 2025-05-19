@@ -253,4 +253,5 @@ Should really leave here.
 2025/05/17 add p0p.cc for persistent.
 2025/05/19 fix p0p function to have correct meaning.
 2025/05/19 fix and now works p0p function with {-1, 1} input stream.
+2025/05/19 p0p.cc with -D_CHAIN_ compiler option to have p0, p1, p2 series compat output.
 

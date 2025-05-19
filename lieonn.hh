@@ -3927,6 +3927,8 @@ template <typename T, T (*p)(const SimpleVector<T>&, const int&)> static inline 
   if(depth.rows() < 2) return T(int(0));
   T M(int(0));
   for(int j = depth.rows() - 1; 0 < j; j --) {
+    // N.B. [[a, b], [- b, a]]^-1 == [[a, -b], [b, a]] / (b * b - a * a)^2
+    //      we only stuck on sign of the result, multiply is better to stable.
     if(j & 1)
       M *= depth(j, 2);
     else {
