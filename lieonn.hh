@@ -3926,11 +3926,12 @@ template <typename T, T (*p)(const SimpleVector<T>&, const int&)> static inline 
   }
   if(depth.rows() < 2) return T(int(0));
   T M(int(0));
-  for(int j = depth.rows() - (depth.rows() & 1) - 1; 0 <= j; j --) {
-    if(j & 1) M += depth(j, 2);
-    else {
+  for(int j = depth.rows() - 1; 0 < j; j --) {
+    if(j & 1)
       M *= depth(j, 2);
-      if(j) M = - M;
+    else {
+      M  = - M;
+      M += depth(j, 2);
     }
   }
   return M;
