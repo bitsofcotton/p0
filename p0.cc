@@ -62,7 +62,7 @@ int main(int argc, const char* argv[]) {
 #if defined(_NONLIN_)
     std::cout << (M = expscale<num_t>(argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(logscale<num_t>(d)) ) : pbond<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)) )) ) << std::endl << std::flush;
 #else
-    std::cout << (M = argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(d)) : pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
+    std::cout << (M = 1 < argc && argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(d)) : pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
   return 0;
