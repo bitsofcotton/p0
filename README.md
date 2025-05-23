@@ -25,8 +25,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # 0 < length for using recent length input numbers.
     # length < 0 for checking result is valid or not:
     #   if they're valid, it's near \[\[01\], 0, ...\].
-    ./p0p < stream.txt
-    # {-1,1} input stream with {-1,0,1} output predictor works well.
+    # length == 'd' for deep depth prediction.
 
 # Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -254,4 +253,4 @@ Should really leave here.
 2025/05/19 fix p0p function to have correct meaning.
 2025/05/19 fix and now works p0p function with {-1, 1} input stream.
 2025/05/19 p0p.cc with -D_CHAIN_ compiler option to have p0, p1, p2 series compat output.
-
+2025/05/23 elim p0p.cc, it's integrated to 'p0 d' argv1, either refactoring.

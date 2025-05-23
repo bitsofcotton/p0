@@ -19,8 +19,12 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   int length(0);
   if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
-  if(1 < argc) length = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << length << std::endl;
+  if(1 < argc && argv[1][0] != 'd')
+    std::cerr << argv[0] << " " << (length = std::atoi(argv[1])) << std::endl;
+  else if(argc <= 1)
+    std::cerr << argv[0] << " " << length << std::endl;
+  else
+    std::cerr << argv[0] << " d" << std::endl;
   if(length < 0) {
     const auto  len(abs(length));
     const auto  d(diff<num_t>(len).row(len - 1));
@@ -56,9 +60,9 @@ int main(int argc, const char* argv[]) {
     std::cout << d * M << ", ";
 #endif
 #if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(logscale<num_t>(pbond<num_t, p0maxNext<num_t> >(p.next(d)) )) ) << std::endl << std::flush;
+    std::cout << (M = expscale<num_t>(argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(logscale<num_t>(d)) ) : pbond<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)) )) ) << std::endl << std::flush;
 #else
-    std::cout << (M = pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
+    std::cout << (M = argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(d)) : pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
   return 0;
