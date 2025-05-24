@@ -19,12 +19,8 @@ int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   int length(0);
   if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
-  if(1 < argc && argv[1][0] != 'd')
-    std::cerr << argv[0] << " " << (length = std::atoi(argv[1])) << std::endl;
-  else if(argc <= 1)
-    std::cerr << argv[0] << " " << length << std::endl;
-  else
-    std::cerr << argv[0] << " d" << std::endl;
+  if(1 < argc) length = std::atoi(argv[1]);
+  std::cerr << argv[0] << " " << length << std::endl;
   if(length < 0) {
     const auto  len(abs(length));
     const auto  d(diff<num_t>(len).row(len - 1));
@@ -43,7 +39,7 @@ int main(int argc, const char* argv[]) {
     std::cout << sumn << ", " << sumd << ", " << sqrt(n2n) << ", " << sqrt(n2d) << std::endl;
     return 0;
   }
-  idFeeder<num_t> p(length);
+  idFeeder<num_t> p(0);
   std::string s;
   num_t d(int(0));
   auto  M(d);
@@ -51,18 +47,14 @@ int main(int argc, const char* argv[]) {
     std::stringstream ins(s);
     ins >> d;
 #if defined(_CHAIN_)
-# if defined(_NONLIN_)
-    std::cout << pseudoerfscale<num_t>(((d = pseudoierfscale<num_t>(d / num_t(int(2)))) - M) * num_t(int(2))) << ", ";
-# else
     std::cout << d - M << ", ";
-# endif
 #else
     std::cout << d * M << ", ";
 #endif
 #if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(logscale<num_t>(d)) ) : pbond<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)) )) ) << std::endl << std::flush;
+    std::cout << (M = length ? (length == 1 ? d : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)), length) ) ) : p0maxNext<num_t>(p.next(logscale<num_t>(d)) )) ) << std::endl << std::flush;
 #else
-    std::cout << (M = 1 < argc && argv[1][0] == 'd' ? pbond<num_t, p0cultivatedDeep<num_t, p0maxNext<num_t> > >(p.next(d)) : pbond<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
+    std::cout << (M = length ? (length == 1 ? d : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) : p0maxNext<num_t>(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
   return 0;

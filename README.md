@@ -22,10 +22,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0(-(32|64)) <length>? < stream.txt
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
-    # 0 < length for using recent length input numbers.
+    # 0 < length for using recent length input numbers deeply.
+    # 0 == length for using whole length shallow.
     # length < 0 for checking result is valid or not:
     #   if they're valid, it's near \[\[01\], 0, ...\].
-    # length == 'd' for deep depth prediction.
 
 # Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -254,3 +254,5 @@ Should really leave here.
 2025/05/19 fix and now works p0p function with {-1, 1} input stream.
 2025/05/19 p0p.cc with -D_CHAIN_ compiler option to have p0, p1, p2 series compat output.
 2025/05/23 elim p0p.cc, it's integrated to 'p0 d' argv1, either refactoring.
+2025/05/25 merge latest lieonn, de-select pbond class, argv meaning change.
+
