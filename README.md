@@ -22,8 +22,10 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     ./p0(-(32|64)) <length>? < stream.txt
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
-    # 0 < length for using recent length input numbers deeply.
+    # 2 < length for using recent length input numbers deeply.
     # 0 == length for using whole length shallow.
+    # 1 == copy cat.
+    # 2 == 3-length shallow.
     # length < 0 for checking result is valid or not:
     #   if they're valid, it's near \[\[01\], 0, ...\].
 
@@ -255,4 +257,5 @@ Should really leave here.
 2025/05/19 p0p.cc with -D_CHAIN_ compiler option to have p0, p1, p2 series compat output.
 2025/05/23 elim p0p.cc, it's integrated to 'p0 d' argv1, either refactoring.
 2025/05/25 merge latest lieonn, de-select pbond class, argv meaning change.
+2025/06/06 catch excluded p0 \[12\] arg into p0.cc.
 

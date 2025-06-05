@@ -8,6 +8,7 @@
 #include <map>
 #include <iomanip>
 #include <algorithm>
+#include <random>
 #include <assert.h>
 #include <stdint.h>
 #include <sys/resource.h>
@@ -40,6 +41,7 @@ int main(int argc, const char* argv[]) {
     return 0;
   }
   idFeeder<num_t> p(0);
+  idFeeder<num_t> p3(3);
   std::string s;
   num_t d(int(0));
   auto  M(d);
@@ -52,9 +54,9 @@ int main(int argc, const char* argv[]) {
     std::cout << d * M << ", ";
 #endif
 #if defined(_NONLIN_)
-    std::cout << (M = length ? (length == 1 ? d : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)), length) ) ) : p0maxNext<num_t>(p.next(logscale<num_t>(d)) )) ) << std::endl << std::flush;
+    std::cout << (M = expscale<num_t>(length ? (length < 3 ? (length == 1 ? logscale<num_t>(d) : p0maxNext<num_t>(p3.next(logscale<num_t>(d))) ) : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d)), length) ) ) : p0maxNext<num_t>(p.next(logscale<num_t>(d)) )) ) ) << std::endl << std::flush;
 #else
-    std::cout << (M = length ? (length == 1 ? d : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) : p0maxNext<num_t>(p.next(d)) ) << std::endl << std::flush;
+    std::cout << (M = length ? (length < 3 ? (length == 1 ? d : p0maxNext<num_t>(p3.next(d)) ) : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) : p0maxNext<num_t>(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
   return 0;
