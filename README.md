@@ -23,10 +23,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # length == 0 for increasingly increase length with raw linear scale.
     #   this takes O((input lines)^3) ratio calculation time.
     # 2 < length for using recent length input numbers deeply.
-    # 0 == length for using whole length shallow.
-    # 1 == copy cat.
-    # 2 == 3-length shallow.
-    # length < 0 for checking result is valid or not:
+    # -1 == copy cat.
+    # 0  == length for using whole length shallow.
+    # 1  == 3-length shallow.
+    # 2  == 4-length shift delay inner product (from p2 result).
+    # length < -1 for checking result is valid or not:
     #   if they're valid, it's near \[\[01\], 0, ...\].
 
 # Proof on Riemann measurable condition.

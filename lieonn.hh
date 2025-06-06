@@ -3506,7 +3506,6 @@ template <typename T> static inline T p012next(const SimpleVector<T>& d) {
   auto sscore(zero);
   for(int i = 0; i < cat.size(); i ++) {
     if(! cat[i].first.size()) continue;
-    if(! (cat[i].first.size() <= cat[i].first[0].size() + 1)) cerr << "!" << flush;
     SimpleVector<T> avg(cat[i].first[0].size() + 1);
     avg.O();
     for(int j = 0; j < cat[i].first.size(); j ++)
@@ -3946,9 +3945,60 @@ template <typename T> static inline pair<T, T> pSubesube(const T& d0, const pair
   const auto sqM(M2n - j.second[rridx] * j.second[rridx]);
   const auto rd0( n2n == T(int(0)) || sq0 <= T(int(0)) ? T(int(0)) : d0 * sqrt(sq0 / n2n));
   const auto absM(M2n == T(int(0)) || sqM <= T(int(0)) ? T(int(0)) :      sqrt(sqM / M2n));
-  return make_pair(rd0  * sgn<T>(j.first[  ridx] * (t & 1 ? T(1) : - T(1)) ),
-                   absM * sgn<T>(j.second[rridx] * (t & 1 ? - T(1) : T(1)) ) );
+  return make_pair(
+    rd0  * (j.first[  ridx] == T(int(0)) ? T(int(1)) :
+      sgn<T>(j.first[  ridx] * (t & 1 ? T(1) : - T(1)) ) ),
+    absM * (j.second[rridx] == T(int(0)) ? T(int(1)) :
+      sgn<T>(j.second[rridx] * (t & 1 ? - T(1) : T(1)) ) ) );
 }
+
+template <typename T> class pslip_t {
+public:
+  inline pslip_t() {
+    pipe.resize(3 * 3 * 3 - 1);
+    {
+      vector<vector<T> > lM;
+      vector<T> llM;
+      llM.resize(1, T(int(0)));
+      lM.reserve(4);
+      lM.emplace_back(llM);
+      lM.emplace_back(llM);
+      llM.resize(6, T(int(0)));
+      lM.emplace_back(llM);
+      lM.emplace_back(llM);
+      lastM.resize(27, lM);
+    }
+    {
+      vector<idFeeder<T> > lf0;
+      vector<idFeeder<SimpleVector<T> > > lf1;
+      lf0.resize(6);
+      lf1.resize(4);
+      f0.resize(27, lf0);
+      f1.resize(27, lf1);
+    }
+    {
+      vector<T> lbr;
+      lbr.resize(2, T(int(0)));
+      br.resize(27, lbr);
+    }
+    pipe.resize(3 * 3 * 3 - 1);
+    std::random_device seed_gen;
+    std::mt19937 engine(seed_gen());
+    shf.resize(0);
+    shf.reserve(4);
+    for(int i = 0; i < 4; i ++)
+      shf.emplace_back(i);
+    std::shuffle(shf.begin(), shf.end(), engine);
+    nshf = shf;
+  }
+  vector<idFeeder<T> > pipe;
+  vector<vector<vector<T> > > lastM;
+  vector<vector<idFeeder<T> > > f0;
+  vector<vector<idFeeder<SimpleVector<T> > > > f1;
+  vector<vector<T> > br;
+  vector<int> shf;
+  vector<int> nshf;
+};
 
 // N.B. one of the bricks stack condition, so not unique and verbose to impl.
 // N.B. this aims to kill 'jammer-like-behaviour on input stream feedback'.
@@ -4103,6 +4153,61 @@ template <typename T> static inline T pSlipJamQuad3(const SimpleVector<T>& in, v
   // XXX: test to return d value, non exact M value.
   assert(apb.size() == aq.size());
   return aq[aq.size() - 1].second;
+}
+
+template <typename T> static inline vector<T> pSlipJam443(const SimpleVector<T>& in, vector<pslip_t<T> >& slip, const int& t){
+  assert(! (slip.size() & 3));
+  vector<T> M;
+  M.resize(slip.size());
+  M[0] = pSlipJamQuad3<T>(in, slip[0].pipe, slip[0].lastM,
+    slip[0].f0, slip[0].f1, slip[0].br, slip[0].shf, slip[0].nshf, t);
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(static, 1)
+#endif
+  for(int i = 1; i < M.size(); i ++)
+    M[i] = pSlipJamQuad3<T>(in, slip[i].pipe, slip[i].lastM,
+      slip[i].f0, slip[i].f1, slip[i].br, slip[i].shf, slip[i].nshf, t);
+  vector<T> MM;
+  MM.resize(4, T(int(0)));
+  for(int i = 0; i < MM.size(); i ++) MM[i] = M[M.size() / MM.size() * i];
+  for(int i = 1; i < M.size() / MM.size(); i ++)
+    for(int j = 0; j < MM.size(); j ++)
+      MM[j] += M[i + M.size() / MM.size() * j];
+  for(int i = 0; i < MM.size(); i ++)
+    MM[i] /= T(M.size() / MM.size());
+  return move(MM);
+}
+
+template <typename T, int recur = 40> static inline T pVeryHeavyPossible(const SimpleVector<T>& in) {
+  vector<pslip_t<T> > pslip;
+  pslip.reserve(recur);
+  for(int i = 0; i < recur; i ++) pslip.emplace_back(pslip_t<T>());
+  vector<T> lastM;
+  vector<idFeeder<T> > f0;
+  vector<idFeeder<SimpleVector<T> > > f1;
+  lastM.resize(6, T(int(0)));
+  f0.resize(3);
+  f1.resize(2);
+  T    br(int(0));
+  auto M(br);
+  auto bM(br);
+  idFeeder<T> in2;
+  for(int i = 1; i <= in.size(); i ++) {
+    const auto& inn2(in2.next(in[i - 1] * bM));
+    bM = T(int(0));
+    const auto inb(in.subVector(0, i));
+    for(int j = 0; j < pslip.size(); j ++)
+      bM += pSlipJamQuad3(inb, pslip[j].pipe, pslip[j].lastM,
+        pslip[j].f0, pslip[j].f1, pslip[j].br, pslip[j].shf, pslip[j].nshf,
+        i - 1);
+    bM /= T(recur);
+    int ii(i - 1);
+    auto MM(p2next<T, true>(lastM, inn2, f0[0], f1[0], f1[1], f0[1], f0[2],
+      br, ii) );
+    M = MM[0];
+    for(int j = 1; j < MM.size(); j ++) M *= MM[j];
+  }
+  return bM * M;
 }
 
 // N.B. start det diag operations.
@@ -4721,6 +4826,28 @@ template <typename T, int nprogress = 20> static inline SimpleVector<T> predvp(c
   return p;
 }
 
+template <typename T, int nprogress = 20> static inline SimpleVector<T> predvq(const vector<SimpleVector<T> >& in) {
+  SimpleVector<T> p(in[0].size());
+  idFeeder<T> buf(in.size());
+  for(int i = 0; i < in.size(); i ++)
+    buf.next(in[i][0]);
+  assert(buf.full);
+  p[0] = pVeryHeavyPossible<T>(buf.res);
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(static, 1)
+#endif
+  for(int j = 1; j < in[0].size(); j ++) {
+    if(nprogress && ! (j % max(int(1), int(in[0].size() / nprogress))) )
+      cerr << j << " / " << in[0].size() << endl;
+    idFeeder<T> buf(in.size());
+    for(int i = 0; i < in.size(); i ++)
+      buf.next(in[i][j]);
+    assert(buf.full);
+    p[j] = pVeryHeavyPossible<T>(buf.res);
+  }
+  return p;
+}
+
 template <typename T, int nprogress = 20> static inline SimpleVector<T> predv1(vector<SimpleVector<T> >& in) {
   static const auto step(1);
   assert(0 < step && 10 + step * 2 <= in.size() && 1 < in[0].size());
@@ -4855,7 +4982,7 @@ template <typename T, int nprogress = 20> static inline SimpleVector<T> predv4(v
       p01next<T>(nwork / nseconds) * nseconds));
 }
 
-template <typename T> vector<vector<SimpleVector<T> > > predVec(vector<vector<SimpleVector<T> > >& in0) {
+template <typename T, bool possible = false> vector<vector<SimpleVector<T> > > predVec(vector<vector<SimpleVector<T> > >& in0) {
   assert(in0.size() && in0[0].size() && in0[0][0].size());
   vector<SimpleVector<T> > in;
   in.resize(in0.size());
@@ -4875,6 +5002,16 @@ template <typename T> vector<vector<SimpleVector<T> > > predVec(vector<vector<Si
   for(int i = 0; i < in.size(); i ++)
     in[i] = - in[i];
   vector<vector<SimpleVector<T> > > res;
+  if(possible) {
+    res.resize(1);
+    for(int i = 0; i < in.size(); i ++)
+      in[i] = - in[i];
+    auto p(predvq<T>(in));
+    res[0].resize(size0);
+    for(int j = 0; j < res[0].size(); j ++)
+      res[0][j] = offsetHalf<T>(p.subVector(size1 * j, size1));
+    return res;
+  }
   res.resize(3);
   {
     auto p(predvp<T>(in));
@@ -4897,12 +5034,12 @@ template <typename T> vector<vector<SimpleVector<T> > > predVec(vector<vector<Si
   return res;
 }
 
-template <typename T> static inline vector<vector<SimpleVector<T> > > predVec(const vector<vector<SimpleVector<T> > >& in0) {
+template <typename T, bool possible = false> static inline vector<vector<SimpleVector<T> > > predVec(const vector<vector<SimpleVector<T> > >& in0) {
   auto res(in0);
-  return predVec<T>(res);
+  return predVec<T, possible>(res);
 }
 
-template <typename T> vector<vector<SimpleMatrix<T> > > predMat(vector<vector<SimpleMatrix<T> > >& in0) {
+template <typename T, bool possible = false> vector<vector<SimpleMatrix<T> > > predMat(vector<vector<SimpleMatrix<T> > >& in0) {
   // N.B. original DFT image[n] DFT conversion looks better with continuous
   //      input converted into discrete variables, however, our predictor isn't
   //      get 100% result, so some probability they slips, so their slips
@@ -4933,6 +5070,19 @@ template <typename T> vector<vector<SimpleMatrix<T> > > predMat(vector<vector<Si
   for(int i = 0; i < in.size(); i ++)
     in[i] = - in[i];
   vector<vector<SimpleMatrix<T> > > res;
+  if(possible) {
+    res.resize(1);
+    for(int i = 0; i < in.size(); i ++)
+      in[i] = - in[i];
+    auto p(predvq<T>(in));
+    res[0].resize(size);
+    for(int j = 0; j < res[0].size(); j ++) {
+      res[0][j].resize(rows, cols);
+      for(int k = 0; k < rows; k ++)
+        res[0][j].row(k) = offsetHalf<T>(p.subVector(j * rows * cols + k * cols, cols));
+    }
+    return res;
+  }
   res.resize(3);
   {
     auto p(predvp<T>(in));
@@ -4964,9 +5114,9 @@ template <typename T> vector<vector<SimpleMatrix<T> > > predMat(vector<vector<Si
   return res;
 }
 
-template <typename T> static inline vector<vector<SimpleMatrix<T> > > predMat(const vector<vector<SimpleMatrix<T> > >& in0) {
+template <typename T, bool possible = false> static inline vector<vector<SimpleMatrix<T> > > predMat(const vector<vector<SimpleMatrix<T> > >& in0) {
   auto res(in0);
-  return predMat<T>(res);
+  return predMat<T, possible>(res);
 }
 
 template <typename T> vector<SimpleSparseTensor<T> > predSTen(vector<SimpleSparseTensor<T> >& in0, const vector<int>& idx) {
