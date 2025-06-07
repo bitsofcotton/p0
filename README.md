@@ -26,7 +26,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     # -1 == copy cat.
     # 0  == length for using whole length shallow.
     # 1  == 3-length shallow.
-    # 2  == 4-length shift delay inner product (from p2 result).
+    # 2  == 2-length shift delay inner product (from p2 result).
     # length < -1 for checking result is valid or not:
     #   if they're valid, it's near \[\[01\], 0, ...\].
 

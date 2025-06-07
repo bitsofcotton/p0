@@ -7828,7 +7828,7 @@ template <typename T, typename U> static inline void makelword(vector<U>& words,
 // (00) predictions via linear sum/diff based some reformation input and revert:
 //      it's all integrated skipX concerns, the jammer either jam out us
 //      even *ANY* reformation and revert them in which way.
-//      so it's integrated int *linear* meanings to reform prediction vector.
+//      so it's integrated into *linear* meanings to reform prediction vector.
 //      eg. PdeltaOnce, Ppersistent, Pprogression, (P0DFT).
 //      they goes well because timing-related concerns A_0 ... A_k B x_0
 //      made initial entropy and A'^k B' x_0 -> x_k structures.
@@ -7839,6 +7839,11 @@ template <typename T, typename U> static inline void makelword(vector<U>& words,
 // (02) we eliminated predvall, we don't need them with whole internal states
 //      awared predictors they have a better prediction concerned with some
 //      series of a PRNG tests.
+// (03) arctanFeeder concerns intended to avoid some jammers.
+//      we shouldn't completely avoid the jammers by them because of the
+//      jammers' strategy can select *any* function.
+// (04) p2next: the p012next, p01next, p0...next integrator.
+//      it's verbose, we should target *thin-layered* ones they can grip stable.
 
 #define _SIMPLELIN_
 #endif

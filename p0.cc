@@ -41,7 +41,7 @@ int main(int argc, const char* argv[]) {
     return 0;
   }
   idFeeder<num_t> p(0);
-  idFeeder<num_t> p3(length == 1 ? 3 : (length == 2 ? 4 : 0));
+  idFeeder<num_t> p3(length == 1 ? 3 : (length == 2 ? 2 : 0));
   std::string s;
   num_t d(int(0));
   auto  M(d);
