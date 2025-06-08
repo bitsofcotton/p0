@@ -17,18 +17,13 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     SimpleVector<double> buf;
     ...
     xnext = p0maxNext<double>(buf);
+    xdeepnext = deep<double, p0maxNext<double> >(buf, int(/* param */));
 
 # How to use (commandline):
     ./p0(-(32|64)) <length>? < stream.txt
-    # length == 0 for increasingly increase length with raw linear scale.
-    #   this takes O((input lines)^3) ratio calculation time.
-    # 2 < length for using recent length input numbers deeply.
-    # -1 == copy cat.
-    # 0  == length for using whole length shallow.
-    # 1  == 3-length shallow.
-    # 2  == 2-length shift delay inner product (from p2 result).
-    # length < -1 for checking result is valid or not:
-    #   if they're valid, it's near \[\[01\], 0, ...\].
+    # length <  0 for using recent length input numbers shallow.
+    # 0 == length for using whole length shallow.
+    # 0 <  length for using recent length input numbers deeply.
 
 # Proof on Riemann measurable condition.
 If original function is in C1, there exists F(z,&theta;) := f(z+\bar{z})+i\*f(z-\bar{z})\*tan(&theta;) in C1 on z in C.
@@ -260,4 +255,5 @@ Should really leave here.
 2025/05/25 merge latest lieonn, de-select pbond class, argv meaning change.
 2025/06/06 catch excluded p0 \[12\] arg into p0.cc.
 2025/06/07 merge latest lieonn.
+2025/06/08 argv meaning change because we don't need pnext, diff real vector output. freeze p0 command.
 
