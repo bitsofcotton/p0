@@ -22,7 +22,7 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
   if(1 < argc) length = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << length << std::endl;
-  idFeeder<num_t> p(abs(length));
+  idFeeder<num_t> p(max(0, - length));
   std::string s;
   num_t d(int(0));
   auto  M(d);
@@ -35,9 +35,9 @@ int main(int argc, const char* argv[]) {
     std::cout << d * M << ", ";
 #endif
 #if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(length < 0 ? p0maxNext<num_t>(p.next(logscale<num_t>(d))) : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d))) )) << std::endl << std::flush;
+    std::cout << (M = expscale<num_t>(length <= 0 ? p0maxNext<num_t>(p.next(logscale<num_t>(d))) : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d), length)) )) << std::endl << std::flush;
 #else
-    std::cout << (M = length < 0 ? p0maxNext<num_t>(p.next(d)) : deep<num_t, p0maxNext<num_t> >(p.next(d)) ) << std::endl << std::flush;
+    std::cout << (M = length <= 0 ? p0maxNext<num_t>(p.next(d)) : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) << std::endl << std::flush;
 #endif
   }
   return 0;
