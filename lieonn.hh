@@ -3491,6 +3491,7 @@ template <typename T> static inline T p012next(const SimpleVector<T>& d) {
   if(M <= zero) return zero;
   const auto varlen(ind2vd(d.size()));
   vector<SimpleVector<T> > cache;
+  if(d.size() - varlen + 2 < 0) return zero;
   cache.reserve(d.size() - varlen + 2);
   for(int i = 0; i < d.size() - varlen - step + 2; i ++) {
     cache.emplace_back(d.subVector(i, varlen));

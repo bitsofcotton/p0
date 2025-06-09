@@ -1,3 +1,4 @@
+#if !defined(_ONEBINARY_)
 #include <cstdio>
 #include <cstring>
 #include <cmath>
@@ -22,8 +23,9 @@ int main(int argc, const char* argv[]) {
   if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
   if(1 < argc) length = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << length << std::endl;
-  idFeeder<num_t> p(max(0, - length));
   std::string s;
+#endif
+  idFeeder<num_t> p(max(0, - length));
   num_t d(int(0));
   auto  M(d);
   while(std::getline(std::cin, s, '\n')) {
@@ -40,6 +42,8 @@ int main(int argc, const char* argv[]) {
     std::cout << (M = length <= 0 ? p0maxNext<num_t>(p.next(d)) : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) << std::endl << std::flush;
 #endif
   }
+#if !defined(_ONEBINARY_)
   return 0;
 }
+#endif
 
