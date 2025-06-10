@@ -24,6 +24,11 @@ int main(int argc, const char* argv[]) {
   if(1 < argc) length = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << length << std::endl;
   std::string s;
+# if defined(_CHAIN_)
+  const bool chain(true);
+# else
+  const bool chain(false);
+# endif
 #endif
   idFeeder<num_t> p(max(0, - length));
   num_t d(int(0));
@@ -31,11 +36,7 @@ int main(int argc, const char* argv[]) {
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
-#if defined(_CHAIN_)
-    std::cout << d - M << ", ";
-#else
-    std::cout << d * M << ", ";
-#endif
+    std::cout << (chain ? d - M : d * M) << ", ";
 #if defined(_NONLIN_)
     std::cout << (M = expscale<num_t>(length <= 0 ? p0maxNext<num_t>(p.next(logscale<num_t>(d))) : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d), length)) )) << std::endl << std::flush;
 #else
