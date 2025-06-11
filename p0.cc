@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <sys/resource.h>
 
+#define _COMPILE_PRED_
 #include "lieonn.hh"
 typedef myfloat num_t;
 
