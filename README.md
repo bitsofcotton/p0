@@ -256,4 +256,5 @@ Should really leave here.
 2025/06/06 catch excluded p0 \[12\] arg into p0.cc.
 2025/06/07 merge latest lieonn.
 2025/06/08 argv meaning change because we don't need pnext, diff real vector output. freeze p0 command.
+2025/06/11 compat compile option to gcc4.2.1.
 

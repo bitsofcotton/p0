@@ -9,7 +9,6 @@
 #include <map>
 #include <iomanip>
 #include <algorithm>
-#include <random>
 #include <assert.h>
 #include <stdint.h>
 #include <sys/resource.h>
@@ -32,7 +31,7 @@ int main(int argc, const char* argv[]) {
 #endif
   idFeeder<num_t> p(max(0, - length));
   num_t d(int(0));
-  auto  M(d);
+  num_t M(d);
   while(std::getline(std::cin, s, '\n')) {
     std::stringstream ins(s);
     ins >> d;
