@@ -258,4 +258,6 @@ Should really leave here.
 2025/06/08 argv meaning change because we don't need pnext, diff real vector output. freeze p0 command.
 2025/06/11 compat compile option to gcc4.2.1.
 2025/06/12 compat compile option with one variant of gcc2.95.3.
+2025/06/17 merge latest ddpmopt fix.
+2025/06/19 merge latest ddpmopt fix.
 
