@@ -30,7 +30,8 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<num_t> p(max(0, - length));
+  idFeeder<num_t> p(max(int(0), - length));
+  idFeeder<num_t> q(max(int(0), - length));
   num_t d(int(0));
   num_t M(d);
   while(std::getline(std::cin, s, '\n')) {
@@ -40,7 +41,7 @@ int main(int argc, const char* argv[]) {
 #if defined(_NONLIN_)
     std::cout << (M = expscale<num_t>(length <= 0 ? p0maxNext<num_t>(p.next(logscale<num_t>(d))) : deep<num_t, p0maxNext<num_t> >(p.next(logscale<num_t>(d), length)) )) << std::endl << std::flush;
 #else
-    std::cout << (M = length <= 0 ? p0maxNext<num_t>(p.next(d)) : deep<num_t, p0maxNext<num_t> >(p.next(d), length) ) << std::endl << std::flush;
+    std::cout << (M = length <= 0 ? p0maxNext<num_t>(p.next(d)) : (deep<num_t, p0maxNext<num_t> >(p.next(d), length) - deep<num_t, p0maxNext<num_t> >(q.next(- d), length)) / num_t(int(2)) ) << std::endl << std::flush;
 #endif
   }
 #if !defined(_ONEBINARY_)
