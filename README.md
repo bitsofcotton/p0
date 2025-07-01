@@ -107,4 +107,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/06/25 readme.md moved into implant lieonn.hh as a comment.
 2025/06/28 refactor and fix around lieonn, re-compat with gcc2953.
 2025/06/29-30 merge latest ddpmopt result.
+2025/07/01 merge latest ddpmopt result.
 
