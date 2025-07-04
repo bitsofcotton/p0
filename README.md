@@ -109,4 +109,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/06/29-30 merge latest ddpmopt result.
 2025/07/01 merge latest ddpmopt result.
 2025/07/02-03 merge latest ddpmopt resut, no logic change.
+2025/07/04 merge latest ddpmopt resut, some speed remedy.
 
