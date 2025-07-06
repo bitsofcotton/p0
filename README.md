@@ -33,7 +33,7 @@ Some of the important tips also implanted into lieon.hh as a comment.
 * https://1drv.ms/u/s!AnqkwcwMjB_PaDIfXya_M3-aLXw?e=qzfKcU
 * https://ja.osdn.net/users/bitsofcotton/
 
-# Real close
+# Leave
 2023/02/28
 2023/03/09 bug fix after close #1.
 2023/03/13 integrate all files into lieonn.hh after close #2.
