@@ -30,10 +30,7 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<num_t> p(max(int(0), - length));
-  idFeeder<num_t> q(max(int(0), - length));
-  vector<idFeeder<num_t> > stat;
-  vector<idFeeder<num_t> > ttat;
+  idFeeder<num_t> p(max(int(0), length));
   num_t d(int(0));
   num_t M(d);
   while(std::getline(std::cin, s, '\n')) {
@@ -41,9 +38,9 @@ int main(int argc, const char* argv[]) {
     ins >> d;
     std::cout << (chain ? d - M : d * M) << ", ";
 #if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(length <= 0 ? p0maxNext<num_t>(p.next(logscale<num_t>(d))) : deep0<num_t, p0maxNext<num_t> >(logscale<num_t>(d), stat, length) )) << std::endl << std::flush;
+    std::cout << (M = expscale<num_t>(p0maxNext<num_t>(p.next(logscale<num_t>(d))) )) << std::endl << std::flush;
 #else
-    std::cout << (M = length <= 0 ? p0maxNext<num_t>(p.next(d)) : (deep0<num_t, p0maxNext<num_t> >(d, stat, length) - deep0<num_t, p0maxNext<num_t> >(- d, ttat, length)) / num_t(int(2)) ) << std::endl << std::flush;
+    std::cout << (M = p0maxNext<num_t>(p.next(d)) ) << std::endl << std::flush;
 #endif
   }
 #if !defined(_ONEBINARY_)

@@ -17,13 +17,11 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     SimpleVector<double> buf;
     ...
     xnext = p0maxNext<double>(buf);
-    xdeepnext = deep<double, p0maxNext<double> >(buf, int(/* param */));
 
 # How to use (commandline):
     ./p0(-(32|64)) <length>? < stream.txt
-    # length <  0 for using recent length input numbers shallow.
     # 0 == length for using whole length shallow.
-    # 0 <  length for using recent length input numbers deeply.
+    # 0 <  length for using recent length input numbers.
 
 # Tips
 Some of the important tips also implanted into lieon.hh as a comment.
