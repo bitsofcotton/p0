@@ -30,7 +30,7 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<num_t> p(max(int(0), length));
+  idFeeder<num_t> p(length);
   num_t d(int(0));
   num_t M(d);
   while(std::getline(std::cin, s, '\n')) {
