@@ -1,7 +1,7 @@
 # bitsofcotton/p0
 Generic predictor for Riemann measurable input streams and their variants (on aleph_1 cf. C).
 
-There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them.
+There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them but pseudo discrete one is.
 
 Also there's another plenty of the room to make th. Peter-Weyl based transformations as some of the normal orthogonal base but we cannot define differential of them in generic ones.
 

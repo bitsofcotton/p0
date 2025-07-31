@@ -30,18 +30,33 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<num_t> p(length);
-  num_t d(int(0));
-  num_t M(d);
+  idFeeder<std::vector<num_t> > p(length);
+  std::vector<num_t> d;
+  std::vector<num_t> M;
   while(std::getline(std::cin, s, '\n')) {
-    std::stringstream ins(s);
-    ins >> d;
-    std::cout << (chain ? d - M : d * M) << ", ";
-#if defined(_NONLIN_)
-    std::cout << (M = expscale<num_t>(p0maxNext<num_t>(p.next(logscale<num_t>(d))) )) << std::endl << std::flush;
-#else
-    std::cout << (M = p0maxNext<num_t>(p.next(d)) ) << std::endl << std::flush;
-#endif
+    int cnt(1);
+    for(int i = 0; i < s.size(); i ++) if(s[i] == ',') cnt ++;
+    d.resize(cnt);
+    int i, j;
+    for(i = 0, j = 0; i < s.size(); i ++) {
+      std::stringstream ins(s);
+      ins >> d[j ++];
+      for( ; s[i] != ',' && i < s.size(); i ++) ;
+    }
+    if(M.size() < d.size()) M.resize(d.size(), num_t(int(0)) );
+    for(int i = 0; i < d.size(); i ++)
+      std::cout << (chain ? d[i] - M[i] : d[i] * M[i]) << ", ";
+    p.next(d);
+    if(p.full)
+      for(int i = 0; i < d.size(); i ++) {
+        idFeeder<num_t> buf(p.res.size());
+        for(int j = 0; j < p.res.size(); j ++) buf.next(p.res[j][i]);
+        assert(buf.full);
+        M[i] = p0maxNext<num_t>(buf.res);
+      }
+    for(int i = 0; i < M.size() - 1; i ++)
+      std::cout << M[i] << ", ";
+    std::cout << M[M.size() - 1] << std::endl << std::flush;
   }
 #if !defined(_ONEBINARY_)
   return 0;
