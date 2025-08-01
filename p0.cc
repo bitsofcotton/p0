@@ -13,16 +13,17 @@
 #include <stdint.h>
 #include <sys/resource.h>
 
-#define _COMPILE_PRED_
 #include "lieonn.hh"
 typedef myfloat num_t;
 
 int main(int argc, const char* argv[]) {
   std::cout << std::setprecision(30);
   int length(0);
-  if(argc < 2) std::cerr << argv[0] << " <length>? : continue with ";
+  int step(0);
+  if(argc < 2) std::cerr << argv[0] << " <length>? <step>? : continue with ";
   if(1 < argc) length = std::atoi(argv[1]);
-  std::cerr << argv[0] << " " << length << std::endl;
+  if(2 < argc) step   = std::atoi(argv[2]);
+  std::cerr << argv[0] << " " << length << " " << step << std::endl;
   std::string s;
 # if defined(_CHAIN_)
   const bool chain(true);
@@ -30,10 +31,11 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<std::vector<num_t> > p(length);
+  idFeeder<std::vector<num_t> > p(length * step);
   std::vector<num_t> d;
-  std::vector<num_t> M;
+  idFeeder<std::vector<num_t> > MM(step);
   while(std::getline(std::cin, s, '\n')) {
+    std::vector<num_t> M(MM.res[0]);
     int cnt(1);
     for(int i = 0; i < s.size(); i ++) if(s[i] == ',') cnt ++;
     d.resize(cnt);
@@ -47,14 +49,17 @@ int main(int argc, const char* argv[]) {
     for(int i = 0; i < d.size(); i ++)
       std::cout << (chain ? d[i] - M[i] : d[i] * M[i]) << ", ";
     p.next(d);
-    if(p.full)
+    if(p.full) {
+      const std::vector<std::vector<num_t> > pp(
+        skipX<std::vector<num_t> >(p.res.entity, step));
       for(int i = 0; i < d.size(); i ++) {
-        idFeeder<num_t> buf(p.res.size());
-        for(int j = 0; j < p.res.size(); j ++) buf.next(p.res[j][i]);
+        idFeeder<num_t> buf(pp.size());
+        for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
         assert(buf.full);
         M[i] = p0maxNext<num_t>(buf.res);
       }
-    for(int i = 0; i < M.size() - 1; i ++)
+      MM.next(M);
+    } for(int i = 0; i < M.size() - 1; i ++)
       std::cout << M[i] << ", ";
     std::cout << M[M.size() - 1] << std::endl << std::flush;
   }

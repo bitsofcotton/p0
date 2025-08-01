@@ -3843,6 +3843,8 @@ template <typename T> static inline T p0maxNext(const SimpleVector<T>& in) {
 // N.B. we make the hypothesis the invariant coefficients are continuous or
 //      periodical. this is valid if original stream have less or equal to
 //      varlen-markov's Riemann-Stieljes measureable condition.
+//      this also inserts some story line hypothesis, if whole the story is
+//      given on data stream condition, we only need to take invariant once.
 // N.B. this is the analogy to toeplitz matrix inversion with singular one.
 // N.B. if the function has internal states variable to be projected into
 //      series, they're looked as <a,x>+<b,y>==<a,x>==0, y is internal states.
@@ -3859,11 +3861,9 @@ template <typename T, bool levi> T p01next(const SimpleVector<T>& in) {
   static const T zero(0);
   static const T one(1);
   static const T two(2);
-  // N.B. division accuracy glitch.
-  const T nin(sqrt(in.dot(in) * (one + SimpleMatrix<T>().epsilon())));
+  const T nin(sqrt(in.dot(in)));
   if(! isfinite(nin) || nin == zero) return zero;
   const int varlen(ind2vd(in.size()));
-  // N.B. we conclude making whole range invariants.
   SimpleMatrix<T> invariants(max(int(1), int(in.size()) -
     int(varlen * 2 + step)), varlen + 2);
   invariants.O();
@@ -4836,8 +4836,8 @@ template <typename T, int nprogress> vector<SimpleVector<T> > pSubtractInvariant
   vector<T> stat;
   stat.reserve(res.size() * res[0].size());
   for(int i = 0; i < res.size(); i ++) {
-    res[i] = unOffsetHalf<T>(res[i] * T(int(2)) +
-      in[i - res.size() + in.size()]);
+    res[i] = unOffsetHalf<T>(res[i]) * T(int(2)) +
+      unOffsetHalf<T>(in[i - res.size() + in.size()]);
     for(int j = 0; j < res[i].size(); j ++) stat.emplace_back(res[i][j]);
   }
   sort(stat.begin(), stat.end());
@@ -4845,12 +4845,10 @@ template <typename T, int nprogress> vector<SimpleVector<T> > pSubtractInvariant
   const T off(T(int(4 * 4)) < abs(stat[stat.size() / 2]) ?
     sgn<T>(stat[stat.size() / 2]) * exp(absfloor(
       log(abs(stat[stat.size() / 2])) / log(T(int(4 * 4))))) : T(int(0)));
-  for(int i = 0; i < res.size(); i ++) {
+  for(int i = 0; i < res.size(); i ++)
     for(int j = 0; j < res[i].size(); j ++)
       res[i][j] -= off;
-    res[i] = offsetHalf<T>(res[i]);
-  }
-  return res;
+  return offsetHalf<T>(res);
 }
 
 // N.B. however, the maximum dimension prediction isn't stable per each,
@@ -4858,11 +4856,10 @@ template <typename T, int nprogress> vector<SimpleVector<T> > pSubtractInvariant
 //      by them.
 template <typename T, int nprogress> vector<SimpleVector<T> > pComplementStream(const vector<SimpleVector<T> >& in, const string& strloop) {
   const int n(in.size() - (_P_MLEN_ * 2 + 3 + 1));
-  vector<SimpleVector<T> > lres(pSubtractInvariant4<T, nprogress>(in, strloop));
+  vector<SimpleVector<T> > lres(unOffsetHalf<T>(
+    pSubtractInvariant4<T, nprogress>(in, strloop)));
   vector<SimpleVector<T> > res;
   res.reserve(n);
-  for(int i = 0; i < lres.size(); i ++)
-    lres[i]  = unOffsetHalf<T>(lres[i]);
   for(int i = 0; i < n; i ++) {
     SimpleVector<T> d(in[0].size());
     d.O();
@@ -5006,34 +5003,16 @@ template <typename T, int nprogress> SimpleVector<T> predv4(vector<SimpleVector<
 // N.B. we make the first hypothesis as the stream is calculatable from
 //      input stream by 5 of the measureable condition.
 //      so if the information amount on the datastream isn't important case,
-//      in another words what's not on the table is important case,
-//      we can gain some result meaning, also out of the LoEM either have
-//      cardinal meaning on the same.
-// N.B. since selecting and optimizing fixes #f because they select a invariant
-//      to determine and predict next one step, in shallow meaning with
-//      universal invariant causes 3 of the candidates are enough if the grip
-//      on universal invariant doesn't slip original stream, however, once
-//      observed by the jammer intent, they slips. so we need to use universal
-//      invariant as a saturate flooded set to switch the cases, so we need
-//      at least first 3 invariant combination to be multiplied by 5 or so,
-//      this can be partially done by applying up to thirds original
-//      predictor to difference / multiply condition. also we need them to
-//      calculate the saturated sets at once to have some grip on them
-//      when we're being persistently jammed condition. however, this count up
-//      is for 4-markov case also the root description table simple enough case.
-//      since we can combine such a invariants as a clustered one AFTER the
-//      predictor is determined (not the BEFORE to determine), the chase depends
-//      on something other than calculations. also if it's not clustered, we
-//      need only 3 of the invariants to describe any of whole the stream.
-//      so the making/applying universal invariant from R\Q to Q meaning
-//      is omitted case, this predictor don't work well or simply our machine
-//      is infected totally.
-// N.B. if we copy some structure on the purpose of prediction, the data amount
-//      3 * in (3 layers) for 2nd order saturation, 6 for multiple layer
-//      algebraic copying structure saturation, 9 for enough to decompose
-//      inverse of them. however, number of the internal calculation copy
-//      only depends on the tanglement number based accuracy reason on
-//      calculation surface.
+//      we can gain some result meaning.
+// N.B. also upper layers are for out of the LoEM conditions saturated case.
+//      so if the data stream is something meaningful case, even the maximum
+//      compressed invariant isn't so stable from left hand side case, 
+//      we subtract maximum dimension of invariants so output stream isn't
+//      have residue in LoEM applied meaning but first hypothesis isn't have
+//      LoEM condition. so pComplementStream result is better stable to
+//      continuous meaning. with subtracting middle ranged walk information,
+//      we get better discontinuous result stream on whole we observed,
+//      however, this can be came from our machines' infection totally.
 // N.B. layers:
 //       | function           | layer# | [wsp1] | data amount* | time*(***)   |
 //       +-----------------------------------------------------+--------------+
@@ -5071,6 +5050,15 @@ template <typename T, int nprogress> SimpleVector<T> predv4(vector<SimpleVector<
 // (***) time order ratio, L for input stream length, G for input vector size,
 //       stand from arithmatic operators. ind2varlen isn't considered.
 // N.B. we need O((mem region)^2) calculation time whole.
+// N.B. upper layers:
+// | function            | layers | len*   |
+// +---------------------+--------+--------+
+// | pSaturatedInvariant | 0      | +4
+// | pJamout             | 1      | +len
+// | pComplementStream   | 2      | +range
+// | pSubtractInvariant4 | 3      | +in-1
+// | pSubtractInvariant3 | 4      | +in-3
+// | pSubtractInvariant2 | 5++    | *2
 
 template <typename T, int nprogress> vector<vector<SimpleVector<T> > > predVec(const vector<vector<SimpleVector<T> > >& in0) {
   assert(in0.size() && in0[0].size() && in0[0][0].size());
@@ -8178,7 +8166,6 @@ template <typename T, typename U> static inline void makelword(vector<U>& words,
 //      egg functions from input streams without the hypotehsis on PDE
 //      structures. so we drop to implement them.
 // (19) distant step prediciton. it's equivalent to skipX concerns.
-//      however, we should try again this when beating with delta input stream.
 //
 // N.B. something XXX result descripton
 // (00) there might exist non Lebesgue measureable condition discrete stream.
@@ -8255,8 +8242,8 @@ template <typename T, typename U> static inline void makelword(vector<U>& words,
 //      on the other hand, our predictor only needs (n-markov)^3, so crossing
 //      point is around after 9 input stream samples.
 //
-// N.B. another variants of the predictors.
-// (00) saturating F_2^4 #f, the bra, ket condition indirect access.
+// N.B. there's plenty of the room to implement the predictor which is
+//      saturating F_2^4 #f, the bra, ket condition indirect access.
 
 #define _SIMPLELIN_
 #endif

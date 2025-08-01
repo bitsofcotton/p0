@@ -19,7 +19,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = p0maxNext<double>(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <length>? < stream.txt
+    ./p0(-(32|64)) <length>? <step>? < stream.txt
     # 0 == length for using whole length shallow.
     # 0 <  length for using recent length input numbers.
 
@@ -117,4 +117,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/07/25 merge latest lieonn.
 2025/07/26-28 merge latest lieonn.
 2025/08/01 merge latest lieonn, pseudo multiple variable pred not exact.
+2025/08/01 re-enable step option.
 
