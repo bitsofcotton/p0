@@ -118,4 +118,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/07/26-28 merge latest lieonn.
 2025/08/01 merge latest lieonn, pseudo multiple variable pred not exact.
 2025/08/01 re-enable step option.
+2025/08/03 fix last up shift delay, merge latest lieonn, however something buggy.
 

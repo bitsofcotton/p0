@@ -62,6 +62,7 @@ int main(int argc, const char* argv[]) {
     } for(int i = 0; i < M.size() - 1; i ++)
       std::cout << M[i] << ", ";
     std::cout << M[M.size() - 1] << std::endl << std::flush;
+    M = MM.res[0];
   }
 #if !defined(_ONEBINARY_)
   return 0;
