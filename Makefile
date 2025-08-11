@@ -24,4 +24,10 @@ p0-32:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=32 -O0 -o p0-32 p0.cc
 p0-64:
 	${CXX} ${CXXFLAGS} -static -D_FLOAT_BITS_=64 -O0 -o p0-64 p0.cc
+p0c:
+	${CXX} ${CXXFLAGS} -static -D_CHAIN_ -O0 -o p0c p0.cc
+p0c32:
+	${CXX} ${CXXFLAGS} -static -D_CHAIN_ -D_FLOAT_BITS_=32 -O0 -o p0c32 p0.cc
+p0c64:
+	${CXX} ${CXXFLAGS} -static -D_CHAIN_ -D_FLOAT_BITS_=64 -O0 -o p0c64 p0.cc
 
