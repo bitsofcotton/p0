@@ -41,7 +41,7 @@ int main(int argc, const char* argv[]) {
     d.resize(cnt);
     int i, j;
     for(i = 0, j = 0; i < s.size(); i ++) {
-      std::stringstream ins(s);
+      std::stringstream ins(s.substr(i, s.size() - i));
       ins >> d[j ++];
       for( ; s[i] != ',' && i < s.size(); i ++) ;
     }
