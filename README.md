@@ -1,4 +1,4 @@
-# bitsofcotton/p0
+# bitsofcotton/p0 (closed)
 Generic predictor for Riemann measurable input streams and their variants (on aleph_1 cf. C).
 
 There's a plenty of the room to make this into n-variable predictor, but this repository won't implement such of them but pseudo discrete one is.
@@ -125,4 +125,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/08/17-23 merge latest lieonn.
 2025/08/25 merge latest lieonn.
 2025/09/01 merge latest lieonn.
+2025/09/05 merge latest lieonn.
 
