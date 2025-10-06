@@ -31,9 +31,9 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<std::vector<num_t> > p(length * step);
+  idFeeder<std::vector<num_t> > p(length * abs(step));
   std::vector<num_t> d;
-  idFeeder<std::vector<num_t> > MM(step);
+  idFeeder<std::vector<num_t> > MM(abs(step));
   while(std::getline(std::cin, s, '\n')) {
     std::vector<num_t> M(MM.res[0]);
     int cnt(1);
@@ -46,12 +46,13 @@ int main(int argc, const char* argv[]) {
       for( ; s[i] != ',' && i < s.size(); i ++) ;
     }
     if(M.size() < d.size()) M.resize(d.size(), num_t(int(0)) );
-    for(int i = 0; i < d.size(); i ++)
+    for(int i = 0; i < (step < 0 ? d.size() / 2 : d.size()); i ++)
       std::cout << (chain ? d[i] - M[i] : d[i] * M[i]) << ", ";
     p.next(d);
+    std::vector<num_t> bM(M);
     if(p.full) {
       const std::vector<std::vector<num_t> > pp(
-        skipX<std::vector<num_t> >(p.res.entity, step));
+        skipX<std::vector<num_t> >(p.res.entity, abs(step)));
       for(int i = 0; i < d.size(); i ++) {
         idFeeder<num_t> buf(pp.size());
         for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
@@ -59,9 +60,16 @@ int main(int argc, const char* argv[]) {
         M[i] = p0maxNext<num_t>(buf.res);
       }
       MM.next(M);
-    } for(int i = 0; i < M.size() - 1; i ++)
-      std::cout << M[i] << ", ";
-    std::cout << M[M.size() - 1] << std::endl << std::flush;
+    }
+    if(step < 0) {
+      for(int i = 0; i < M.size() / 2 - 1; i ++)
+        std::cout << bM[i] + d[i + M.size() / 2] << ", ";
+      std::cout << bM[bM.size() / 2 - 1] + d[d.size() / 2 - 1] << std::endl << std::flush;
+    } else {
+      for(int i = 0; i < M.size() - 1; i ++)
+        std::cout << (chain ? bM[i] : M[i]) << ", ";
+      std::cout << (chain ? bM[bM.size() - 1] : M[M.size() - 1]) << std::endl << std::flush;
+    }
     M = MM.res[0];
   }
 #if !defined(_ONEBINARY_)
