@@ -130,4 +130,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/09/25 merge latest lieonn.
 2025/10/06 add step < 0 option for first half prediction with applying second half and return whole.
 2025/10/15 fix step < 0 case last column. also eliminate step < 0 case with by replacing the predictor as a linear one.
+2025/10/16 we need step < 0 actually, so revert and fixed last bug.
 
