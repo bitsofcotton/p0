@@ -57,9 +57,9 @@ int main(int argc, const char* argv[]) {
         idFeeder<num_t> buf(pp.size());
         for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
         assert(buf.full);
-        M[i] = p0maxNext<num_t>(buf.res);
+        // M[i] = p0maxNext<num_t>(buf.res);
         // N.B. linear for composition in p2.
-        // M[i] = pnextcacher<num_t>(buf.res.size(), 1).dot(buf.res);
+        M[i] = pnextcacher<num_t>(buf.res.size(), 1).dot(buf.res);
       }
       MM.next(M);
     }
