@@ -1682,7 +1682,7 @@ public:
   inline T* allocate(size_t n, const void*) { return allocate(n); }
   inline size_t max_size() const { return vmlieonn() / sizeof(T); }
   template <typename U, class ... _Args> inline void construct(U* p, _Args&& ... __args) {
-    ::new ((void*)p) U(_VSTD::forward<_Args>(__args)...);
+    ::new ((void*)p) U(std::forward<_Args>(__args)...);
   }
   inline void destroy(T* p) { p->~T(); }
   inline bool operator == (const SimpleAllocator<T>& x) { return true; }
@@ -5154,11 +5154,10 @@ template <typename T, int nprogress> vector<vector<SimpleVector<T> > > predVec(c
       in[i].setVector(j * in0[i][0].size(), in0[i][j]);
     }
   }
-  // N.B. don't normalize here because of puts/txtpgm.py
 #if defined(_SIMPLEALLOC_)
-  vector<SimpleVector<T>, SimpleAllocator<SimpleVector<T> > > pres(pRepeat<T, nprogress>(in, string(" predVec")) );
+  vector<SimpleVector<T>, SimpleAllocator<SimpleVector<T> > > pres(normalize<T>(pRepeat<T, nprogress>(in, string(" predVec")) ));
 #else
-  vector<SimpleVector<T> > pres(pRepeat<T, nprogress>(in, string(" predVec")) );
+  vector<SimpleVector<T> > pres(normalize<T>(pRepeat<T, nprogress>(in, string(" predVec")) ));
 #endif
   vector<vector<SimpleVector<T> > > res;
   res.resize(pres.size());
