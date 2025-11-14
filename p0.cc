@@ -32,11 +32,11 @@ int main(int argc, const char* argv[]) {
   const bool chain(false);
 # endif
 #endif
-  idFeeder<std::vector<num_t> > p(length * step);
-  std::vector<num_t> d;
-  idFeeder<std::vector<num_t> > MM(step);
+  idFeeder<SimpleVector<num_t> > p(length * step);
+  SimpleVector<num_t> d;
+  idFeeder<SimpleVector<num_t> > MM(step);
   while(std::getline(std::cin, s, '\n')) {
-    std::vector<num_t> M(MM.res[0]);
+    SimpleVector<num_t> M(MM.res[0]);
     int cnt(1);
     for(int i = 0; i < s.size(); i ++) if(s[i] == ',') cnt ++;
     d.resize(cnt);
@@ -46,14 +46,14 @@ int main(int argc, const char* argv[]) {
       ins >> d[j ++];
       for( ; s[i] != ',' && i < s.size(); i ++) ;
     }
-    if(M.size() < d.size()) M.resize(d.size(), num_t(int(0)) );
+    if(M.size() < d.size()) M.entity.resize(d.size(), num_t(int(0)) );
     for(int i = 0; i < d.size(); i ++)
       std::cout << (chain ? d[i] - M[i] : d[i] * M[i]) << ", ";
     p.next(d);
-    std::vector<num_t> bM(M);
+    SimpleVector<num_t> bM(M);
     if(p.full) {
-      const std::vector<std::vector<num_t> > pp(
-        skipX<std::vector<num_t> >(p.res.entity, step));
+      const SimpleVector<SimpleVector<num_t> > pp(
+        skipX<SimpleVector<num_t> >(p.res, step));
       for(int i = 0; i < d.size(); i ++) {
         idFeeder<num_t> buf(pp.size());
         for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
