@@ -19,10 +19,9 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = p0maxNext<double>(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <length>? <step>? < stream.txt
+    ./p0(-(32|64)) <length>? < stream.txt
     # 0 == length for using whole length shallow.
     # 0 <  length for using recent length input numbers.
-    # step < 0    for chain condition.
 
 # Tips
 Some of the important tips also implanted into lieon.hh as a comment.
@@ -136,4 +135,5 @@ Some of the important tips also implanted into lieon.hh as a comment.
 2025/11/30 merge latest lieonn.
 2025/12/04 merge latest lieonn.
 2025/12/10 merge latest lieonn.
+2025/05/13 merge from p2.cc.
 
