@@ -19,7 +19,7 @@ And, if we make DFT and IDFT on them, there exists differential on them in DFT m
     xnext = p0maxNext<double>(buf);
 
 # How to use (commandline):
-    ./p0(-(32|64)) <length>? < stream.txt
+    ./p0 <length>? < stream.txt
     # 0 == length for using whole length shallow.
     # 0 <  length for using recent length input numbers.
 

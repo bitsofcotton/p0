@@ -14,18 +14,41 @@
 #include <stdint.h>
 #include <sys/resource.h>
 
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
+
+#if defined(_P_VULKAN_)
+#include <vulkan/vulkan.h>
+#endif
+
+#if defined(_MIMALLOC_)
+#define MIMALLOC_OVERRIDE_H
+#define MIMALLOC_NEW_DELETE_H
+#include <mimalloc.h>
+#endif
+
+#if defined(_FLOAT_BITS_)
+#define int int64_t
+#endif
 #include "lieonn.hh"
 typedef myfloat num_t;
 lieonn_t lieonn;
 
+#if defined(_FLOAT_BITS_)
+#undef int
+#endif
 int main(int argc, const char* argv[]) {
+#if defined(_FLOAT_BITS_)
+#define int int64_t
+#endif
   std::cout << std::setprecision(30);
   int length(1);
   if(1 < argc) length = std::atoi(argv[1]);
   std::cerr << argv[0] << " " << length << std::endl;
   lieonnStaticInit();
   std::string s;
-# if defined(_CHAIN_)
+# if defined(_P_NOWALK_)
   const bool chain(true);
 # else
   const bool chain(false);
@@ -46,7 +69,10 @@ int main(int argc, const char* argv[]) {
         idFeeder<num_t> buf(pp.size());
         for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
         assert(buf.full);
-        M[i] = p0maxNext<num_t>(buf.res);
+        // M[i] = p0maxNext<num_t>(buf.res);
+        // M[i] = p0max0next<num_t>(buf.res);
+        // N.B. we choose linear one because of chains.
+        M[i] = p0next<num_t>(buf.res);
       }
     }
     for(int i = 0; i < M.size() - 1; i ++)
