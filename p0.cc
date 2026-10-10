@@ -18,10 +18,6 @@
 #include <omp.h>
 #endif
 
-#if defined(_P_VULKAN_)
-#include <vulkan/vulkan.h>
-#endif
-
 #if defined(_MIMALLOC_)
 #define MIMALLOC_OVERRIDE_H
 #define MIMALLOC_NEW_DELETE_H
@@ -48,7 +44,7 @@ int main(int argc, const char* argv[]) {
   std::cerr << argv[0] << " " << length << std::endl;
   lieonnStaticInit();
   std::string s;
-# if defined(_P_NOWALK_)
+# if defined(_P_RAW_)
   const bool chain(true);
 # else
   const bool chain(false);
@@ -62,7 +58,11 @@ int main(int argc, const char* argv[]) {
     for(int i = 0; i < d.size(); i ++)
       std::cout << (chain ? d[i] - M[i] : d[i] * M[i]) << ", ";
     p.next(d);
-    SimpleVector<num_t> bM(M);
+    if(chain) {
+      for(int i = 0; i < M.size() - 1; i ++)
+        std::cout << M[i] << ", ";
+      std::cout << M[M.size() - 1] << endl;
+    } else std::cout << flush;
     if(p.full) {
       const SimpleVector<SimpleVector<num_t> > pp(p.res);
       for(int i = 0; i < d.size(); i ++) {
@@ -72,12 +72,14 @@ int main(int argc, const char* argv[]) {
         // M[i] = p0maxNext<num_t>(buf.res);
         // M[i] = p0max0next<num_t>(buf.res);
         // N.B. we choose linear one because of chains.
-        M[i] = p0next<num_t>(buf.res);
+        M[i] = sumCNext<num_t, true, p0next<num_t> >(buf.res);
       }
     }
-    for(int i = 0; i < M.size() - 1; i ++)
-      std::cout << (chain ? bM[i] : M[i]) << ", ";
-    std::cout << (chain ? bM[bM.size() - 1] : M[M.size() - 1]) << std::endl << std::flush;
+    if(! chain) {
+      for(int i = 0; i < M.size() - 1; i ++)
+        std::cout << M[i] << ", ";
+      std::cout << M[M.size() - 1] << endl;
+    }
   }
 #if !defined(_ONEBINARY_)
   lieonnStaticDestroy();
