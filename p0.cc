@@ -63,18 +63,7 @@ int main(int argc, const char* argv[]) {
         std::cout << M[i] << ", ";
       std::cout << M[M.size() - 1] << endl;
     } else std::cout << flush;
-    if(p.full) {
-      const SimpleVector<SimpleVector<num_t> > pp(p.res);
-      for(int i = 0; i < d.size(); i ++) {
-        idFeeder<num_t> buf(pp.size());
-        for(int j = 0; j < pp.size(); j ++) buf.next(pp[j][i]);
-        assert(buf.full);
-        // M[i] = p0maxNext<num_t>(buf.res);
-        // M[i] = p0max0next<num_t>(buf.res);
-        // N.B. we choose linear one because of chains.
-        M[i] = sumCNext<num_t, true, p0next<num_t> >(buf.res);
-      }
-    }
+    if(p.full) M = p0maxNext<num_t>(p.res);
     if(! chain) {
       for(int i = 0; i < M.size() - 1; i ++)
         std::cout << M[i] << ", ";
