@@ -19,8 +19,6 @@
 #endif
 
 #if defined(_MIMALLOC_)
-#define MIMALLOC_OVERRIDE_H
-#define MIMALLOC_NEW_DELETE_H
 #include <mimalloc.h>
 #endif
 
@@ -29,7 +27,7 @@
 #endif
 #include "lieonn.hh"
 typedef myfloat num_t;
-lieonn_t lieonn;
+int revert_acc_regression;
 
 #if defined(_FLOAT_BITS_)
 #undef int
@@ -71,7 +69,6 @@ int main(int argc, const char* argv[]) {
     }
   }
 #if !defined(_ONEBINARY_)
-  lieonnStaticDestroy();
   return 0;
 }
 #endif
